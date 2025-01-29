@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.BusinessObjects.Models
 {
-    internal class Event
+    public class Event
     {
         public int Id { get; set; }
         public string City { get; set; } = null!;

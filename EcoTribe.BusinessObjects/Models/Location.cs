@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.BusinessObjects.Models
 {
-    internal class Location
+    public class Location
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

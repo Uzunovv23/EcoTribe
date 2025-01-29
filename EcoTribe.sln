@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35707.178 d17.12
+VisualStudioVersion = 17.12.35707.178
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.BusinessObjects", "EcoTribe.BusinessObjects\EcoTribe.BusinessObjects.csproj", "{A1F126D0-8168-45CC-9270-6441F88D9369}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.Data", "EcoTribe.Data\EcoTribe.Data.csproj", "{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A1F126D0-8168-45CC-9270-6441F88D9369}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1F126D0-8168-45CC-9270-6441F88D9369}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1F126D0-8168-45CC-9270-6441F88D9369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

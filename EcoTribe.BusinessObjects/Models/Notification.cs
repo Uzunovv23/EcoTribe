@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.BusinessObjects.Models
 {
-    internal class Notification
+    public class Notification
     {
         public int Id { get; set; }
         public int VolunteerId { get; set; }

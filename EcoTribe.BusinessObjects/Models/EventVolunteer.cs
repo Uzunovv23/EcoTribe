@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.BusinessObjects.Models
 {
-    internal class EventResources
+    public class EventVolunteer
     {
         public int Id { get; set; }
+        public int VolunteerId { get; set; }
+        public Volunteer Volunteer { get; set; } = null!;
         public int EventId { get; set; }
         public Event Event { get; set; } = null!;
-        public string ResourceName { get; set; } = null!;
-        public int Quantity { get; set; }
-        public string? ProvidedBy { get; set; }
-        public string Status { get; set; }
-        public string? Notes { get; set; }
+        public string Intention { get; set; }
+        public bool? Attended { get; set; } 
     }
 }
