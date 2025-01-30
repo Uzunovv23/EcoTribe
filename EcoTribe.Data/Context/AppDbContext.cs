@@ -1,4 +1,4 @@
-﻿using EcoTribe.BusinessObjects.Models;
+﻿using EcoTribe.BusinessObjects.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;

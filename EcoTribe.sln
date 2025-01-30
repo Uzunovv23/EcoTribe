@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.BusinessObjects", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.Data", "EcoTribe.Data\EcoTribe.Data.csproj", "{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.Services", "EcoTribe.Services\EcoTribe.Services.csproj", "{6709FC88-B134-44E9-883C-183B90CE38E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.Web", "EcoTribe.Web\EcoTribe.Web.csproj", "{3FC0B977-DD5D-46A6-B604-79686D41FCC1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +25,14 @@ Global
 		{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B73FDC72-D4B3-4B19-BAD0-5DF738A06EC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6709FC88-B134-44E9-883C-183B90CE38E8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6709FC88-B134-44E9-883C-183B90CE38E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6709FC88-B134-44E9-883C-183B90CE38E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6709FC88-B134-44E9-883C-183B90CE38E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FC0B977-DD5D-46A6-B604-79686D41FCC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FC0B977-DD5D-46A6-B604-79686D41FCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FC0B977-DD5D-46A6-B604-79686D41FCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FC0B977-DD5D-46A6-B604-79686D41FCC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
