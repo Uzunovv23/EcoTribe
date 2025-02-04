@@ -12,8 +12,10 @@ namespace EcoTribe.Data.Context
 {
     public class AppDbContext : DbContext
     {
-        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
-
+        public AppDbContext(DbContextOptions<AppDbContext> options)
+            : base(options)
+        { 
+        }
         public DbSet<Volunteer> Volunteers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<EventVolunteer> EventVolunteers { get; set; }
@@ -22,6 +24,9 @@ namespace EcoTribe.Data.Context
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
