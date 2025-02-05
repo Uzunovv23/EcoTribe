@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EcoTribe.Data\EcoTribe.Data.csproj" />
+  </ItemGroup>
+
 </Project>
