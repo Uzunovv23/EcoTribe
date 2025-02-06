@@ -1,11 +1,11 @@
-﻿using EcoTribe.BusinessObjects.ViewModels;
+﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.Services.Utils;
+using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
-using System;
+using EcoTribe.Services.Utils;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Implementations
 {
@@ -17,19 +17,12 @@ namespace EcoTribe.Services.Implementations
         {
             this.context = context;
         }
+
         public IEnumerable<OrganizationViewModel> GetAll()
         {
-            return context.Organizations.Select(organization => new OrganizationViewModel()
-            {
-                Id = organization.Id,
-                Name = organization.Name,
-                City = organization.City,
-                Description = organization.Description,
-                ContactEmail = organization.ContactEmail,
-                Phone = organization.Phone,
-                Website = organization.Website,
-                CreatedAt = organization.CreatedAt,
-            });
+            return context.Organizations
+                .Select(org => ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(org))
+                .ToList();
         }
     }
 }
