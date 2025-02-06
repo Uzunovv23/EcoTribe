@@ -16,7 +16,7 @@ namespace EcoTribe.Web.Controllers
         public IActionResult Index()
         {
             List<OrganizationViewModel> organizations = organizationService.GetAll().ToList();
-            return View();
+            return View(organizations);
         }
     }
 }
