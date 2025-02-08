@@ -1,26 +1,29 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
-using EcoTribe.Services.Utils;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
+using EcoTribe.Services.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Implementations
 {
-    public class OrganizationService : IOrganizationService
+    public class FeedbackService : IFeedbackService
     {
         private readonly AppDbContext context;
 
-        public OrganizationService(AppDbContext context)
+        public FeedbackService(AppDbContext context)
         {
             this.context = context;
         }
 
-        public IEnumerable<OrganizationViewModel> GetAll()
+        public IEnumerable<FeedbackViewModel> GetAll()
         {
-            return context.Organizations
-                .Select(org => ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(org))
+            return context.Feedbacks
+                .Select(feedb => ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(feedb))
                 .ToList();
         }
     }

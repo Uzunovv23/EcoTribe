@@ -1,0 +1,34 @@
+﻿@model List<EcoTribe.BusinessObjects.ViewModels.FeedbackViewModel>
+
+<h2>Feedback List</h2>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No feedbacks available.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Event</th>
+                <th>Volunteer</th>
+                <th>Rating</th>
+                <th>Comments</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var feedback in Model)
+            {
+                <tr>
+                    <td>@(feedback.Event?.Name ?? "Unknown Event")</td>
+                    <td>@(feedback.Volunteer?.Name ?? "Unknown Volunteer")</td>
+                    <td>@feedback.Rating</td>
+                    <td>@(feedback.Comments ?? "No comments")</td>
+                    <td>@feedback.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
