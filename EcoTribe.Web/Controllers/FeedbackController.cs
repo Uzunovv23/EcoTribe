@@ -14,14 +14,8 @@ namespace EcoTribe.Web.Controllers
         }
         public IActionResult Index()
         {
-            var feedbacks = feedbackService.GetAll().ToList();
-
-            if (feedbacks == null)
-            {
-                return View(new List<FeedbackViewModel>()); // Pass an empty list to avoid null issues
-            }
-
-            return View(feedbacks);
+            List<FeedbackViewModel> feedbackViewModels = feedbackService.GetAll().ToList();
+            return View(feedbackViewModels);
         }
     }
 }
