@@ -1,0 +1,44 @@
+﻿@model List<EcoTribe.BusinessObjects.ViewModels.EventResourceViewModel>
+
+@{
+    ViewData["Title"] = "Event Resources";
+}
+
+<h2>Event Resources</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Event ID</th>
+            <th>Resource Name</th>
+            <th>Quantity</th>
+            <th>Provided By</th>
+            <th>Status</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var resource in Model)
+            {
+                <tr>
+                    <td>@resource.Id</td>
+                    <td>@resource.EventId</td>
+                    <td>@resource.ResourceName</td>
+                    <td>@resource.Quantity</td>
+                    <td>@resource.ProvidedBy</td>
+                    <td>@resource.Status</td>
+                    <td>@resource.Notes</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">No event resources found.</td>
+            </tr>
+        }
+    </tbody>
+</table>
