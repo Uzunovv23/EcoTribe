@@ -1,19 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EcoTribe.BusinessObjects.Domain.Models
+namespace EcoTribe.BusinessObjects.InputModels
 {
-    public class EventVolunteer
+    public class EventVolunteerInputModel
     {
-        public int Id { get; set; }
+        [Required]
         public int VolunteerId { get; set; }
-        public Volunteer Volunteer { get; set; } = null!;
+
+        [Required]
         public int EventId { get; set; }
-        public Event Event { get; set; } = null!;
+
+        [Required]
+        [MaxLength(500)]
         public string Intention { get; set; } = null!;
+
         public bool? Attended { get; set; }
     }
 }

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using EcoTribe.BusinessObjects.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EcoTribe.BusinessObjects.Domain.Models
+namespace EcoTribe.BusinessObjects.ViewModels
 {
-    public class EventVolunteer
+    public class EventVolunteerViewModel
     {
         public int Id { get; set; }
         public int VolunteerId { get; set; }

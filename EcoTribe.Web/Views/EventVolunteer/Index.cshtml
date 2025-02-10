@@ -1,0 +1,47 @@
+﻿@model List<EcoTribe.BusinessObjects.ViewModels.EventVolunteerViewModel>
+
+@{
+    ViewData["Title"] = "Event Volunteers";
+}
+
+<h2>Event Volunteers</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Volunteer</th>
+            <th>Event</th>
+            <th>Intention</th>
+            <th>Attended</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var eventVolunteer in Model)
+        {
+            <tr>
+                <td>@eventVolunteer.Id</td>
+                <td>@(eventVolunteer.Volunteer?.Name ?? "Unknown Volunteer")</td>
+                <td>@(eventVolunteer.Event?.Name ?? "Unknown Event")</td>
+                <td>@eventVolunteer.Intention</td>
+                <td>
+                    @if (eventVolunteer.Attended.HasValue)
+                    {
+                        @if (eventVolunteer.Attended.Value)
+                        {
+                            <span class="text-success">Yes</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger">No</span>
+                        }
+                    }
+                    else
+                    {
+                        <span class="text-muted">Not specified</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
