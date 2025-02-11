@@ -1,0 +1,51 @@
+﻿@model List<EcoTribe.BusinessObjects.ViewModels.VolunteerViewModel>
+
+@{
+    ViewData["Title"] = "Volunteers";
+}
+
+<h2>Volunteers</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>City</th>
+            <th>Email</th>
+            <th>Skills</th>
+            <th>Preferred Events</th>
+            <th>Location</th>
+            <th>Phone Number</th>
+            <th>Instagram</th>
+            <th>Facebook</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var volunteer in Model)
+        {
+            <tr>
+                <td>@volunteer.Id</td>
+                <td>@volunteer.Name</td>
+                <td>@volunteer.City</td>
+                <td>@volunteer.Email</td>
+                <td>@volunteer.Skills</td>
+                <td>@volunteer.PreferredEvents</td>
+                <td>Lat: @volunteer.Latitude, Long: @volunteer.Longitude</td>
+                <td>@volunteer.Number</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(volunteer.Instagram))
+                    {
+                        <a href="@volunteer.Instagram" target="_blank">Instagram</a>
+                    }
+                </td>
+                <td>
+                    @if (!string.IsNullOrEmpty(volunteer.Facebook))
+                    {
+                        <a href="@volunteer.Facebook" target="_blank">Facebook</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

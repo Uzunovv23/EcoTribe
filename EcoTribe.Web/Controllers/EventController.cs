@@ -14,8 +14,8 @@ namespace EcoTribe.Web.Controllers
         }
         public IActionResult Index()
         {
-            List<EventViewModel> eventViewModels = eventService.GetAll().ToList();
-            return View(eventViewModels);
+            List<EventViewModel> events = eventService.GetAll().ToList();
+            return View(events);
         }
     }
 }

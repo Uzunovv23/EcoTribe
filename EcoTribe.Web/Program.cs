@@ -18,6 +18,7 @@ builder.Services.AddScoped<IFeedbackService, FeedbackService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<IEventResourceService, EventResourceService>();
 builder.Services.AddScoped<IEventVolunteerService, EventVolunteerService>();
+builder.Services.AddScoped<IVolunteerService, VolunteerService>();
 
 var app = builder.Build();
 

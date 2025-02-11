@@ -14,8 +14,8 @@ namespace EcoTribe.Web.Controllers
         }
         public IActionResult Index()
         {
-            List<FeedbackViewModel> feedbackViewModels = feedbackService.GetAll().ToList();
-            return View(feedbackViewModels);
+            List<FeedbackViewModel> feedbacks = feedbackService.GetAll().ToList();
+            return View(feedbacks);
         }
     }
 }
