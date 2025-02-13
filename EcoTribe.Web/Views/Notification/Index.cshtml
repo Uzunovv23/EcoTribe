@@ -1,0 +1,40 @@
+﻿@model List<EcoTribe.BusinessObjects.ViewModels.NotificationViewModel>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h2>Notifications</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Volunteer ID</th>
+            <th>Message</th>
+            <th>Created At</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var notification in Model)
+        {
+            <tr>
+                <td>@notification.Id</td>
+                <td>@notification.VolunteerId</td>
+                <td>@notification.Message</td>
+                <td>@notification.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    @if (notification.IsRead)
+                    {
+                        <span class="badge bg-success">Read</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">Unread</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
