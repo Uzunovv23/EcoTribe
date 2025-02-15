@@ -1,4 +1,5 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
@@ -26,5 +27,13 @@ namespace EcoTribe.Services.Implementations
                 .Select(loc => ModelConverter.ConvertToViewModel<Location, LocationViewModel>(loc))
                 .ToList();
         }
+
+        public void Create(LocationInputModel inputModel)
+        {
+            var location = ModelConverter.ConvertToModel<LocationInputModel, Location>(inputModel);
+            context.Locations.Add(location);
+            context.SaveChanges();
+        }
+
     }
 }
