@@ -1,4 +1,5 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
@@ -26,5 +27,11 @@ namespace EcoTribe.Services.Implementations
                 .ToList();
         }
 
+        public void Create(EventInputModel inputModel)
+        {
+            var eventEntity = ModelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
+            context.Events.Add(eventEntity);
+            context.SaveChanges();
+        }
     }
 }
