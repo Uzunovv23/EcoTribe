@@ -1,4 +1,5 @@
-﻿using EcoTribe.BusinessObjects.ViewModels;
+﻿using EcoTribe.BusinessObjects.InputModels;
+using EcoTribe.BusinessObjects.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace EcoTribe.Services.Interfaces
     public interface IEventResourceService
     {
         IEnumerable<EventResourceViewModel> GetAll();
+        void Create(EventResourceInputModel inputModel);
     }
 }
