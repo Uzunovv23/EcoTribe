@@ -1,4 +1,5 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
@@ -27,5 +28,11 @@ namespace EcoTribe.Services.Implementations
                 .ToList();
         }
 
+        public void Create(VolunteerInputModel inputModel)
+        {
+            var volunteer = ModelConverter.ConvertToModel<VolunteerInputModel, Volunteer>(inputModel);
+            context.Volunteers.Add(volunteer);
+            context.SaveChanges();
+        }
     }
 }
