@@ -11,6 +11,8 @@ namespace EcoTribe.Services.Interfaces
     public interface IOrganizationService
     {
         IEnumerable<OrganizationViewModel> GetAll();
+        OrganizationViewModel? GetById(int id); 
         void Create(OrganizationInputModel inputModel);
+        void Update(int id, OrganizationInputModel inputModel);
     }
 }

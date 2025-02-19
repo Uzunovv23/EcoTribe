@@ -32,5 +32,32 @@ namespace EcoTribe.Services.Implementations
             context.Organizations.Add(organization);
             context.SaveChanges();
         }
+
+        public OrganizationViewModel? GetById(int id)
+        {
+            var organization = context.Organizations.Find(id);
+            return organization != null
+                ? ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization)
+                : null;
+        }
+
+        public void Update(int id, OrganizationInputModel inputModel)
+        {
+            var existingOrganization = context.Organizations.Find(id);
+            if (existingOrganization == null)
+            {
+                throw new ArgumentException("Organization not found.");
+            }
+
+            // Use ModelConverter to map properties
+            var updatedOrganization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
+            updatedOrganization.Id = id; // Ensure the ID is preserved
+
+            // Attach & mark properties as modified
+            context.Entry(existingOrganization).CurrentValues.SetValues(updatedOrganization);
+
+            context.SaveChanges();
+        }
+
     }
 }
