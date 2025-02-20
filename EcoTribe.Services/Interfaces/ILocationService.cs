@@ -11,6 +11,8 @@ namespace EcoTribe.Services.Interfaces
     public interface ILocationService 
     {
         IEnumerable<LocationViewModel> GetAll();
+        LocationViewModel? GetById(int id);
         void Create(LocationInputModel inputModel);
+        void Update(int id, LocationInputModel inputModel);
     }
 }

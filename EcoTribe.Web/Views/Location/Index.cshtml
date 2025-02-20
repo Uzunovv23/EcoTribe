@@ -17,6 +17,7 @@
             <th>Latitude</th>
             <th>Longitude</th>
             <th>Description</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -29,6 +30,11 @@
                 <td>@location.Latitude</td>
                 <td>@location.Longitude</td>
                 <td>@(string.IsNullOrEmpty(location.Description) ? "N/A" : location.Description)</td>
+                <td>
+                    <a asp-controller="Location" asp-action="Edit" asp-route-id="@location.Id" class="btn btn-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                </td>
             </tr>
         }
     </tbody>

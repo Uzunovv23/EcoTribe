@@ -2,6 +2,7 @@
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
+using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcoTribe.Web.Controllers
@@ -43,6 +44,38 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+        public IActionResult Edit(int id)
+        {
+            var location = locationService.GetById(id);
+            if (location == null)
+            {
+                return NotFound();
+            }
 
+            var inputModel = ModelConverter.ConvertToModel<LocationViewModel, LocationInputModel>(location);
+
+            return View(inputModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, LocationInputModel inputModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(inputModel);
+            }
+
+            try
+            {
+                locationService.Update(id, inputModel);
+                return RedirectToAction(nameof(Index)); 
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while updating the location.");
+                return View(inputModel);
+            }
+        }
     }
 }

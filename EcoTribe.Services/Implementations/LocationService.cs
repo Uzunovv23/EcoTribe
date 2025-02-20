@@ -34,6 +34,27 @@ namespace EcoTribe.Services.Implementations
             context.Locations.Add(location);
             context.SaveChanges();
         }
+        public LocationViewModel? GetById(int id)
+        {
+            var location = context.Locations.Find(id);
+            return location != null
+                ? ModelConverter.ConvertToViewModel<Location, LocationViewModel>(location)
+                : null;
+        }
+        public void Update(int id, LocationInputModel inputModel)
+        {
+            var existingLocation = context.Locations.Find(id);
+            if (existingLocation == null)
+            {
+                throw new ArgumentException("Location not found.");
+            }
 
+            var updatedLocation = ModelConverter.ConvertToModel<LocationInputModel, Location>(inputModel);
+            updatedLocation.Id = id; 
+
+            context.Entry(existingLocation).CurrentValues.SetValues(updatedLocation);
+
+            context.SaveChanges();
+        }
     }
 }
