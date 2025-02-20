@@ -32,6 +32,28 @@ namespace EcoTribe.Services.Implementations
             var eventEntity = ModelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
             context.Events.Add(eventEntity);
             context.SaveChanges();
+        }       
+        public EventViewModel? GetById(int id)
+        {
+            var eventEntity = context.Events.Find(id);
+            return eventEntity != null
+                ? ModelConverter.ConvertToViewModel<Event, EventViewModel> (eventEntity)
+                : null;
+        }
+        public void Update(int id, EventInputModel inputModel)
+        {
+            var existingEvent = context.Events.Find(id);
+            if (existingEvent == null)
+            {
+                throw new ArgumentException("Event not found.");
+            }
+
+            var updatedEvent = ModelConverter.ConvertToModel<EventInputModel, Event> (inputModel);
+            updatedEvent.Id = id;
+
+            context.Entry(existingEvent).CurrentValues.SetValues(updatedEvent);
+            context.SaveChanges();
+            
         }
     }
 }

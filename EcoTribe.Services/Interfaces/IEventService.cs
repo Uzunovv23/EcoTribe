@@ -11,6 +11,8 @@ namespace EcoTribe.Services.Interfaces
     public interface IEventService
     {
         IEnumerable<EventViewModel> GetAll();
+        EventViewModel? GetById(int id);
         void Create(EventInputModel inputModel);
+        void Update(int id, EventInputModel inputModel);
     }
 }

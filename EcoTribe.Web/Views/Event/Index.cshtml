@@ -16,6 +16,9 @@
                 <th>City</th>
                 <th>Type</th>
                 <th>Volunteers Required</th>
+                <th>Description</th>
+                <th>Latitude</th>
+                <th>Longitude</th>
                 <th>Start</th>
                 <th>End</th>
                 <th>Actions</th>
@@ -30,12 +33,16 @@
                     <td>@eventItem.City</td>
                     <td>@eventItem.Type</td>
                     <td>@eventItem.RequiredVolunteers</td>
+                    <td>@eventItem.Description</td>
+                    <td>@eventItem.Latitude</td>
+                    <td>@eventItem.Longitude</td>
                     <td>@eventItem.Start.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@eventItem.End.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>
-                        <a href="@Url.Action("Details", "Event", new { id = eventItem.Id })" class="btn btn-info btn-sm">Details</a>
-                        <a href="@Url.Action("Edit", "Event", new { id = eventItem.Id })" class="btn btn-warning btn-sm">Edit</a>
-                        <a href="@Url.Action("Delete", "Event", new { id = eventItem.Id })" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?');">Delete</a>
+                        <div class="btn-group">
+                            <a href="@Url.Action("Edit", "Event", new { id = eventItem.Id })" class="btn btn-primary me-2">Edit</a>
+                            <a href="@Url.Action("Delete", "Event", new { id = eventItem.Id })" class="btn btn-danger" onclick="return confirm('Are you sure?');">Delete</a>
+                        </div>
                     </td>
                 </tr>
             }
