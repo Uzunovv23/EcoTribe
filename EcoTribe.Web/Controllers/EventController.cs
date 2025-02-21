@@ -78,5 +78,31 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+        public IActionResult Delete(int id)
+        {
+            var eventEntity = eventService.GetById(id);
+            if (eventEntity == null)
+            {
+                return NotFound();
+            }
+
+            return View(eventEntity); // Show a confirmation page before deleting.
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            try
+            {
+                eventService.Delete(id);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Error deleting the event.");
+            }
+        }
+
+
     }
 }

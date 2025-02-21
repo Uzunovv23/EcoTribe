@@ -3,6 +3,7 @@ using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,9 +23,14 @@ namespace EcoTribe.Services.Implementations
 
         public IEnumerable<FeedbackViewModel> GetAll()
         {
-            return context.Feedbacks
+            return context.Feedbacks.Include(fb => fb.Volunteer).Include(fb => fb.Event)
                 .Select(feedb => ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(feedb))
                 .ToList();
+        }
+
+        public FeedbackViewModel? GetById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

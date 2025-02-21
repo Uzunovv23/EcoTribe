@@ -8,11 +8,10 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Interfaces
 {
-    public interface IEventService
+    public interface IEventService : IService<EventViewModel, EventInputModel>
     {
-        IEnumerable<EventViewModel> GetAll();
-        EventViewModel? GetById(int id);
         void Create(EventInputModel inputModel);
+        void Delete(int id);
         void Update(int id, EventInputModel inputModel);
     }
 }

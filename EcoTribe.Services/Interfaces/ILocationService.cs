@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Interfaces
 {
-    public interface ILocationService 
+    public interface ILocationService : IService<LocationViewModel, LocationInputModel>
     {
-        IEnumerable<LocationViewModel> GetAll();
-        LocationViewModel? GetById(int id);
         void Create(LocationInputModel inputModel);
         void Update(int id, LocationInputModel inputModel);
     }

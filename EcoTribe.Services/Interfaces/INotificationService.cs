@@ -1,4 +1,5 @@
-﻿using EcoTribe.BusinessObjects.ViewModels;
+﻿using EcoTribe.BusinessObjects.InputModels;
+using EcoTribe.BusinessObjects.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Interfaces
 {
-    public interface INotificationService
+    public interface INotificationService : IService<NotificationViewModel, NotificationInputModel>
     {
-        IEnumerable<NotificationViewModel> GetAll();
+        
     }
 }

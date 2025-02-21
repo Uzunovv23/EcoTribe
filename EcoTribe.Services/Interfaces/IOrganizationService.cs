@@ -8,10 +8,8 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Interfaces
 {
-    public interface IOrganizationService
+    public interface IOrganizationService : IService<OrganizationViewModel, OrganizationInputModel>
     {
-        IEnumerable<OrganizationViewModel> GetAll();
-        OrganizationViewModel? GetById(int id); 
         void Create(OrganizationInputModel inputModel);
         void Update(int id, OrganizationInputModel inputModel);
     }

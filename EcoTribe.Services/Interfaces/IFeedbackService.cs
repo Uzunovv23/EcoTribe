@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Interfaces
 {
-    public interface IFeedbackService
+    public interface IFeedbackService : IService<FeedbackViewModel, FeedbackInputModel>
     {
-        IEnumerable<FeedbackViewModel> GetAll();
+        
     }
 }

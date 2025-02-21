@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Interfaces
 {
-    public interface IVolunteerService
+    public interface IVolunteerService : IService<VolunteerViewModel, VolunteerInputModel>
     {
-        IEnumerable<VolunteerViewModel> GetAll();
         void Create(VolunteerInputModel inputModel);
     }
 }

@@ -33,5 +33,10 @@ namespace EcoTribe.Services.Implementations
             context.EventResources.Add(eventResource);
             context.SaveChanges();
         }
+
+        public EventResourceViewModel? GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

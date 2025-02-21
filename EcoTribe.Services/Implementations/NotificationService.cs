@@ -1,4 +1,5 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
@@ -25,6 +26,11 @@ namespace EcoTribe.Services.Implementations
             return context.Notifications
                 .Select(notf => ModelConverter.ConvertToViewModel<Notification, NotificationViewModel>(notf))
                 .ToList();
+        }
+
+        public NotificationViewModel? GetById(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -52,8 +52,19 @@ namespace EcoTribe.Services.Implementations
             updatedEvent.Id = id;
 
             context.Entry(existingEvent).CurrentValues.SetValues(updatedEvent);
+            context.SaveChanges();            
+        }
+
+        public void Delete(int id)
+        {
+            var eventEntity = context.Events.Find(id);
+            if (eventEntity == null)
+            {
+                throw new ArgumentException("Event not found.");
+            }
+
+            context.Events.Remove(eventEntity);
             context.SaveChanges();
-            
         }
     }
 }

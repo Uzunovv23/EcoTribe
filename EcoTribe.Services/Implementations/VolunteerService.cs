@@ -34,5 +34,10 @@ namespace EcoTribe.Services.Implementations
             context.Volunteers.Add(volunteer);
             context.SaveChanges();
         }
+
+        public VolunteerViewModel? GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
