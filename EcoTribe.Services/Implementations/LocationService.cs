@@ -56,5 +56,17 @@ namespace EcoTribe.Services.Implementations
 
             context.SaveChanges();
         }
+        public void Delete(int id)
+        {
+            var location = context.Locations.Find(id);
+            if (location == null)
+            {
+                throw new ArgumentException("Event not found.");
+            }
+
+            context.Locations.Remove(location);
+            context.SaveChanges();
+        }
+
     }
 }

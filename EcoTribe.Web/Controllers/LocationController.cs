@@ -35,8 +35,8 @@ namespace EcoTribe.Web.Controllers
             }
             try
             {
-                locationService.Create(inputModel); // Call the service method
-                return RedirectToAction(nameof(Index)); // Redirect back to locations list
+                locationService.Create(inputModel); 
+                return RedirectToAction(nameof(Index)); 
             }
             catch (Exception)
             {
@@ -75,6 +75,30 @@ namespace EcoTribe.Web.Controllers
             {
                 ModelState.AddModelError("", "An error occurred while updating the location.");
                 return View(inputModel);
+            }
+        }
+        public IActionResult Delete(int id)
+        {
+            var location = locationService.GetById(id);
+            if (location == null)
+            {
+                return NotFound();
+            }
+
+            return View(location);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeleteConfirmed(int id)
+        {
+            try
+            {
+                locationService.Delete(id);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest("Error deleting the location.");
             }
         }
     }

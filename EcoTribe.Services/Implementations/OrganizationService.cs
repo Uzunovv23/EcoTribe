@@ -49,15 +49,23 @@ namespace EcoTribe.Services.Implementations
                 throw new ArgumentException("Organization not found.");
             }
 
-            // Use ModelConverter to map properties
             var updatedOrganization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
-            updatedOrganization.Id = id; // Ensure the ID is preserved
+            updatedOrganization.Id = id; 
 
-            // Attach & mark properties as modified
             context.Entry(existingOrganization).CurrentValues.SetValues(updatedOrganization);
 
             context.SaveChanges();
         }
+        public void Delete(int id)
+        {
+            var organization = context.Organizations.Find(id);
+            if (organization == null)
+            {
+                throw new ArgumentException("Organization not found.");
+            }
 
+            context.Organizations.Remove(organization);
+            context.SaveChanges();
+        }
     }
 }

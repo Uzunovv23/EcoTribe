@@ -86,7 +86,7 @@ namespace EcoTribe.Web.Controllers
                 return NotFound();
             }
 
-            return View(eventEntity); // Show a confirmation page before deleting.
+            return View(eventEntity); 
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -102,7 +102,5 @@ namespace EcoTribe.Web.Controllers
                 return BadRequest("Error deleting the event.");
             }
         }
-
-
     }
 }

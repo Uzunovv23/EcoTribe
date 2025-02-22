@@ -12,5 +12,6 @@ namespace EcoTribe.Services.Interfaces
     {
         void Create(OrganizationInputModel inputModel);
         void Update(int id, OrganizationInputModel inputModel);
+        void Delete(int id);
     }
 }
