@@ -36,7 +36,37 @@ namespace EcoTribe.Services.Implementations
 
         public EventResourceViewModel? GetById(int id)
         {
-            throw new NotImplementedException();
+            var eventResource = context.EventResources.Find(id);
+            return eventResource != null
+                ? ModelConverter.ConvertToViewModel<EventResource, EventResourceViewModel>(eventResource)
+                : null;
+        }
+
+        public void Update(int id, EventResourceInputModel inputModel)
+        {
+            var existingEventResource = context.EventResources.Find(id);
+            if (existingEventResource == null)
+            {
+                throw new ArgumentException("Event Resource not found.");
+            }
+
+            var updatedEventResource = ModelConverter.ConvertToModel<EventResourceInputModel, EventResource>(inputModel);
+            updatedEventResource.Id = id;
+
+            context.Entry(existingEventResource).CurrentValues.SetValues(updatedEventResource);
+            context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var eventResource = context.EventResources.Find(id);
+            if (eventResource == null)
+            {
+                throw new ArgumentException("Event Resource not found.");
+            }
+
+            context.EventResources.Remove(eventResource);
+            context.SaveChanges();
         }
     }
 }

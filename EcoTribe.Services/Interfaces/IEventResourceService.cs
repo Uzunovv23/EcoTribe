@@ -11,5 +11,7 @@ namespace EcoTribe.Services.Interfaces
     public interface IEventResourceService : IService<EventResourceViewModel, EventResourceInputModel>
     {
         void Create(EventResourceInputModel inputModel);
+        void Update(int id, EventResourceInputModel inputModel);
+        void Delete(int id);
     }
 }

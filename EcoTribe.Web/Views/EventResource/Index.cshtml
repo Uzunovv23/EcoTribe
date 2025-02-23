@@ -4,26 +4,27 @@
     ViewData["Title"] = "Event Resources";
 }
 
-<h2>Event Resources</h2>
+<h2 class="mb-4">Event Resources</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Event ID</th>
-            <th>Resource Name</th>
-            <th>Quantity</th>
-            <th>Provided By</th>
-            <th>Status</th>
-            <th>Notes</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (Model != null && Model.Any())
-        {
+@if (Model != null && Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Event ID</th>
+                <th>Resource Name</th>
+                <th>Quantity</th>
+                <th>Provided By</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
             @foreach (var resource in Model)
             {
-                <tr>
+                <tr id="resource-row-@resource.Id">
                     <td>@resource.Id</td>
                     <td>@resource.EventId</td>
                     <td>@resource.ResourceName</td>
@@ -31,16 +32,52 @@
                     <td>@resource.ProvidedBy</td>
                     <td>@resource.Status</td>
                     <td>@resource.Notes</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="@Url.Action("Edit", "EventResource", new { id = resource.Id })" class="btn btn-primary me-2">Edit</a>
+                            <button class="btn btn-danger" onclick="deleteEventResource(@resource.Id)">Delete</button>
+                        </div>
+                    </td>
                 </tr>
             }
-        }
-        else
-        {
-            <tr>
-                <td colspan="7" class="text-center">No event resources found.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No event resources available.</p>
+}
 
-<a href="@Url.Action("Create", "EventResource")" class="btn btn-primary">Add resource</a>
+<a href="@Url.Action("Create", "EventResource")" class="btn btn-primary mt-3">Add New Resource</a>
+
+<!-- Anti-forgery token -->
+@Html.AntiForgeryToken()
+
+<script>
+    function deleteEventResource(resourceId) {
+        if (!confirm("Are you sure you want to delete this event resource?")) {
+            return;
+        }
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        fetch(`/EventResource/DeleteConfirmed`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "RequestVerificationToken": token
+            },
+            body: new URLSearchParams({ id: resourceId })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to delete event resource.");
+            }
+            return response.text();
+        })
+        .then(() => {
+            document.getElementById(`resource-row-${resourceId}`).remove();
+        })
+        .catch(error => alert(error.message));
+    }
+</script>
