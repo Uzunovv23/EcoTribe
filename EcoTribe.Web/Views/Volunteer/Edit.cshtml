@@ -1,0 +1,78 @@
+﻿@model EcoTribe.BusinessObjects.InputModels.VolunteerInputModel
+
+@{
+    ViewData["Title"] = "Edit Volunteer";
+}
+
+<h2>Edit Volunteer</h2>
+
+<form asp-action="Edit" method="post">
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="City" class="control-label"></label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Skills" class="control-label"></label>
+        <input asp-for="Skills" class="form-control" />
+        <span asp-validation-for="Skills" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PreferredEvents" class="control-label"></label>
+        <input asp-for="PreferredEvents" class="form-control" />
+        <span asp-validation-for="PreferredEvents" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Latitude" class="control-label"></label>
+        <input asp-for="Latitude" class="form-control" type="number" step="any" />
+        <span asp-validation-for="Latitude" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Longitude" class="control-label"></label>
+        <input asp-for="Longitude" class="form-control" type="number" step="any" />
+        <span asp-validation-for="Longitude" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Number" class="control-label"></label>
+        <input asp-for="Number" class="form-control" />
+        <span asp-validation-for="Number" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Instagram" class="control-label"></label>
+        <input asp-for="Instagram" class="form-control" />
+        <span asp-validation-for="Instagram" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Facebook" class="control-label"></label>
+        <input asp-for="Facebook" class="form-control" />
+        <span asp-validation-for="Facebook" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

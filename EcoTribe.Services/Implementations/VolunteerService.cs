@@ -37,7 +37,35 @@ namespace EcoTribe.Services.Implementations
 
         public VolunteerViewModel? GetById(int id)
         {
-            throw new NotImplementedException();
+            var volunteer = context.Volunteers.Find(id);
+            return volunteer != null
+                ? ModelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(volunteer)
+                : null;
+        }
+
+        public void Update(int id, VolunteerInputModel inputModel)
+        {
+            var existingVolunteer = context.Volunteers.Find(id);
+            if (existingVolunteer == null)
+            {
+                throw new ArgumentException("Volunteer not found.");
+            }
+            var updatedVolunteer = ModelConverter.ConvertToModel<VolunteerInputModel, Volunteer>(inputModel);
+            updatedVolunteer.Id = id;
+
+            context.Entry(existingVolunteer).CurrentValues.SetValues(updatedVolunteer);
+            context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var volunteer = context.Volunteers.Find(id);
+            if (volunteer == null)
+            {
+                throw new ArgumentException("Volunteer not found.");
+            }
+            context.Volunteers.Remove(volunteer);
+            context.SaveChanges();
         }
     }
 }
