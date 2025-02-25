@@ -7,7 +7,7 @@
 <h2>Add Location</h2>
 
 <form asp-controller="Location" asp-action="Create" method="post">
-    @Html.AntiForgeryToken() <!-- Ensure security token is present -->
+    @Html.AntiForgeryToken() 
 
     <div class="form-group">
         <label asp-for="Name"></label>
