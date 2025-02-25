@@ -1,34 +1,75 @@
 ﻿@model List<EcoTribe.BusinessObjects.ViewModels.FeedbackViewModel>
 
-<h2>Feedback List</h2>
+@{
+    ViewData["Title"] = "Feedbacks";
+}
 
-@if (Model == null || !Model.Any())
-{
-    <p>No feedbacks available.</p>
-}
-else
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Event</th>
-                <th>Volunteer</th>
-                <th>Rating</th>
-                <th>Comments</th>
-                <th>Created At</th>
+<h2>Feedbacks</h2>
+
+<a asp-controller="Feedback" asp-action="Create" class="btn btn-primary mb-3">Add Feedback</a>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Event</th>
+            <th>Volunteer</th>
+            <th>Rating</th>
+            <th>Comments</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var feedback in Model)
+        {
+            <tr id="feedback-row-@feedback.Id">
+                <td>@feedback.Id</td>
+                <td>@(feedback.Event?.Name ?? "Unknown Event")</td>
+                <td>@(feedback.Volunteer?.Name ?? "Unknown Volunteer")</td>
+                <td>@feedback.Rating</td>
+                <td>@(string.IsNullOrEmpty(feedback.Comments) ? "No comments" : feedback.Comments)</td>
+                <td>@feedback.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>
+                    <a asp-controller="Feedback" asp-action="Edit" asp-route-id="@feedback.Id" class="btn btn-primary me-2">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <button class="btn btn-danger" onclick="deleteFeedback(@feedback.Id)">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var feedback in Model)
-            {
-                <tr>
-                    <td>@(feedback.Event?.Name ?? "Unknown Event")</td>
-                    <td>@(feedback.Volunteer?.Name ?? "Unknown Volunteer")</td>
-                    <td>@feedback.Rating</td>
-                    <td>@(feedback.Comments ?? "No comments")</td>
-                    <td>@feedback.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                </tr>
+        }
+    </tbody>
+</table>
+
+@Html.AntiForgeryToken()
+
+<script>
+    function deleteFeedback(feedbackId) {
+        if (!confirm("Are you sure you want to delete this feedback?")) {
+            return;
+        }
+
+        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+        fetch(`/Feedback/DeleteConfirmed`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "RequestVerificationToken": token
+            },
+            body: new URLSearchParams({ id: feedbackId })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Failed to delete feedback.");
             }
-        </tbody>
-    </table>
-}
+            return response.text();
+        })
+        .then(() => {
+            document.getElementById(`feedback-row-${feedbackId}`).remove();
+        })
+        .catch(error => alert(error.message));
+    }
+</script>
