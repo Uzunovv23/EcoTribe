@@ -10,8 +10,6 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IOrganizationService : IService<OrganizationViewModel, OrganizationInputModel>
     {
-        void Create(OrganizationInputModel inputModel);
-        void Update(int id, OrganizationInputModel inputModel);
-        void Delete(int id);
+        
     }
 }

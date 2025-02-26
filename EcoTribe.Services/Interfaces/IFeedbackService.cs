@@ -10,9 +10,6 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IFeedbackService : IService<FeedbackViewModel, FeedbackInputModel>
     {
-        void Create(FeedbackInputModel inputModel);
-        void Update(int id, FeedbackInputModel inputModel);
-        void Delete(int id);
         List<EventViewModel> GetAllEvents();
         List<VolunteerViewModel> GetAllVolunteers();
     }

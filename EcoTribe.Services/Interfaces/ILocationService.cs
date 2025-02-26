@@ -10,8 +10,6 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface ILocationService : IService<LocationViewModel, LocationInputModel>
     {
-        void Create(LocationInputModel inputModel);
-        void Update(int id, LocationInputModel inputModel);
-        void Delete(int id);
+       
     }
 }

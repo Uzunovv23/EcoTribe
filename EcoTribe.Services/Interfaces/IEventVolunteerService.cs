@@ -10,8 +10,6 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IEventVolunteerService : IService<EventVolunteerViewModel, EventVolunteerInputModel>
     {
-        void Create(EventVolunteerInputModel inputModel);
-        void Update(int id, EventVolunteerInputModel inputModel);
-        void Delete (int id);
+        
     }
 }

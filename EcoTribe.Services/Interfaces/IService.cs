@@ -11,5 +11,8 @@ namespace EcoTribe.Services.Interfaces
     {
         IEnumerable<TViewModel> GetAll();
         TViewModel? GetById(int id);
+        void Create(TInputModel inputModel);
+        void Update(int id, TInputModel inputModel);
+        void Delete(int id);
     }
 }

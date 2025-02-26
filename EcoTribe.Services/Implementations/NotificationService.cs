@@ -21,6 +21,16 @@ namespace EcoTribe.Services.Implementations
             this.context = context;
         }
 
+        public void Create(NotificationInputModel inputModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Delete(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public IEnumerable<NotificationViewModel> GetAll()
         {
             return context.Notifications
@@ -29,6 +39,11 @@ namespace EcoTribe.Services.Implementations
         }
 
         public NotificationViewModel? GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Update(int id, NotificationInputModel inputModel)
         {
             throw new NotImplementedException();
         }
