@@ -1,21 +1,15 @@
-﻿using EcoTribe.BusinessObjects.Domain.Models;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Reflection.Emit;
-using System.Text;
-using System.Threading.Tasks;
+using EcoTribe.BusinessObjects.Domain.Models;
 
 namespace EcoTribe.Data.Context
 {
-    public class AppDbContext : DbContext
+    public class AppDbContext :IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
-        { 
-        }
+        { }
+
         public DbSet<Volunteer> Volunteers { get; set; }
         public DbSet<Event> Events { get; set; }
         public DbSet<EventVolunteer> EventVolunteers { get; set; }
@@ -25,12 +19,12 @@ namespace EcoTribe.Data.Context
         public DbSet<Location> Locations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
 
-
-
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Fluent API конфигурации
+            
+            base.OnModelCreating(modelBuilder);
+
+            
             modelBuilder.Entity<Volunteer>()
                 .Property(v => v.Latitude)
                 .HasPrecision(9, 6);
