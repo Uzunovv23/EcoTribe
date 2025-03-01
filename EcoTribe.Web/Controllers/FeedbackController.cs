@@ -43,6 +43,14 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
 
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            inputModel.ApplicationUserId = userId;
+
             try
             {
                 feedbackService.Create(inputModel);

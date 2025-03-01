@@ -24,28 +24,52 @@ namespace EcoTribe.Services.Implementations
 
         public IEnumerable<FeedbackViewModel> GetAll()
         {
-            return context.Feedbacks.Include(fb => fb.Volunteer).Include(fb => fb.Event)
-                .Select(feedb => ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(feedb))
-                .ToList();
+            return context.Feedbacks
+        .Include(fb => fb.Event)
+        .Include(fb => fb.Volunteer)
+        .AsEnumerable() 
+        .Select(fb =>
+        {
+            var viewModel = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(fb);
+            viewModel.Event = fb.Event; 
+            viewModel.Volunteer = fb.Volunteer;
+            return viewModel;
+        })
+        .ToList();
         }
 
         public void Create(FeedbackInputModel inputModel)
         {
             var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
+            feedback.Event = context.Events.Find(inputModel.EventId)!;
+            feedback.Volunteer = context.Volunteers.Find(inputModel.VolunteerId)!;
+
             context.Feedbacks.Add(feedback);
             context.SaveChanges();
         }
 
         public FeedbackViewModel? GetById(int id)
         {
-            var feedback = context.Feedbacks.Find(id);
-            return feedback != null
-                ? ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(feedback)
-                : null;
+            var feedback = context.Feedbacks
+            .Include(fb => fb.Event)
+            .Include(fb => fb.Volunteer)
+            .FirstOrDefault(fb => fb.Id == id);
+
+            if (feedback == null) return null;
+
+            var viewModel = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(feedback);
+            viewModel.Event = feedback.Event;
+            viewModel.Volunteer = feedback.Volunteer;
+
+            return viewModel;
         }
         public void Update(int id, FeedbackInputModel inputModel)
         {
-            var existingFeedback = context.Feedbacks.Find(id);
+            var existingFeedback = context.Feedbacks
+            .Include(fb => fb.Event)
+            .Include(fb => fb.Volunteer)
+            .FirstOrDefault(fb => fb.Id == id);
+
             if (existingFeedback == null)
             {
                 throw new ArgumentException("Feedback not found.");
@@ -53,6 +77,8 @@ namespace EcoTribe.Services.Implementations
 
             var updatedFeedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             updatedFeedback.Id = existingFeedback.Id;
+            updatedFeedback.Event = context.Events.Find(inputModel.EventId)!;
+            updatedFeedback.Volunteer = context.Volunteers.Find(inputModel.VolunteerId)!;
 
             context.Entry(existingFeedback).CurrentValues.SetValues(updatedFeedback);
             context.SaveChanges();

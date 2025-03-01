@@ -17,5 +17,8 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public int Rating { get; set; }
         public string? Comments { get; set; }
         public DateTime CreatedAt { get; set; }
+
+        public string ApplicationUserId { get; set; } = null!;
+        public string ApplicationUserName { get; set; } = null!;
     }
 }
