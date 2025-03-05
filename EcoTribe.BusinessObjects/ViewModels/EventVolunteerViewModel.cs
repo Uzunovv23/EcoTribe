@@ -16,5 +16,8 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public Event Event { get; set; } = null!;
         public string Intention { get; set; } = null!;
         public bool? Attended { get; set; }
+
+        public string ApplicationUserId { get; set; } = null!;
+        public string ApplicationUserName { get; set; } = null!;
     }
 }

@@ -1,8 +1,8 @@
 ﻿using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
-using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcoTribe.Web.Controllers
@@ -21,12 +21,15 @@ namespace EcoTribe.Web.Controllers
             List<OrganizationViewModel> organizations = organizationService.GetAll().ToList();
             return View(organizations);
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(OrganizationInputModel inputModel)
         {
@@ -38,7 +41,7 @@ namespace EcoTribe.Web.Controllers
             try
             {
                 organizationService.Create(inputModel);
-                return RedirectToAction(nameof(Index)); 
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -46,6 +49,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
         {
             var organization = organizationService.GetById(id);
@@ -60,6 +65,7 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, OrganizationInputModel inputModel)
         {
@@ -71,7 +77,7 @@ namespace EcoTribe.Web.Controllers
             try
             {
                 organizationService.Update(id, inputModel);
-                return RedirectToAction(nameof(Index)); 
+                return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
             {
@@ -80,6 +86,7 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int id)
         {
             var organization = organizationService.GetById(id);
@@ -90,7 +97,9 @@ namespace EcoTribe.Web.Controllers
 
             return View(organization);
         }
+
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {

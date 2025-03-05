@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EcoTribe.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250227114519_AddIdentityTables")]
-    partial class AddIdentityTables
+    [Migration("20250305114543_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,7 +34,6 @@ namespace EcoTribe.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("Address")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -52,11 +51,9 @@ namespace EcoTribe.Data.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool>("LockoutEnabled")
@@ -197,6 +194,7 @@ namespace EcoTribe.Data.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool?>("Attended")
@@ -231,7 +229,10 @@ namespace EcoTribe.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("ApplicationUserId")
+                    b.Property<int>("ApplicationUserId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ApplicationUserId1")
                         .HasColumnType("text");
 
                     b.Property<string>("Comments")
@@ -251,7 +252,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("ApplicationUserId1");
 
                     b.HasIndex("EventId");
 
@@ -550,9 +551,11 @@ namespace EcoTribe.Data.Migrations
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventVolunteer", b =>
                 {
-                    b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", null)
+                    b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("EventVolunteers")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Event", "Event")
                         .WithMany()
@@ -565,6 +568,8 @@ namespace EcoTribe.Data.Migrations
                         .HasForeignKey("VolunteerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Event");
 
@@ -573,9 +578,9 @@ namespace EcoTribe.Data.Migrations
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Feedback", b =>
                 {
-                    b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", null)
+                    b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("ApplicationUserId1");
 
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Event", "Event")
                         .WithMany()
@@ -588,6 +593,8 @@ namespace EcoTribe.Data.Migrations
                         .HasForeignKey("VolunteerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Event");
 

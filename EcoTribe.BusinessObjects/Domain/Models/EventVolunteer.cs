@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,5 +17,10 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public Event Event { get; set; } = null!;
         public string Intention { get; set; } = null!;
         public bool? Attended { get; set; }
+
+        
+        public string ApplicationUserId { get; set; } = null!;
+
+        public ApplicationUser ApplicationUser { get; set; } = null!;
     }
 }

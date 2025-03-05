@@ -1,4 +1,5 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,7 @@ namespace EcoTribe.Web.Controllers
         public IActionResult Register() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        public async Task<IActionResult> Register(RegisterInputModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
