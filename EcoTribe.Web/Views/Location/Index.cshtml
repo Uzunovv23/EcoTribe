@@ -1,4 +1,6 @@
 ﻿@model List<EcoTribe.BusinessObjects.ViewModels.LocationViewModel>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Locations";
@@ -6,7 +8,10 @@
 
 <h2>Locations</h2>
 
-<a asp-controller="Location" asp-action="Create" class="btn btn-primary mb-3">Add Location</a>
+@if (User.IsInRole("Administrator"))
+{
+    <a asp-controller="Location" asp-action="Create" class="btn btn-primary mb-3">Add Location</a>
+}
 
 <table class="table">
     <thead>

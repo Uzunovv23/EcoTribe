@@ -1,10 +1,17 @@
 ﻿@model List<EcoTribe.BusinessObjects.ViewModels.EventResourceViewModel>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Event Resources";
 }
 
 <h2 class="mb-4">Event Resources</h2>
+
+@if (User.IsInRole("Administrator"))
+{
+    <a href="@Url.Action("Create", "EventResource")" class="btn btn-primary mt-3">Add New Resource</a>
+}
 
 @if (Model != null && Model.Any())
 {
@@ -48,9 +55,6 @@ else
     <p>No event resources available.</p>
 }
 
-<a href="@Url.Action("Create", "EventResource")" class="btn btn-primary mt-3">Add New Resource</a>
-
-<!-- Anti-forgery token -->
 @Html.AntiForgeryToken()
 
 <script>

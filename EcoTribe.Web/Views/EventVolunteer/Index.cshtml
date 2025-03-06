@@ -1,4 +1,6 @@
 ﻿@model List<EcoTribe.BusinessObjects.ViewModels.EventVolunteerViewModel>
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 @{
     ViewData["Title"] = "Event Volunteers";
@@ -6,7 +8,10 @@
 
 <h2>Event Volunteers</h2>
 
-<a asp-controller="EventVolunteer" asp-action="Create" class="btn btn-primary mb-3">Add Volunteer</a>
+@if (User.IsInRole("Administrator"))
+{
+    <a asp-controller="EventVolunteer" asp-action="Create" class="btn btn-primary mb-3">Add Volunteer</a>
+}
 
 <table class="table">
     <thead>

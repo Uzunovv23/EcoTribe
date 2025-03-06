@@ -2,6 +2,7 @@
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Globalization;
 
@@ -20,11 +21,14 @@ namespace EcoTribe.Web.Controllers
             List<VolunteerViewModel> volunteers = volunteerService.GetAll().ToList();
             return View(volunteers);
         }
+
+        [Authorize(Roles= "Administrator")]
         public IActionResult Create()
         {
             return View();
         }
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(VolunteerInputModel inputModel)
         {
@@ -47,6 +51,7 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
         {
             var volunteer = volunteerService.GetById(id);
@@ -57,7 +62,9 @@ namespace EcoTribe.Web.Controllers
             var inputModel = ModelConverter.ConvertToModel<VolunteerViewModel, VolunteerInputModel>(volunteer);
             return View(inputModel);
         }
+
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, VolunteerInputModel inputModel)
         {
@@ -78,6 +85,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int id)
         {
             var volunteer = volunteerService.GetById(id);
@@ -88,6 +97,7 @@ namespace EcoTribe.Web.Controllers
             return View(volunteer);
         }
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {

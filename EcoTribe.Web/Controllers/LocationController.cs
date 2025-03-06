@@ -3,6 +3,7 @@ using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcoTribe.Web.Controllers
@@ -20,12 +21,15 @@ namespace EcoTribe.Web.Controllers
             List<LocationViewModel> locations = locationService.GetAll().ToList();
             return View(locations);
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(LocationInputModel inputModel)
         {
@@ -44,6 +48,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
         {
             var location = locationService.GetById(id);
@@ -58,6 +64,7 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, LocationInputModel inputModel)
         {
@@ -77,6 +84,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int id)
         {
             var location = locationService.GetById(id);
@@ -87,7 +96,9 @@ namespace EcoTribe.Web.Controllers
 
             return View(location);
         }
+
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {

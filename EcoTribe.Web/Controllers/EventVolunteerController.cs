@@ -2,6 +2,7 @@
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Cryptography.X509Certificates;
 
@@ -20,11 +21,15 @@ namespace EcoTribe.Web.Controllers
             List<EventVolunteerViewModel> eventVolunteers = eventVolunteerService.GetAll().ToList();
             return View(eventVolunteers);
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
         }
+
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventVolunteerInputModel inputModel)
         {
@@ -43,6 +48,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
         {
             var eventVolunteer = eventVolunteerService.GetById(id);
@@ -53,7 +60,9 @@ namespace EcoTribe.Web.Controllers
             var inputModel = ModelConverter.ConvertToModel<EventVolunteerViewModel, EventVolunteerInputModel>(eventVolunteer);
             return View(inputModel);
         }
+
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, EventVolunteerInputModel inputModel)
         {
@@ -72,6 +81,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int id)
         {
             var eventVolunteer = eventVolunteerService.GetById(id);
@@ -82,7 +93,9 @@ namespace EcoTribe.Web.Controllers
 
             return View(eventVolunteer);
         }
+
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {

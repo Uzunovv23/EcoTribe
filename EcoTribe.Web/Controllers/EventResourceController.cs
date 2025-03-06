@@ -2,6 +2,7 @@
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EcoTribe.Web.Controllers
@@ -19,12 +20,15 @@ namespace EcoTribe.Web.Controllers
             List<EventResourceViewModel> eventResources = eventResourceService.GetAll().ToList();
             return(View(eventResources));
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventResourceInputModel model)
         {
@@ -45,6 +49,7 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
         {
             var eventResourceEntity = eventResourceService.GetById(id);
@@ -57,6 +62,7 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, EventResourceInputModel inputModel)
         {
@@ -76,6 +82,7 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int id)
         {
             var eventResource = eventResourceService.GetById(id);
@@ -86,6 +93,7 @@ namespace EcoTribe.Web.Controllers
             return View(eventResource);
         }
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {

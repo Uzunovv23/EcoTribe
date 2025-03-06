@@ -6,6 +6,11 @@
 
 <h2 class="mb-4">Events</h2>
 
+@if (User.IsInRole("Administrator"))
+{
+    <a href="@Url.Action("Create", "Event")" class="btn btn-primary mt-3">Create New Event</a>
+}
+
 @if (Model != null && Model.Any())
 {
     <table class="table table-striped">
@@ -53,8 +58,6 @@ else
 {
     <p>No events available.</p>
 }
-
-<a href="@Url.Action("Create", "Event")" class="btn btn-primary mt-3">Create New Event</a>
 
 @Html.AntiForgeryToken()
 
