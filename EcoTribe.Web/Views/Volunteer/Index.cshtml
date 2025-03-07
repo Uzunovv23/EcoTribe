@@ -60,14 +60,17 @@
                         }
                     </td>
                     <td>
-                        <div class="d-flex gap-2">
-                            <a asp-controller="Volunteer" asp-action="Edit" asp-route-id="@volunteer.Id" class="btn btn-primary">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <button class="btn btn-danger" onclick="confirmDelete(@volunteer.Id)">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Volunteer" asp-action="Edit" asp-route-id="@volunteer.Id" class="btn btn-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <button class="btn btn-danger" onclick="confirmDelete(@volunteer.Id)">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        }
                     </td>
                 </tr>
             }

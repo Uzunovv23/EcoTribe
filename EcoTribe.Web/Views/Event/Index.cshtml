@@ -44,10 +44,13 @@
                     <td>@eventItem.Start.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>@eventItem.End.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>
-                        <div class="btn-group">
-                            <a href="@Url.Action("Edit", "Event", new { id = eventItem.Id })" class="btn btn-primary me-2">Edit</a>
-                            <button class="btn btn-danger" onclick="deleteEvent(@eventItem.Id)">Delete</button>
-                        </div>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <div class="btn-group">
+                                <a href="@Url.Action("Edit", "Event", new { id = eventItem.Id })" class="btn btn-primary me-2">Edit</a>
+                                <button class="btn btn-danger" onclick="deleteEvent(@eventItem.Id)">Delete</button>
+                            </div>
+                        }                    
                     </td>
                 </tr>
             }

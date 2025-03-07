@@ -36,12 +36,15 @@
                 <td>@location.Longitude</td>
                 <td>@(string.IsNullOrEmpty(location.Description) ? "N/A" : location.Description)</td>
                 <td>
-                    <a asp-controller="Location" asp-action="Edit" asp-route-id="@location.Id" class="btn btn-primary me-2">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <button class="btn btn-danger" onclick="deleteLocation(@location.Id)">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a asp-controller="Location" asp-action="Edit" asp-route-id="@location.Id" class="btn btn-primary me-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <button class="btn btn-danger" onclick="deleteLocation(@location.Id)">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    }
                 </td>
             </tr>
         }

@@ -50,12 +50,15 @@
                     }
                 </td>
                 <td>
-                    <a asp-controller="EventVolunteer" asp-action="Edit" asp-route-id="@eventVolunteer.Id" class="btn btn-primary me-2">
-                        <i class="fas fa-edit"></i> Edit
-                    </a>
-                    <button class="btn btn-danger" onclick="deleteEventVolunteer(@eventVolunteer.Id)">
-                        <i class="fas fa-trash"></i> Delete
-                    </button>
+                    @if (User.IsInRole("Administrator"))
+                    {
+                        <a asp-controller="EventVolunteer" asp-action="Edit" asp-route-id="@eventVolunteer.Id" class="btn btn-primary me-2">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <button class="btn btn-danger" onclick="deleteEventVolunteer(@eventVolunteer.Id)">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    }
                 </td>
             </tr>
         }

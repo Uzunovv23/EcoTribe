@@ -40,10 +40,13 @@
                     <td>@resource.Status</td>
                     <td>@resource.Notes</td>
                     <td>
-                        <div class="btn-group">
-                            <a href="@Url.Action("Edit", "EventResource", new { id = resource.Id })" class="btn btn-primary me-2">Edit</a>
-                            <button class="btn btn-danger" onclick="deleteEventResource(@resource.Id)">Delete</button>
-                        </div>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <div class="btn-group">
+                                <a href="@Url.Action("Edit", "EventResource", new { id = resource.Id })" class="btn btn-primary me-2">Edit</a>
+                                <button class="btn btn-danger" onclick="deleteEventResource(@resource.Id)">Delete</button>
+                            </div>
+                        }
                     </td>
                 </tr>
             }

@@ -19,7 +19,7 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public bool? Attended { get; set; }
 
         
-        public string ApplicationUserId { get; set; } = null!;
+        public int ApplicationUserId { get; set; } 
 
         public ApplicationUser ApplicationUser { get; set; } = null!;
     }

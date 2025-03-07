@@ -48,14 +48,17 @@
                     <td>@organization.Description</td>
                     <td>@organization.CreatedAt.ToString("yyyy-MM-dd")</td>
                     <td>
-                        <div class="d-flex gap-2">
-                            <a asp-controller="Organization" asp-action="Edit" asp-route-id="@organization.Id" class="btn btn-primary">
-                                <i class="fas fa-edit"></i> Edit
-                            </a>
-                            <button class="btn btn-danger" onclick="confirmDelete(@organization.Id)">
-                                <i class="fas fa-trash"></i> Delete
-                            </button>
-                        </div>
+                        @if (User.IsInRole("Administrator"))
+                        {
+                            <div class="d-flex gap-2">
+                                <a asp-controller="Organization" asp-action="Edit" asp-route-id="@organization.Id" class="btn btn-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <button class="btn btn-danger" onclick="confirmDelete(@organization.Id)">
+                                    <i class="fas fa-trash"></i> Delete
+                                </button>
+                            </div>
+                        }
                     </td>
                 </tr>
             }
