@@ -4,6 +4,7 @@ using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 
 namespace EcoTribe.Web.Controllers
@@ -33,12 +34,16 @@ namespace EcoTribe.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventVolunteerInputModel inputModel)
         {
+            inputModel.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            ModelState.Remove("ApplicationUserId");
             if (!ModelState.IsValid)
             {
                 return View(inputModel);
             }
             try
             {
+                
                 eventVolunteerService.Create(inputModel);
                 return RedirectToAction(nameof(Index));
             }

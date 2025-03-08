@@ -190,10 +190,8 @@ namespace EcoTribe.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ApplicationUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ApplicationUserId1")
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<bool?>("Attended")
@@ -211,7 +209,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId1");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("EventId");
 
@@ -228,10 +226,8 @@ namespace EcoTribe.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("ApplicationUserId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ApplicationUserId1")
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Comments")
@@ -251,7 +247,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId1");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("EventId");
 
@@ -552,7 +548,9 @@ namespace EcoTribe.Data.Migrations
                 {
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("EventVolunteers")
-                        .HasForeignKey("ApplicationUserId1");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Event", "Event")
                         .WithMany()
@@ -577,7 +575,9 @@ namespace EcoTribe.Data.Migrations
                 {
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Feedbacks")
-                        .HasForeignKey("ApplicationUserId1");
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Event", "Event")
                         .WithMany()

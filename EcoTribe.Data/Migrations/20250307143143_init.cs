@@ -311,17 +311,17 @@ namespace EcoTribe.Data.Migrations
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     Comments = table.Column<string>(type: "text", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ApplicationUserId = table.Column<int>(type: "integer", nullable: false),
-                    ApplicationUserId1 = table.Column<string>(type: "text", nullable: true)
+                    ApplicationUserId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Feedbacks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Feedbacks_AspNetUsers_ApplicationUserId1",
-                        column: x => x.ApplicationUserId1,
+                        name: "FK_Feedbacks_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Feedbacks_Events_EventId",
                         column: x => x.EventId,
@@ -416,9 +416,9 @@ namespace EcoTribe.Data.Migrations
                 column: "VolunteerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_ApplicationUserId1",
+                name: "IX_Feedbacks_ApplicationUserId",
                 table: "Feedbacks",
-                column: "ApplicationUserId1");
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Feedbacks_EventId",

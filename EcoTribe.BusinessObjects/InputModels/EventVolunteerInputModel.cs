@@ -20,6 +20,6 @@ namespace EcoTribe.BusinessObjects.InputModels
         public string Intention { get; set; } = null!;
 
         public bool? Attended { get; set; }
-
+        public string ApplicationUserId { get; set; }
     }
 }
