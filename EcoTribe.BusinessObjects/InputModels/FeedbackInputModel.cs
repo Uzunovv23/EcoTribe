@@ -27,7 +27,6 @@ namespace EcoTribe.BusinessObjects.InputModels
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
 
-        [Required]
-        public string ApplicationUserId { get; set; } = null!;
+        public string ApplicationUserId { get; set; }
     }
 }

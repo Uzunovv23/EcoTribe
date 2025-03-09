@@ -3,8 +3,10 @@ using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace EcoTribe.Web.Controllers
 {
@@ -21,6 +23,8 @@ namespace EcoTribe.Web.Controllers
             List<FeedbackViewModel> feedbacks = feedbackService.GetAll().ToList();
             return View(feedbacks);
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Create()
         {
             var events = feedbackService.GetAllEvents();
@@ -33,9 +37,13 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(FeedbackInputModel inputModel)
         {
+            inputModel.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            ModelState.Remove("ApplicationUserId");
             if (!ModelState.IsValid)
             {
                 ViewBag.Events = new SelectList(feedbackService.GetAllEvents(), "Id", "Name");
@@ -64,6 +72,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
         {
             var feedback = feedbackService.GetById(id);
@@ -80,6 +90,7 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, FeedbackInputModel inputModel)
         {
@@ -103,6 +114,8 @@ namespace EcoTribe.Web.Controllers
                 return View(inputModel);
             }
         }
+
+        [Authorize(Roles = "Administrator")]
         public IActionResult Delete(int id)
         {
             var feedback = feedbackService.GetById(id);
@@ -112,7 +125,9 @@ namespace EcoTribe.Web.Controllers
             }
             return View(feedback);
         }
+
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
