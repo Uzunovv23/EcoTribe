@@ -71,6 +71,9 @@ namespace EcoTribe.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, EventVolunteerInputModel inputModel)
         {
+            inputModel.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+
+            ModelState.Remove("ApplicationUserId");
             if (!ModelState.IsValid)
             {
                 return View(inputModel);

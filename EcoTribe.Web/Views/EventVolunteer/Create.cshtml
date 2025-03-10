@@ -27,11 +27,15 @@
         <span asp-validation-for="Intention" class="text-danger"></span>
     </div>
 
-    <select asp-for="Attended" class="form-control">
-        <option value="">Not specified</option>
-        <option value="true">Yes</option>
-        <option value="false">No</option>
-    </select>
+    <div class="form-group">
+        <label asp-for="Attended">Attended</label>
+        <select asp-for="Attended" class="form-control">
+            <option value="">Not specified</option>
+            <option value="true">Yes</option>
+            <option value="false">No</option>
+        </select>
+    </div>
+
 
     <button type="submit" class="btn btn-success">Save</button>
     <a asp-controller="EventVolunteer" asp-action="Index" class="btn btn-secondary">Cancel</a>
