@@ -115,5 +115,16 @@ namespace EcoTribe.Web.Controllers
                 return BadRequest("Error deleting the event.");
             }
         }
+
+        public IActionResult Details(int id)
+        {
+            var eventEntity = eventService.GetByIdWithVolunteers(id);
+            if (eventEntity == null)
+            {
+                return NotFound();
+            }
+
+            return View(eventEntity);
+        }
     }
 }

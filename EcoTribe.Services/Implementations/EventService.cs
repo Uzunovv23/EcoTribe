@@ -4,6 +4,7 @@ using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -40,6 +41,28 @@ namespace EcoTribe.Services.Implementations
                 ? ModelConverter.ConvertToViewModel<Event, EventViewModel> (eventEntity)
                 : null;
         }
+
+        public EventDetailsViewModel? GetByIdWithVolunteers(int id)
+        {
+            var eventEntity = context.Events
+                .Include(e => e.EventVolunteers) 
+                .ThenInclude(ev => ev.Volunteer) 
+                .FirstOrDefault(e => e.Id == id);
+
+            if (eventEntity == null)
+            {
+                return null;
+            }
+
+            var eventDetailsViewModel = ModelConverter.ConvertToViewModel<Event, EventDetailsViewModel>(eventEntity);
+
+            eventDetailsViewModel.AttendingVolunteers = eventEntity.EventVolunteers
+                .Select(ev => ModelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(ev.Volunteer))
+                .ToList();
+
+            return eventDetailsViewModel;
+        }
+
         public void Update(int id, EventInputModel inputModel)
         {
             var existingEvent = context.Events.Find(id);
@@ -66,5 +89,7 @@ namespace EcoTribe.Services.Implementations
             context.Events.Remove(eventEntity);
             context.SaveChanges();
         }
+
+
     }
 }

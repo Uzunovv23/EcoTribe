@@ -19,5 +19,8 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public decimal Longitude { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+
+        public ICollection<EventVolunteer> EventVolunteers { get; set; } = new List<EventVolunteer>();
+
     }
 }
