@@ -4,7 +4,7 @@ using EcoTribe.BusinessObjects.Domain.Models;
 
 namespace EcoTribe.Data.Context
 {
-    public class AppDbContext :IdentityDbContext<ApplicationUser>
+    public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
@@ -18,13 +18,12 @@ namespace EcoTribe.Data.Context
         public DbSet<Feedback> Feedbacks { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
+        public DbSet<EventSponsor> EventSponsors { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
             base.OnModelCreating(modelBuilder);
 
-            
             modelBuilder.Entity<Volunteer>()
                 .Property(v => v.Latitude)
                 .HasPrecision(9, 6);
@@ -40,6 +39,19 @@ namespace EcoTribe.Data.Context
             modelBuilder.Entity<Event>()
                 .Property(e => e.Longitude)
                 .HasPrecision(9, 6);
+
+            modelBuilder.Entity<EventSponsor>()
+                .HasKey(es => new { es.EventId, es.OrganizationId });
+
+            modelBuilder.Entity<EventSponsor>()
+                .HasOne(es => es.Event)
+                .WithMany(e => e.EventSponsors)
+                .HasForeignKey(es => es.EventId);
+
+            modelBuilder.Entity<EventSponsor>()
+                .HasOne(es => es.Organization)
+                .WithMany(o => o.EventSponsors)
+                .HasForeignKey(es => es.OrganizationId);
         }
     }
 }

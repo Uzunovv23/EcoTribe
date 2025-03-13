@@ -16,5 +16,8 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public string Description { get; set; } = null!;
         public string City { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+
+        public ICollection<EventSponsor> EventSponsors { get; set; } = new List<EventSponsor>();
+
     }
 }

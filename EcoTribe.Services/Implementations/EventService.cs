@@ -45,8 +45,8 @@ namespace EcoTribe.Services.Implementations
         public EventDetailsViewModel? GetByIdWithVolunteers(int id)
         {
             var eventEntity = context.Events
-                .Include(e => e.EventVolunteers) 
-                .ThenInclude(ev => ev.Volunteer) 
+                .Include(e => e.EventVolunteers)
+                    .ThenInclude(ev => ev.Volunteer)
                 .FirstOrDefault(e => e.Id == id);
 
             if (eventEntity == null)
@@ -62,6 +62,28 @@ namespace EcoTribe.Services.Implementations
 
             return eventDetailsViewModel;
         }
+
+        public EventDetailsViewModel? GetByIdWithSponsors(int id)
+        {
+            var eventEntity = context.Events
+                .Include(e => e.EventSponsors)
+                    .ThenInclude(es => es.Organization)
+                .FirstOrDefault(e => e.Id == id);
+
+            if (eventEntity == null)
+            {
+                return null;
+            }
+
+            var eventDetailsViewModel = ModelConverter.ConvertToViewModel<Event, EventDetailsViewModel>(eventEntity);
+
+            eventDetailsViewModel.Sponsors = eventEntity.EventSponsors
+                .Select(es => ModelConverter.ConvertToViewModel<Organization, EventSponsorViewModel>(es.Organization))
+                .ToList();
+
+            return eventDetailsViewModel;
+        }
+
 
         public void Update(int id, EventInputModel inputModel)
         {

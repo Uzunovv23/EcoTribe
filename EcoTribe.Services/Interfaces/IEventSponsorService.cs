@@ -8,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Interfaces
 {
-    public interface IEventService : IService<EventViewModel, EventInputModel>
+    public interface IEventSponsorService : IService<EventSponsorViewModel,EventSponsorInputModel>
     {
-        EventDetailsViewModel GetByIdWithVolunteers(int id);
-        EventDetailsViewModel GetByIdWithSponsors(int id);
+
     }
 }

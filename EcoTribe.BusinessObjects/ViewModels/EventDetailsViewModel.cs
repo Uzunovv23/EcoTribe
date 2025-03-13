@@ -20,5 +20,9 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public DateTime End { get; set; }
 
         public List<VolunteerViewModel> AttendingVolunteers { get; set; } = new List<VolunteerViewModel>();
+
+        public List<EventSponsorViewModel> Sponsors { get; set; } = new List<EventSponsorViewModel>();
+
+
     }
 }

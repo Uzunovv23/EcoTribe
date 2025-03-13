@@ -28,6 +28,7 @@ builder.Services.AddScoped<IEventResourceService, EventResourceService>();
 builder.Services.AddScoped<IEventVolunteerService, EventVolunteerService>();
 builder.Services.AddScoped<IVolunteerService, VolunteerService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IEventSponsorService, EventSponsorService>();
 
 var app = builder.Build();
 
