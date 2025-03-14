@@ -53,12 +53,12 @@ namespace EcoTribe.Services.Implementations
             context.SaveChanges();
         }
 
-        public EventSponsorViewModel? GetById(int id)
+        public EventSponsorViewModel? GetById(int eventId, int organizationId)
         {
             var eventSponsor = context.EventSponsors
                 .Include(es => es.Event)
                 .Include(es => es.Organization)
-                .FirstOrDefault(es => es.Id == id);
+                .FirstOrDefault(es => es.EventId == eventId && es.OrganizationId == organizationId);
 
             if (eventSponsor == null)
             {
@@ -68,6 +68,7 @@ namespace EcoTribe.Services.Implementations
             var viewModel = ModelConverter.ConvertToViewModel<EventSponsor, EventSponsorViewModel>(eventSponsor);
 
             viewModel.Event = eventSponsor.Event;
+            viewModel.Organization = eventSponsor.Organization;
 
             return viewModel;
         }
@@ -91,16 +92,26 @@ namespace EcoTribe.Services.Implementations
             context.SaveChanges();
         }
 
+        public void Delete(int eventId, int organizationId)
+        {
+            var eventSponsor = context.EventSponsors
+                .FirstOrDefault(es => es.EventId == eventId && es.OrganizationId == organizationId);
+
+            if (eventSponsor != null)
+            {
+                context.EventSponsors.Remove(eventSponsor);
+                context.SaveChanges();
+            }
+        }
+
+        public EventSponsorViewModel? GetById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(int id)
         {
-            var eventSponsor = context.EventSponsors.Find(id);
-            if (eventSponsor == null)
-            {
-                throw new ArgumentException("Event sponsor not found.");
-            }
-
-            context.EventSponsors.Remove(eventSponsor);
-            context.SaveChanges();
+            throw new NotImplementedException();
         }
     }
 

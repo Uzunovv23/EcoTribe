@@ -46,12 +46,14 @@ namespace EcoTribe.Data.Context
             modelBuilder.Entity<EventSponsor>()
                 .HasOne(es => es.Event)
                 .WithMany(e => e.EventSponsors)
-                .HasForeignKey(es => es.EventId);
+                .HasForeignKey(es => es.EventId)
+                .OnDelete(DeleteBehavior.Cascade);  
 
             modelBuilder.Entity<EventSponsor>()
                 .HasOne(es => es.Organization)
                 .WithMany(o => o.EventSponsors)
-                .HasForeignKey(es => es.OrganizationId);
+                .HasForeignKey(es => es.OrganizationId)
+                .OnDelete(DeleteBehavior.Cascade);  
         }
     }
 }

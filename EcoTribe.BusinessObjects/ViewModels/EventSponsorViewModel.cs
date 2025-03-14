@@ -16,9 +16,10 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public int OrganizationId { get; set; }
         public Organization Organization { get; set; } = null!;
 
-        public string OrganizationName { get; set; } = null!;
-        public string OrganizationDescription { get; set; } = null!;
-        public string OrganizationWebsite { get; set; } = null!;
-        public string OrganizationPhone { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string Description { get; set; } = null!;
+        public string Website { get; set; } = null!;
+        public string Phone { get; set; } = null!;
+        public string ContactEmail { get; set; } = null!;
     }
 }

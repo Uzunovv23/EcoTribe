@@ -10,7 +10,6 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IEventService : IService<EventViewModel, EventInputModel>
     {
-        EventDetailsViewModel GetByIdWithVolunteers(int id);
-        EventDetailsViewModel GetByIdWithSponsors(int id);
+        EventDetailsViewModel GetByIdWithVolunteersAndSponsors(int id);
     }
 }

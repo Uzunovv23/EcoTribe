@@ -43,15 +43,15 @@ else
         @foreach (var sponsor in Model.Sponsors)
         {
             <li>
-                <strong>@sponsor.OrganizationName</strong>
-                - <a href="mailto:@sponsor.Organization.ContactEmail">@sponsor.Organization.ContactEmail</a>
-                @if (!string.IsNullOrEmpty(sponsor.OrganizationPhone))
+                <strong>@sponsor.Name</strong>
+                - <a href="mailto:@sponsor.ContactEmail">@sponsor.ContactEmail</a>
+                @if (!string.IsNullOrEmpty(sponsor.Phone))
                 {
-                    <span> | Phone: @sponsor.OrganizationPhone</span>
+                    <span> | Phone: @sponsor.Phone</span>
                 }
-                @if (!string.IsNullOrEmpty(sponsor.OrganizationWebsite))
+                @if (!string.IsNullOrEmpty(sponsor.Website))
                 {
-                    <span> | <a href="@sponsor.OrganizationWebsite" target="_blank">Website</a></span>
+                    <span> | <a href="@sponsor.Website" target="_blank">Website</a></span>
                 }
             </li>
         }

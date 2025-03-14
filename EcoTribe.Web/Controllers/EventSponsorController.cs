@@ -93,9 +93,9 @@ namespace EcoTribe.Web.Controllers
         }
 
         [Authorize(Roles = "Administrator")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int eventId, int organizationId)
         {
-            var eventSponsor = eventSponsorService.GetById(id);
+            var eventSponsor = eventSponsorService.GetById(eventId, organizationId);
             if (eventSponsor == null)
             {
                 return NotFound();
@@ -107,17 +107,18 @@ namespace EcoTribe.Web.Controllers
         [HttpPost]
         [Authorize(Roles = "Administrator")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(int id)
+        public IActionResult DeleteConfirmed(int eventId, int organizationId)
         {
             try
             {
-                eventSponsorService.Delete(id);
-                return Ok();
+                eventSponsorService.Delete(eventId, organizationId);
+                return RedirectToAction("Index");
             }
             catch (Exception)
             {
                 return BadRequest("Error deleting the event sponsor.");
             }
         }
+
     }
 }

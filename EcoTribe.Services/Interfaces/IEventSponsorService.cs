@@ -10,6 +10,7 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IEventSponsorService : IService<EventSponsorViewModel,EventSponsorInputModel>
     {
-
+        EventSponsorViewModel? GetById(int eventId, int organizationId);
+        void Delete(int eventId, int organizationId);
     }
 }
