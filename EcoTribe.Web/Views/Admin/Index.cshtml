@@ -1,0 +1,69 @@
+﻿@model EcoTribe.BusinessObjects.ViewModels.AdminViewModel
+
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<h2>User Management</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th colspan="3">Administrators</th>
+        </tr>
+        @foreach (var user in Model.Users.Where(u => Model.UserRoles[u.Id] == "Administrator"))
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@Model.UserRoles[user.Id]</td>
+                <td></td>
+            </tr>
+        }
+
+        <tr>
+            <th colspan="3">Organizators</th>
+        </tr>
+        @foreach (var user in Model.Users.Where(u => Model.UserRoles[u.Id] == "Organizator"))
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@Model.UserRoles[user.Id]</td>
+                <td>
+                    <form asp-action="RemoveOrganizator" asp-controller="Admin" method="post">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-danger">Remove Organizator</button>
+                    </form>
+                </td>
+            </tr>
+        }
+
+        <tr>
+            <th colspan="3">Users</th>
+        </tr>
+        @foreach (var user in Model.Users.Where(u => Model.UserRoles[u.Id] == "User"))
+        {
+            <tr>
+                <td>@user.Email</td>
+                <td>@Model.UserRoles[user.Id]</td>
+                <td>
+                    <form asp-action="AddOrganizator" asp-controller="Admin" method="post">
+                        <input type="hidden" name="userId" value="@user.Id" />
+                        <button type="submit" class="btn btn-success">Make Organizator</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
