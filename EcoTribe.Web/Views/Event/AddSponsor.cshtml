@@ -1,0 +1,19 @@
+﻿@model EcoTribe.BusinessObjects.InputModels.AddSponsorInputModel
+
+<h2>Add Sponsor to Event</h2>
+
+<form asp-action="AddSponsor" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="EventId" />
+
+    <div class="form-group">
+        <label for="OrganizationId">Select Sponsor Organization</label>
+        <select asp-for="OrganizationId" asp-items="@ViewBag.Organizations" class="form-control">
+            <option value="">-- Select Organization --</option>
+        </select>
+        <span asp-validation-for="OrganizationId" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-success">Add Sponsor</button>
+    <a asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-secondary">Cancel</a>
+</form>

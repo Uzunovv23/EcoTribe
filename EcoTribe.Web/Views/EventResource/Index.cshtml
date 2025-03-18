@@ -8,7 +8,7 @@
 
 <h2 class="mb-4">Event Resources</h2>
 
-@if (User.IsInRole("Administrator"))
+@if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
 {
     <a href="@Url.Action("Create", "EventResource")" class="btn btn-primary mt-3">Add New Resource</a>
 }
@@ -40,7 +40,7 @@
                     <td>@resource.Status</td>
                     <td>@resource.Notes</td>
                     <td>
-                        @if (User.IsInRole("Administrator"))
+                        @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
                         {
                             <div class="btn-group">
                                 <a href="@Url.Action("Edit", "EventResource", new { id = resource.Id })" class="btn btn-primary me-2">Edit</a>

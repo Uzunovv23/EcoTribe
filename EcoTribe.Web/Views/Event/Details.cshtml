@@ -4,31 +4,66 @@
     ViewData["Title"] = "Event Details";
 }
 
-<h2>@Model.Name</h2>
+<h2 class="mb-4">@Model.Name</h2>
 
-<div>
-    <p><strong>City:</strong> @Model.City</p>
-    <p><strong>Type:</strong> @Model.Type</p>
-    <p><strong>Required Volunteers:</strong> @Model.RequiredVolunteers</p>
-    <p><strong>Description:</strong> @Model.Description</p>
-    <p><strong>Location:</strong> (@Model.Latitude, @Model.Longitude)</p>
-    <p><strong>Start Time:</strong> @Model.Start.ToString("f")</p>
-    <p><strong>End Time:</strong> @Model.End.ToString("f")</p>
-</div>
+<h3>Event Details</h3>
+<table class="table table-bordered">
+    <tbody>
+        <tr>
+            <th>City</th>
+            <td>@Model.City</td>
+        </tr>
+        <tr>
+            <th>Type</th>
+            <td>@Model.Type</td>
+        </tr>
+        <tr>
+            <th>Required Volunteers</th>
+            <td>@Model.RequiredVolunteers</td>
+        </tr>
+        <tr>
+            <th>Description</th>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <th>Location</th>
+            <td>(@Model.Latitude, @Model.Longitude)</td>
+        </tr>
+        <tr>
+            <th>Start Time</th>
+            <td>@Model.Start.ToString("f")</td>
+        </tr>
+        <tr>
+            <th>End Time</th>
+            <td>@Model.End.ToString("f")</td>
+        </tr>
+    </tbody>
+</table>
 
 <h3>Attending Volunteers</h3>
-
 @if (Model.AttendingVolunteers.Any())
 {
-    <ul>
-        @foreach (var volunteer in Model.AttendingVolunteers)
-        {
-            <li>
-                <strong>@volunteer.Name</strong> (@volunteer.City)
-                - Contact: @volunteer.Email, @volunteer.Number
-            </li>
-        }
-    </ul>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Contact Email</th>
+                <th>Phone Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var volunteer in Model.AttendingVolunteers)
+            {
+                <tr>
+                    <td>@volunteer.Name</td>
+                    <td>@volunteer.City</td>
+                    <td>@volunteer.Email</td>
+                    <td>@volunteer.Number</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 else
 {
@@ -37,29 +72,49 @@ else
 
 <h3>Event Sponsors</h3>
 
-@if (Model.Sponsors.Any())
-{
-    <ul>
-        @foreach (var sponsor in Model.Sponsors)
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Contact Email</th>
+            <th>Phone</th>
+            <th>Website</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Sponsors.Any())
         {
-            <li>
-                <strong>@sponsor.Name</strong>
-                - <a href="mailto:@sponsor.ContactEmail">@sponsor.ContactEmail</a>
-                @if (!string.IsNullOrEmpty(sponsor.Phone))
-                {
-                    <span> | Phone: @sponsor.Phone</span>
-                }
-                @if (!string.IsNullOrEmpty(sponsor.Website))
-                {
-                    <span> | <a href="@sponsor.Website" target="_blank">Website</a></span>
-                }
-            </li>
+            @foreach (var sponsor in Model.Sponsors)
+            {
+                <tr>
+                    <td>@sponsor.Name</td>
+                    <td><a href="mailto:@sponsor.ContactEmail">@sponsor.ContactEmail</a></td>
+                    <td>@sponsor.Phone</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(sponsor.Website))
+                        {
+                            <a href="@sponsor.Website" target="_blank">Website</a>
+                        }
+                        else
+                        {
+                            <span>-</span>
+                        }
+                    </td>
+                </tr>
+            }
         }
-    </ul>
-}
-else
+        else
+        {
+            <tr><td colspan="4" class="text-center">No sponsors for this event.</td></tr>
+        }
+    </tbody>
+</table>
+
+@if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
 {
-    <p>No sponsors for this event.</p>
+    <a asp-action="AddSponsor" asp-route-eventId="@Model.Id" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Sponsor
+    </a>
 }
 
-<a asp-action="Index" class="btn btn-secondary">Back to Events</a>
+<a asp-action="Index" class="btn btn-secondary mt-3">Back to Events</a>

@@ -97,6 +97,40 @@ namespace EcoTribe.Services.Implementations
             context.SaveChanges();
         }
 
+        public List<Organization> GetOrganizations()
+        {
+            return context.Organizations.ToList(); 
+        }
+
+        public void AddSponsor(int eventId, int organizationId)
+        {
+            var eventEntity = context.Events
+                .Include(e => e.EventSponsors) 
+                .FirstOrDefault(e => e.Id == eventId);
+
+            var organization = context.Organizations
+                .FirstOrDefault(o => o.Id == organizationId);
+
+            if (eventEntity == null || organization == null)
+            {
+                throw new ArgumentException("Invalid event or organization.");
+            }
+
+            bool alreadyExists = eventEntity.EventSponsors
+                .Any(es => es.OrganizationId == organizationId);
+
+            if (!alreadyExists)
+            {
+                var eventSponsor = new EventSponsor
+                {
+                    EventId = eventId,
+                    OrganizationId = organizationId
+                };
+
+                eventEntity.EventSponsors.Add(eventSponsor);
+                context.SaveChanges();
+            }
+        }
 
     }
 }

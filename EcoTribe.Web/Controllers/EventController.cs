@@ -4,6 +4,7 @@ using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace EcoTribe.Web.Controllers
 {
@@ -125,6 +126,49 @@ namespace EcoTribe.Web.Controllers
             }
 
             return View(eventEntity);
+        }
+
+        [Authorize(Roles = "Administrator, Organizatior")]
+        public IActionResult AddSponsor(int eventId)
+        {
+            var eventEntity = eventService.GetById(eventId);
+            if (eventEntity == null)
+            {
+                return NotFound();
+            }
+
+            var organizations = eventService.GetOrganizations();
+
+            ViewBag.Organizations = new SelectList(organizations, "Id", "Name");
+
+            var model = new AddSponsorInputModel
+            {
+                EventId = eventId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator, Organizatior")]
+        [ValidateAntiForgeryToken]
+        public IActionResult AddSponsor(AddSponsorInputModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            try
+            {
+                eventService.AddSponsor(model.EventId, model.OrganizationId);
+                return RedirectToAction("Details", new { id = model.EventId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while adding the sponsor.");
+                return View(model);
+            }
         }
     }
 }

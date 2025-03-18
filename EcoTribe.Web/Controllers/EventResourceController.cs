@@ -21,14 +21,14 @@ namespace EcoTribe.Web.Controllers
             return(View(eventResources));
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator,Organizator")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator,Organizator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventResourceInputModel model)
         {
@@ -49,7 +49,7 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator,Organizator")]
         public IActionResult Edit(int id)
         {
             var eventResourceEntity = eventResourceService.GetById(id);
@@ -62,7 +62,7 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator,Organizator")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, EventResourceInputModel inputModel)
         {
@@ -82,7 +82,7 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator,Organizator")]
         public IActionResult Delete(int id)
         {
             var eventResource = eventResourceService.GetById(id);
@@ -93,7 +93,7 @@ namespace EcoTribe.Web.Controllers
             return View(eventResource);
         }
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator,Organizator")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(int id)
         {
