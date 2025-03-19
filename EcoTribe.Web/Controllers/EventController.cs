@@ -1,10 +1,12 @@
 ﻿using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
+using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace EcoTribe.Web.Controllers
 {
@@ -170,5 +172,6 @@ namespace EcoTribe.Web.Controllers
                 return View(model);
             }
         }
+
     }
 }

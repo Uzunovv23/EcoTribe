@@ -132,5 +132,14 @@ namespace EcoTribe.Services.Implementations
             }
         }
 
+        public void AddFeedback(FeedbackInputModel inputModel)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<FeedbackViewModel> GetFeedbacksForEvent(int eventId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

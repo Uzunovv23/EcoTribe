@@ -12,5 +12,6 @@ namespace EcoTribe.Services.Interfaces
     {
         List<EventViewModel> GetAllEvents();
         List<VolunteerViewModel> GetAllVolunteers();
+
     }
 }

@@ -15,5 +15,7 @@ namespace EcoTribe.Services.Interfaces
         EventDetailsViewModel GetByIdWithVolunteersAndSponsors(int id);
         void AddSponsor(int eventId, int organizationId);
         List<Organization> GetOrganizations();
+        void AddFeedback(FeedbackInputModel inputModel);
+        List<FeedbackViewModel> GetFeedbacksForEvent(int eventId);
     }
 }
