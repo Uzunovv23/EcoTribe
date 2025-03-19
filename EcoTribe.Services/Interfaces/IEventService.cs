@@ -12,7 +12,7 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IEventService : IService<EventViewModel, EventInputModel>
     {
-        EventDetailsViewModel GetByIdWithVolunteersAndSponsors(int id);
+        EventDetailsViewModel GetByIdWithVolunteersAndSponsorsAndFeedbacks(int id);
         void AddSponsor(int eventId, int organizationId);
         List<Organization> GetOrganizations();
         void AddFeedback(FeedbackInputModel inputModel);

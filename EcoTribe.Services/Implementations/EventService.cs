@@ -42,13 +42,14 @@ namespace EcoTribe.Services.Implementations
                 : null;
         }
 
-        public EventDetailsViewModel? GetByIdWithVolunteersAndSponsors(int id)
+        public EventDetailsViewModel? GetByIdWithVolunteersAndSponsorsAndFeedbacks(int id)
         {
             var eventEntity = context.Events
                 .Include(e => e.EventSponsors)
                     .ThenInclude(es => es.Organization)
                 .Include(e => e.EventVolunteers)
                     .ThenInclude(ev => ev.Volunteer)
+                .Include(e => e.Feedbacks)
                 .FirstOrDefault(e => e.Id == id);
 
             if (eventEntity == null)
@@ -66,6 +67,11 @@ namespace EcoTribe.Services.Implementations
             eventDetailsViewModel.Sponsors = eventEntity.EventSponsors
                 .Select(es => ModelConverter.ConvertToViewModel<Organization, EventSponsorViewModel>(es.Organization))
                 .ToList();
+
+            eventDetailsViewModel.Feedbacks = eventEntity.Feedbacks
+                .Select(f => ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f))
+                .ToList();
+
 
             return eventDetailsViewModel;
         }
@@ -134,12 +140,29 @@ namespace EcoTribe.Services.Implementations
 
         public void AddFeedback(FeedbackInputModel inputModel)
         {
-            throw new NotImplementedException();
+            if (!context.Events.Any(e => e.Id == inputModel.EventId))
+            {
+                throw new ArgumentException("Invalid Event ID.");
+            }
+
+            if (!context.Volunteers.Any(v => v.Id == inputModel.VolunteerId))
+            {
+                throw new ArgumentException("Invalid Volunteer ID.");
+            }
+
+            var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
+
+            context.Feedbacks.Add(feedback);
+            context.SaveChanges();
         }
 
         public List<FeedbackViewModel> GetFeedbacksForEvent(int eventId)
         {
-            throw new NotImplementedException();
+            return context.Feedbacks
+                .Where(f => f.EventId == eventId)
+                .Select(f => ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f))
+                .ToList();
         }
+
     }
 }

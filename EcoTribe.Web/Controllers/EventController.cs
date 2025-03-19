@@ -121,7 +121,7 @@ namespace EcoTribe.Web.Controllers
 
         public IActionResult Details(int id)
         {
-            var eventEntity = eventService.GetByIdWithVolunteersAndSponsors(id);
+            var eventEntity = eventService.GetByIdWithVolunteersAndSponsorsAndFeedbacks(id);
             if (eventEntity == null)
             {
                 return NotFound();

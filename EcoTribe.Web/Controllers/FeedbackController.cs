@@ -69,7 +69,8 @@ namespace EcoTribe.Web.Controllers
                 ModelState.AddModelError("", "An error occurred while saving the feedback.");
                 ViewBag.Events = new SelectList(feedbackService.GetAllEvents(), "Id", "Name");
                 ViewBag.Volunteers = new SelectList(feedbackService.GetAllVolunteers(), "Id", "Name");
-                return View(inputModel);
+
+                return RedirectToAction("Details", "Event", new { id = inputModel.EventId });
             }
         }
 

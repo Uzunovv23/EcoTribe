@@ -24,6 +24,8 @@ namespace EcoTribe.BusinessObjects.Domain.Models
 
         public ICollection<EventSponsor> EventSponsors { get; set; } = new List<EventSponsor>();
 
+        public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
+
 
     }
 }
