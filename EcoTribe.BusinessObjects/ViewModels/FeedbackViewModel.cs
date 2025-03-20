@@ -20,5 +20,7 @@ namespace EcoTribe.BusinessObjects.ViewModels
 
         public string ApplicationUserId { get; set; } = null!;
         public string ApplicationUserName { get; set; } = null!;
+        public string VolunteerName { get; set; } = string.Empty;
+
     }
 }

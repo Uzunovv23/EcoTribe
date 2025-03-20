@@ -41,23 +41,19 @@ namespace EcoTribe.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(FeedbackInputModel inputModel)
         {
-            inputModel.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            inputModel.ApplicationUserId = userId; 
 
-            ModelState.Remove("ApplicationUserId");
             if (!ModelState.IsValid)
             {
                 ViewBag.Events = new SelectList(feedbackService.GetAllEvents(), "Id", "Name");
                 ViewBag.Volunteers = new SelectList(feedbackService.GetAllVolunteers(), "Id", "Name");
                 return View(inputModel);
             }
-
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            if (userId == null)
-            {
-                return Unauthorized();
-            }
-
-            inputModel.ApplicationUserId = userId;
 
             try
             {
@@ -70,9 +66,10 @@ namespace EcoTribe.Web.Controllers
                 ViewBag.Events = new SelectList(feedbackService.GetAllEvents(), "Id", "Name");
                 ViewBag.Volunteers = new SelectList(feedbackService.GetAllVolunteers(), "Id", "Name");
 
-                return RedirectToAction("Details", "Event", new { id = inputModel.EventId });
+                return View(inputModel); 
             }
         }
+
 
         [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)
@@ -145,5 +142,64 @@ namespace EcoTribe.Web.Controllers
                 return BadRequest("Error deleting the feedback.");
             }
         }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult SubmitFeedback(int eventId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            if (feedbackService.HasUserProvidedFeedback(eventId, userId))
+            {
+                TempData["ErrorMessage"] = "You have already submitted feedback for this event.";
+                return RedirectToAction("Details", "Event", new { id = eventId });
+            }
+
+            var feedbackModel = new FeedbackInputModel { EventId = eventId };
+            return View(feedbackModel);
+        }
+
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public IActionResult SubmitFeedback(FeedbackInputModel inputModel)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            inputModel.ApplicationUserId = userId;
+
+            if (!ModelState.IsValid)
+            {
+                return View(inputModel); 
+            }
+
+            if (feedbackService.HasUserProvidedFeedback(inputModel.EventId, userId))
+            {
+                TempData["ErrorMessage"] = "You have already submitted feedback for this event.";
+                return RedirectToAction("Details", "Event", new { id = inputModel.EventId });
+            }
+
+            try
+            {
+                feedbackService.Create(inputModel);
+                TempData["SuccessMessage"] = "Feedback submitted successfully.";
+                return RedirectToAction("Details", "Event", new { id = inputModel.EventId });
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", "An error occurred while submitting feedback.");
+                return View(inputModel);
+            }
+        }
+
     }
 }

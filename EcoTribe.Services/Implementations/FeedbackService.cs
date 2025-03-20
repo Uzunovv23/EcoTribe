@@ -25,17 +25,18 @@ namespace EcoTribe.Services.Implementations
         public IEnumerable<FeedbackViewModel> GetAll()
         {
             return context.Feedbacks
-        .Include(fb => fb.Event)
-        .Include(fb => fb.Volunteer)
-        .AsEnumerable() 
-        .Select(fb =>
-        {
-            var viewModel = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(fb);
-            viewModel.Event = fb.Event; 
-            viewModel.Volunteer = fb.Volunteer;
-            return viewModel;
-        })
-        .ToList();
+                .Include(fb => fb.Event)
+                .Include(fb => fb.Volunteer)
+                .AsEnumerable()
+                .Select(fb =>
+                {
+                    var viewModel = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(fb);
+                    viewModel.Event = fb.Event;
+                    viewModel.Volunteer = fb.Volunteer;
+                    viewModel.VolunteerName = fb.Volunteer.Name; 
+                    return viewModel;
+                })
+                .ToList();
         }
 
         public void Create(FeedbackInputModel inputModel)
@@ -43,6 +44,7 @@ namespace EcoTribe.Services.Implementations
             var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             feedback.Event = context.Events.Find(inputModel.EventId)!;
             feedback.Volunteer = context.Volunteers.Find(inputModel.VolunteerId)!;
+            feedback.ApplicationUser = context.Users.Find(inputModel.ApplicationUserId)!; 
 
             context.Feedbacks.Add(feedback);
             context.SaveChanges();
@@ -108,6 +110,15 @@ namespace EcoTribe.Services.Implementations
                 .Select(v => new VolunteerViewModel { Id = v.Id, Name = v.Name })
                 .ToList();
         }
-       
+
+        public bool HasUserProvidedFeedback(int eventId, string userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool HasEventStarted(int eventId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

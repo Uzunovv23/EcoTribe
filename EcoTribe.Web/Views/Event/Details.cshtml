@@ -9,34 +9,13 @@
 <h3>Event Details</h3>
 <table class="table table-bordered">
     <tbody>
-        <tr>
-            <th>City</th>
-            <td>@Model.City</td>
-        </tr>
-        <tr>
-            <th>Type</th>
-            <td>@Model.Type</td>
-        </tr>
-        <tr>
-            <th>Required Volunteers</th>
-            <td>@Model.RequiredVolunteers</td>
-        </tr>
-        <tr>
-            <th>Description</th>
-            <td>@Model.Description</td>
-        </tr>
-        <tr>
-            <th>Location</th>
-            <td>(@Model.Latitude, @Model.Longitude)</td>
-        </tr>
-        <tr>
-            <th>Start Time</th>
-            <td>@Model.Start.ToString("f")</td>
-        </tr>
-        <tr>
-            <th>End Time</th>
-            <td>@Model.End.ToString("f")</td>
-        </tr>
+        <tr><th>City</th><td>@Model.City</td></tr>
+        <tr><th>Type</th><td>@Model.Type</td></tr>
+        <tr><th>Required Volunteers</th><td>@Model.RequiredVolunteers</td></tr>
+        <tr><th>Description</th><td>@Model.Description</td></tr>
+        <tr><th>Location</th><td>(@Model.Latitude, @Model.Longitude)</td></tr>
+        <tr><th>Start Time</th><td>@Model.Start.ToString("f")</td></tr>
+        <tr><th>End Time</th><td>@Model.End.ToString("f")</td></tr>
     </tbody>
 </table>
 
@@ -71,7 +50,6 @@ else
 }
 
 <h3>Event Sponsors</h3>
-
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -118,7 +96,6 @@ else
 }
 
 <h3>Feedbacks</h3>
-
 @if (Model.Feedbacks.Any())
 {
     <table class="table table-striped">
@@ -153,7 +130,7 @@ else
     if (Model.Start <= DateTime.UtcNow)
     {
         <h4>Leave Feedback</h4>
-        <form asp-controller="Feedback" asp-action="Create" method="post">
+        <form asp-controller="Feedback" asp-action="SubmitFeedback" method="post">
             <input type="hidden" name="EventId" value="@Model.Id" />
             <input type="hidden" name="ApplicationUserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
 

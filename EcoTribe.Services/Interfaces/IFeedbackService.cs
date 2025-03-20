@@ -12,6 +12,8 @@ namespace EcoTribe.Services.Interfaces
     {
         List<EventViewModel> GetAllEvents();
         List<VolunteerViewModel> GetAllVolunteers();
+        bool HasUserProvidedFeedback(int eventId, string userId);
+        bool HasEventStarted(int eventId);
 
     }
 }

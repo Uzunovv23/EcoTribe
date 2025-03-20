@@ -50,6 +50,7 @@ namespace EcoTribe.Services.Implementations
                 .Include(e => e.EventVolunteers)
                     .ThenInclude(ev => ev.Volunteer)
                 .Include(e => e.Feedbacks)
+                    .ThenInclude(f => f.Volunteer)
                 .FirstOrDefault(e => e.Id == id);
 
             if (eventEntity == null)
@@ -69,7 +70,12 @@ namespace EcoTribe.Services.Implementations
                 .ToList();
 
             eventDetailsViewModel.Feedbacks = eventEntity.Feedbacks
-                .Select(f => ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f))
+                .Select(f =>
+                {
+                    var feedbackVM = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f);
+                    feedbackVM.VolunteerName = f.Volunteer.Name; 
+                    return feedbackVM;
+                })
                 .ToList();
 
 
@@ -151,7 +157,7 @@ namespace EcoTribe.Services.Implementations
             }
 
             var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
-
+            feedback.ApplicationUser = context.Users.Find(inputModel.ApplicationUserId)!;
             context.Feedbacks.Add(feedback);
             context.SaveChanges();
         }
