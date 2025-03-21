@@ -130,9 +130,11 @@ else
     if (Model.Start <= DateTime.UtcNow)
     {
         <h4>Leave Feedback</h4>
+
         <form asp-controller="Feedback" asp-action="SubmitFeedback" method="post">
             <input type="hidden" name="EventId" value="@Model.Id" />
             <input type="hidden" name="ApplicationUserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
+            <input type="hidden" name="VolunteerId" value="@User.FindFirst("VolunteerId")?.Value" />
 
             <div class="mb-3">
                 <label class="form-label">Rating (1-5)</label>

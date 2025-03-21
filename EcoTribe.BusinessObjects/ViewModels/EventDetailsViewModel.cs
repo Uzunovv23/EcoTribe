@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcoTribe.BusinessObjects.InputModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,7 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public List<VolunteerViewModel> AttendingVolunteers { get; set; } = new List<VolunteerViewModel>();
         public List<EventSponsorViewModel> Sponsors { get; set; } = new List<EventSponsorViewModel>();
         public List<FeedbackViewModel> Feedbacks { get; set; } = new List<FeedbackViewModel>();
+        public FeedbackInputModel FeedbackInput { get; set; } = new FeedbackInputModel();
 
     }
 }

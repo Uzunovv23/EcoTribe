@@ -159,8 +159,14 @@ namespace EcoTribe.Web.Controllers
                 return RedirectToAction("Details", "Event", new { id = eventId });
             }
 
-            var feedbackModel = new FeedbackInputModel { EventId = eventId };
-            return View(feedbackModel);
+            var feedbackModel = new FeedbackInputModel
+            {
+                EventId = eventId,
+                ApplicationUserId = userId,
+                VolunteerId = int.Parse(User.FindFirst("VolunteerId")?.Value!) 
+            };
+
+            return View(feedbackModel); 
         }
 
 
@@ -179,7 +185,7 @@ namespace EcoTribe.Web.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(inputModel); 
+                return View(inputModel);
             }
 
             if (feedbackService.HasUserProvidedFeedback(inputModel.EventId, userId))

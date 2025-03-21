@@ -1,4 +1,5 @@
-﻿using EcoTribe.BusinessObjects.InputModels;
+﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
@@ -121,14 +122,17 @@ namespace EcoTribe.Web.Controllers
 
         public IActionResult Details(int id)
         {
-            var eventEntity = eventService.GetByIdWithVolunteersAndSponsorsAndFeedbacks(id);
-            if (eventEntity == null)
+            var viewModel = eventService.GetByIdWithVolunteersAndSponsorsAndFeedbacks(id);
+            if (viewModel == null)
             {
                 return NotFound();
             }
 
-            return View(eventEntity);
+            viewModel.FeedbackInput = new FeedbackInputModel { EventId = id };
+
+            return View(viewModel);
         }
+
 
         [Authorize(Roles = "Administrator, Organizatior")]
         public IActionResult AddSponsor(int eventId)
