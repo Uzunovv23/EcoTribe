@@ -27,34 +27,13 @@ namespace EcoTribe.Web.Controllers
         {
             if (!ModelState.IsValid) return View(model);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
-            {
-                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
-                return View(model);
-            }
+            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
 
-            // Create claims for the user
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim("VolunteerId", user.VolunteerId?.ToString() ?? string.Empty), // Add VolunteerId claim
-            };
+            if (result.Succeeded)
+                return RedirectToAction("Index", "Home");
 
-            // Add roles to claims (if applicable)
-            var roles = await _userManager.GetRolesAsync(user);
-            foreach (var role in roles)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, role));
-            }
-
-            // Create the identity and sign in
-            var identity = new ClaimsIdentity(claims, "login");
-            var principal = new ClaimsPrincipal(identity);
-            await HttpContext.SignInAsync(principal);
-
-            return RedirectToAction("Index", "Home");
+            ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+            return View(model);
         }
 
         public IActionResult Register() => View();
