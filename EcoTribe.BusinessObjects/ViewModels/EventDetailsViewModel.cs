@@ -23,7 +23,11 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public List<VolunteerViewModel> AttendingVolunteers { get; set; } = new List<VolunteerViewModel>();
         public List<EventSponsorViewModel> Sponsors { get; set; } = new List<EventSponsorViewModel>();
         public List<FeedbackViewModel> Feedbacks { get; set; } = new List<FeedbackViewModel>();
-        public FeedbackInputModel FeedbackInput { get; set; } = new FeedbackInputModel();
 
+        public string UserId { get; set; }
+        public string UserRole { get; set; }
+        public int? VolunteerId { get; set; } 
+
+        public FeedbackInputModel FeedbackInput { get; set; }
     }
 }

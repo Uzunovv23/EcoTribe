@@ -147,7 +147,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events");
+                    b.ToTable("Events", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventResource", b =>
@@ -182,7 +182,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventResources");
+                    b.ToTable("EventResources", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventSponsor", b =>
@@ -200,7 +200,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("EventSponsors");
+                    b.ToTable("EventSponsors", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventVolunteer", b =>
@@ -236,7 +236,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("VolunteerId");
 
-                    b.ToTable("EventVolunteers");
+                    b.ToTable("EventVolunteers", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Feedback", b =>
@@ -274,7 +274,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("VolunteerId");
 
-                    b.ToTable("Feedbacks");
+                    b.ToTable("Feedbacks", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Location", b =>
@@ -304,7 +304,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations");
+                    b.ToTable("Locations", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Notification", b =>
@@ -332,7 +332,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("VolunteerId");
 
-                    b.ToTable("Notifications");
+                    b.ToTable("Notifications", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Organization", b =>
@@ -370,7 +370,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organizations");
+                    b.ToTable("Organizations", (string)null);
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Volunteer", b =>
@@ -419,7 +419,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Volunteers");
+                    b.ToTable("Volunteers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,5 +20,11 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public string Number { get; set; } = null!;
         public string? Instagram { get; set; }
         public string? Facebook { get; set; }
+
+
+        public string UserId { get; set; } = null!;
+
+        [ForeignKey(nameof(UserId))]
+        public virtual ApplicationUser User { get; set; } = null!;
     }
 }

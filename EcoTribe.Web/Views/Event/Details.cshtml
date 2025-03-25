@@ -1,4 +1,4 @@
-﻿    @model EcoTribe.BusinessObjects.ViewModels.EventDetailsViewModel
+﻿@model EcoTribe.BusinessObjects.ViewModels.EventDetailsViewModel
 
 @{
     ViewData["Title"] = "Event Details";
@@ -125,7 +125,7 @@ else
     <p>No feedback available for this event.</p>
 }
 
-@if (User.Identity.IsAuthenticated)
+@if (User.Identity.IsAuthenticated && Model.UserRole == "User")
 {
     if (Model.Start <= DateTime.UtcNow)
     {
@@ -133,8 +133,8 @@ else
 
         <form asp-controller="Feedback" asp-action="SubmitFeedback" method="post">
             <input type="hidden" name="EventId" value="@Model.Id" />
-            <input type="hidden" name="ApplicationUserId" value="@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value" />
-            <input type="hidden" name="VolunteerId" value="@User.FindFirst("VolunteerId")?.Value" />
+            <input type="hidden" name="ApplicationUserId" value="@Model.UserId" />
+            <input type="hidden" name="VolunteerId" value="@Model.VolunteerId" />
 
             <div class="mb-3">
                 <label class="form-label">Rating (1-5)</label>

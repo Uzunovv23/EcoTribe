@@ -14,10 +14,12 @@ namespace EcoTribe.Web.Controllers
     public class EventController : Controller
     {
         private readonly IEventService eventService;
+        private readonly IVolunteerService volunteerService;
 
-        public EventController(IEventService eventService)
+        public EventController(IEventService eventService, IVolunteerService volunteerService)
         {
             this.eventService = eventService;
+            this.volunteerService = volunteerService;
         }
         public IActionResult Index()
         {
@@ -128,7 +130,30 @@ namespace EcoTribe.Web.Controllers
                 return NotFound();
             }
 
-            viewModel.FeedbackInput = new FeedbackInputModel { EventId = id };
+            string? userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            string? userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+
+            viewModel.UserId = userId;
+            viewModel.UserRole = userRole;
+
+            if (userRole == "User" && !string.IsNullOrEmpty(userId))
+            {
+                // Fetch the volunteer entity (not a ViewModel)
+                var volunteer = volunteerService.GetByUserId(userId);
+                viewModel.VolunteerId = volunteer?.Id; // Use only the ID, discard the rest
+            }
+            else
+            {
+                viewModel.VolunteerId = null;
+            }
+
+            viewModel.FeedbackInput = new FeedbackInputModel
+            {
+                EventId = id,
+                ApplicationUserId = userId,
+                VolunteerId = viewModel.VolunteerId ?? 0,
+                CreatedAt = DateTime.UtcNow
+            };
 
             return View(viewModel);
         }

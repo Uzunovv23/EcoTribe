@@ -67,5 +67,10 @@ namespace EcoTribe.Services.Implementations
             context.Volunteers.Remove(volunteer);
             context.SaveChanges();
         }
+
+        public Volunteer? GetByUserId(string userId)
+        {
+            return context.Volunteers.FirstOrDefault(v => v.UserId == userId);
+        }
     }
 }

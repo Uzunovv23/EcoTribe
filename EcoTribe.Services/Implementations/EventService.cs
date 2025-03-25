@@ -64,7 +64,6 @@ namespace EcoTribe.Services.Implementations
                 .Select(ev => ModelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(ev.Volunteer))
                 .ToList();
 
-
             eventDetailsViewModel.Sponsors = eventEntity.EventSponsors
                 .Select(es => ModelConverter.ConvertToViewModel<Organization, EventSponsorViewModel>(es.Organization))
                 .ToList();
@@ -73,11 +72,12 @@ namespace EcoTribe.Services.Implementations
                 .Select(f =>
                 {
                     var feedbackVM = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f);
-                    feedbackVM.VolunteerName = f.Volunteer.Name; 
+                    feedbackVM.VolunteerName = f.Volunteer.Name;
                     return feedbackVM;
                 })
                 .ToList();
 
+            eventDetailsViewModel.VolunteerId = null;
 
             return eventDetailsViewModel;
         }

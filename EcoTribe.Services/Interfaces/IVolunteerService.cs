@@ -1,4 +1,5 @@
-﻿using EcoTribe.BusinessObjects.InputModels;
+﻿using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,6 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IVolunteerService : IService<VolunteerViewModel, VolunteerInputModel>
     {
-        
+        Volunteer? GetByUserId(string userId);
     }
 }
