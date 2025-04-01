@@ -37,9 +37,6 @@ namespace EcoTribe.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
@@ -85,9 +82,6 @@ namespace EcoTribe.Data.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
-
-                    b.Property<int?>("VolunteerId")
-                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -147,7 +141,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Events", (string)null);
+                    b.ToTable("Events");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventResource", b =>
@@ -182,7 +176,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("EventId");
 
-                    b.ToTable("EventResources", (string)null);
+                    b.ToTable("EventResources");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventSponsor", b =>
@@ -200,7 +194,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("EventSponsors", (string)null);
+                    b.ToTable("EventSponsors");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventVolunteer", b =>
@@ -210,10 +204,6 @@ namespace EcoTribe.Data.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<bool?>("Attended")
                         .HasColumnType("boolean");
@@ -230,13 +220,11 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("EventId");
 
                     b.HasIndex("VolunteerId");
 
-                    b.ToTable("EventVolunteers", (string)null);
+                    b.ToTable("EventVolunteers");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Feedback", b =>
@@ -246,10 +234,6 @@ namespace EcoTribe.Data.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("ApplicationUserId")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("Comments")
                         .HasColumnType("text");
@@ -268,13 +252,11 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
-
                     b.HasIndex("EventId");
 
                     b.HasIndex("VolunteerId");
 
-                    b.ToTable("Feedbacks", (string)null);
+                    b.ToTable("Feedbacks");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Location", b =>
@@ -304,7 +286,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Locations", (string)null);
+                    b.ToTable("Locations");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Notification", b =>
@@ -332,7 +314,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("VolunteerId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Organization", b =>
@@ -370,7 +352,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Organizations", (string)null);
+                    b.ToTable("Organizations");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Volunteer", b =>
@@ -384,6 +366,9 @@ namespace EcoTribe.Data.Migrations
                     b.Property<string>("City")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTime>("DateOfBirth")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -417,9 +402,14 @@ namespace EcoTribe.Data.Migrations
                     b.Property<string>("Skills")
                         .HasColumnType("text");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
-                    b.ToTable("Volunteers", (string)null);
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Volunteers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -586,12 +576,6 @@ namespace EcoTribe.Data.Migrations
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.EventVolunteer", b =>
                 {
-                    b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("EventVolunteers")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Event", "Event")
                         .WithMany("EventVolunteers")
                         .HasForeignKey("EventId")
@@ -599,12 +583,10 @@ namespace EcoTribe.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Volunteer", "Volunteer")
-                        .WithMany()
+                        .WithMany("EventVolunteers")
                         .HasForeignKey("VolunteerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Event");
 
@@ -613,12 +595,6 @@ namespace EcoTribe.Data.Migrations
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Feedback", b =>
                 {
-                    b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", "ApplicationUser")
-                        .WithMany("Feedbacks")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Event", "Event")
                         .WithMany("Feedbacks")
                         .HasForeignKey("EventId")
@@ -626,12 +602,10 @@ namespace EcoTribe.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("EcoTribe.BusinessObjects.Domain.Models.Volunteer", "Volunteer")
-                        .WithMany()
+                        .WithMany("Feedbacks")
                         .HasForeignKey("VolunteerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Event");
 
@@ -647,6 +621,15 @@ namespace EcoTribe.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Volunteer");
+                });
+
+            modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Volunteer", b =>
+                {
+                    b.HasOne("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -700,13 +683,6 @@ namespace EcoTribe.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("EventVolunteers");
-
-                    b.Navigation("Feedbacks");
-                });
-
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Event", b =>
                 {
                     b.Navigation("EventSponsors");
@@ -719,6 +695,13 @@ namespace EcoTribe.Data.Migrations
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Organization", b =>
                 {
                     b.Navigation("EventSponsors");
+                });
+
+            modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Volunteer", b =>
+                {
+                    b.Navigation("EventVolunteers");
+
+                    b.Navigation("Feedbacks");
                 });
 #pragma warning restore 612, 618
         }

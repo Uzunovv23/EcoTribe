@@ -46,7 +46,7 @@ namespace EcoTribe.Web.Controllers
             {
                 return Unauthorized();
             }
-            inputModel.ApplicationUserId = userId; 
+            //inputModel.ApplicationUserId = userId; 
 
             if (!ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace EcoTribe.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, FeedbackInputModel inputModel)
         {
-            inputModel.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            //inputModel.ApplicationUserId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
 
             ModelState.Remove("ApplicationUserId");
             if (!ModelState.IsValid)
@@ -162,7 +162,7 @@ namespace EcoTribe.Web.Controllers
             var feedbackModel = new FeedbackInputModel
             {
                 EventId = eventId,
-                ApplicationUserId = userId,
+                // ApplicationUserId = userId,
                 VolunteerId = int.Parse(User.FindFirst("VolunteerId")?.Value!) 
             };
 
@@ -181,7 +181,7 @@ namespace EcoTribe.Web.Controllers
                 return Unauthorized();
             }
 
-            inputModel.ApplicationUserId = userId;
+            //inputModel.ApplicationUserId = userId;
 
             if (!ModelState.IsValid)
             {

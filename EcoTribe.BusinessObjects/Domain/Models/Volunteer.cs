@@ -20,9 +20,12 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public string Number { get; set; } = null!;
         public string? Instagram { get; set; }
         public string? Facebook { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public ICollection<EventVolunteer>? EventVolunteers { get; set; }
+        public ICollection<Feedback>? Feedbacks { get; set; }
 
 
-        public string UserId { get; set; } = null!;
+        public string? UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; } = null!;

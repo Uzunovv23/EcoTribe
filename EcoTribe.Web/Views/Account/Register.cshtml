@@ -1,95 +1,120 @@
-﻿@model EcoTribe.BusinessObjects.InputModels.RegisterInputModel
+﻿@model EcoTribe.BusinessObjects.InputModels.RegisterVolunteerInputModel
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
+@{
+    ViewData["Title"] = "Register";
 }
 
-<div class="min-vh-100 d-flex align-items-center justify-content-center py-5">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6 col-lg-5">
-                <div class="card shadow-lg" style="background: rgba(255, 255, 255, 0.95);">
-                    <div class="card-body p-5">
-                        <h2 class="text-center mb-4 fw-bold">Create Account</h2>
-                        <p class="text-center text-muted mb-4">
-                            Already have an account?
-                            <a href="@Url.Action("Login", "Account")" class="text-success fw-semibold text-decoration-none">
-                                Sign in
-                            </a>
-                        </p>
+<h2 class="text-center mt-4">Register</h2>
 
-                        <form asp-controller="Account" asp-action="Register" method="post">
-                            <div class="mb-4">
-                                <label asp-for="FullName" class="form-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-person"></i>
-                                    </span>
-                                    <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
-                                </div>
-                                <span asp-validation-for="FullName" class="text-danger small"></span>
-                            </div>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <form asp-action="Register" method="post" class="card shadow-sm p-4">
 
-                            <div class="mb-4">
-                                <label asp-for="Email" class="form-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-envelope"></i>
-                                    </span>
-                                    <input asp-for="Email" class="form-control" placeholder="Enter your email" />
-                                </div>
-                                <span asp-validation-for="Email" class="text-danger small"></span>
-                            </div>
-
-                            <div class="mb-4">
-                                <label asp-for="Password" class="form-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-lock"></i>
-                                    </span>
-                                    <input asp-for="Password" type="password" class="form-control" placeholder="Create a password" />
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="password-strength-meter mt-2">
-                                    <div class="progress" style="height: 5px;">
-                                        <div class="progress-bar password-strength" role="progressbar"></div>
-                                    </div>
-                                    <small class="password-strength-text text-muted"></small>
-                                </div>
-                                <span asp-validation-for="Password" class="text-danger small"></span>
-                            </div>
-
-                            <div class="mb-4">
-                                <label asp-for="ConfirmPassword" class="form-label"></label>
-                                <div class="input-group">
-                                    <span class="input-group-text">
-                                        <i class="bi bi-lock"></i>
-                                    </span>
-                                    <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm your password" />
-                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
-                                </div>
-                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
-                            </div>
-
-                            <button type="submit" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
-                                <i class="bi bi-person-plus"></i>
-                                Create Account
-                                <div class="spinner-border spinner-border-sm d-none" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
-                            </button>
-                        </form>
-                    </div>
-                </div>
+            <!-- Full Name -->
+            <div class="mb-4">
+                <label asp-for="FullName" class="form-label">Full Name</label>
+                <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+                <span asp-validation-for="FullName" class="text-danger small"></span>
             </div>
+
+            <!-- Email -->
+            <div class="mb-4">
+                <label asp-for="Email" class="form-label">Email</label>
+                <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <!-- Password -->
+            <div class="mb-4">
+                <label asp-for="Password" class="form-label">Password</label>
+                <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="mb-4">
+                <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                <input asp-for="ConfirmPassword" type="password" class="form-control" placeholder="Confirm your password" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+            </div>
+
+            <hr class="my-4">
+
+            <h4 class="text-center">Volunteer Information</h4>
+
+            <!-- Name -->
+            <div class="mb-4">
+                <label asp-for="Name" class="form-label">Name</label>
+                <input asp-for="Name" class="form-control" placeholder="Enter name" />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+            </div>
+
+            <!-- City -->
+            <div class="mb-4">
+                <label asp-for="City" class="form-label">City</label>
+                <input asp-for="City" class="form-control" placeholder="Enter your city" />
+                <span asp-validation-for="City" class="text-danger small"></span>
+            </div>
+
+            <!-- Phone Number -->
+            <div class="mb-4">
+                <label asp-for="Number" class="form-label">Phone Number</label>
+                <input asp-for="Number" class="form-control" placeholder="Enter your phone number" />
+                <span asp-validation-for="Number" class="text-danger small"></span>
+            </div>
+
+            <!-- Skills -->
+            <div class="mb-4">
+                <label asp-for="Skills" class="form-label">Skills (optional)</label>
+                <textarea asp-for="Skills" class="form-control" rows="2" placeholder="Describe your skills"></textarea>
+                <span asp-validation-for="Skills" class="text-danger small"></span>
+            </div>
+
+            <!-- Preferred Events -->
+            <div class="mb-4">
+                <label asp-for="PreferredEvents" class="form-label">Preferred Events (optional)</label>
+                <textarea asp-for="PreferredEvents" class="form-control" rows="2" placeholder="Describe preferred events"></textarea>
+                <span asp-validation-for="PreferredEvents" class="text-danger small"></span>
+            </div>
+
+            <!-- Latitude -->
+            <div class="mb-4">
+                <label asp-for="Latitude" class="form-label">Latitude</label>
+                <input asp-for="Latitude" class="form-control" placeholder="Enter latitude" type="text" />
+                <span asp-validation-for="Latitude" class="text-danger small"></span>
+            </div>
+
+            <!-- Longitude -->
+            <div class="mb-4">
+                <label asp-for="Longitude" class="form-label">Longitude</label>
+                <input asp-for="Longitude" class="form-control" placeholder="Enter longitude" type="text" />
+                <span asp-validation-for="Longitude" class="text-danger small"></span>
+            </div>
+
+
+            <!-- Instagram -->
+            <div class="mb-4">
+                <label asp-for="Instagram" class="form-label">Instagram (optional)</label>
+                <input asp-for="Instagram" class="form-control" placeholder="Instagram profile" />
+                <span asp-validation-for="Instagram" class="text-danger small"></span>
+            </div>
+
+            <!-- Facebook -->
+            <div class="mb-4">
+                <label asp-for="Facebook" class="form-label">Facebook (optional)</label>
+                <input asp-for="Facebook" class="form-control" placeholder="Facebook profile" />
+                <span asp-validation-for="Facebook" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100">Register</button>
+        </form>
+
+        <div class="text-center mt-3">
+            <p>Already have an account? <a asp-action="Login">Sign in</a></p>
         </div>
     </div>
 </div>
 
 @section Scripts {
-    <script src="~/js/register.js"></script>
+    <partial name="_ValidationScriptsPartial" />
 }

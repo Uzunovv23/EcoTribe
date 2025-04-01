@@ -22,9 +22,5 @@ namespace EcoTribe.BusinessObjects.Domain.Models
 
         public string Intention { get; set; } = null!;
         public bool? Attended { get; set; }
-
-        [ForeignKey(nameof(ApplicationUser))]
-        public string ApplicationUserId { get; set; }
-        public ApplicationUser ApplicationUser { get; set; } = null!;
     }
 }

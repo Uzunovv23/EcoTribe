@@ -1,9 +1,11 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
+using EcoTribe.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 using System.Security.Claims;
 
 namespace EcoTribe.Web.Controllers
@@ -13,11 +15,16 @@ namespace EcoTribe.Web.Controllers
         
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IVolunteerService _volunteerService;
 
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
+        public AccountController(
+            UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager,
+            IVolunteerService volunteerService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _volunteerService = volunteerService;
         }
 
         public IActionResult Login() => View();
@@ -39,16 +46,37 @@ namespace EcoTribe.Web.Controllers
         public IActionResult Register() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Register(RegisterInputModel model)
+        public async Task<IActionResult> Register(RegisterVolunteerInputModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
+        
 
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "User");
+
+                model.Latitude = Convert.ToDecimal(model.Latitude, CultureInfo.InvariantCulture);
+                model.Longitude = Convert.ToDecimal(model.Longitude, CultureInfo.InvariantCulture);
+
+                var volunteer = new VolunteerInputModel
+                {
+                    Name = model.Name,
+                    City = model.City,
+                    Email = model.Email,
+                    Skills = model.Skills,
+                    PreferredEvents = model.PreferredEvents,
+                    Latitude = model.Latitude,
+                    Longitude = model.Longitude,
+                    Number = model.Number,
+                    Instagram = model.Instagram,
+                    Facebook = model.Facebook
+                };
+
+                _volunteerService.Create(volunteer);
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");
             }

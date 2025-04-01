@@ -6,7 +6,7 @@
 
 <h2 class="mb-4">Events</h2>
 
-@if (User.IsInRole("Administrator"))
+@if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
 {
     <a href="@Url.Action("Create", "Event")" class="btn btn-primary mt-3">Create New Event</a>
 }
@@ -26,7 +26,7 @@
                 <th>Longitude</th>
                 <th>Start</th>
                 <th>End</th>
-                @if(User.IsInRole("Administrator"))
+                @if(User.IsInRole("Administrator") || User.IsInRole("Organizator"))
                 {
                     <th>Actions</th>
                 }

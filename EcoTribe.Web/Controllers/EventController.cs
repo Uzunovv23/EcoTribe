@@ -27,14 +27,14 @@ namespace EcoTribe.Web.Controllers
             return View(events);
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Organizator")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator, Organizator")]
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventInputModel model)
         {
@@ -150,7 +150,7 @@ namespace EcoTribe.Web.Controllers
             viewModel.FeedbackInput = new FeedbackInputModel
             {
                 EventId = id,
-                ApplicationUserId = userId,
+                // ApplicationUserId = userId,
                 VolunteerId = viewModel.VolunteerId ?? 0,
                 CreatedAt = DateTime.UtcNow
             };
@@ -159,7 +159,7 @@ namespace EcoTribe.Web.Controllers
         }
 
 
-        [Authorize(Roles = "Administrator, Organizatior")]
+        [Authorize(Roles = "Administrator, Organizator")]
         public IActionResult AddSponsor(int eventId)
         {
             var eventEntity = eventService.GetById(eventId);
@@ -181,7 +181,7 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator, Organizatior")]
+        [Authorize(Roles = "Administrator, Organizator")]
         [ValidateAntiForgeryToken]
         public IActionResult AddSponsor(AddSponsorInputModel model)
         {

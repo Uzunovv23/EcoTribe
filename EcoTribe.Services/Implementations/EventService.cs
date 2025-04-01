@@ -157,7 +157,9 @@ namespace EcoTribe.Services.Implementations
             }
 
             var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
-            feedback.ApplicationUser = context.Users.Find(inputModel.ApplicationUserId)!;
+            var volunteer = context.Volunteers.FirstOrDefault(v => v.Id == inputModel.VolunteerId);
+            var user = 
+            feedback.Volunteer.User = context.Users.FirstOrDefault(u => u.Id == volunteer.UserId);
             context.Feedbacks.Add(feedback);
             context.SaveChanges();
         }

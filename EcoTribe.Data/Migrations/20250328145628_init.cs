@@ -34,7 +34,6 @@ namespace EcoTribe.Data.Migrations
                     FirstName = table.Column<string>(type: "text", nullable: true),
                     LastName = table.Column<string>(type: "text", nullable: true),
                     Address = table.Column<string>(type: "text", nullable: true),
-                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -111,28 +110,6 @@ namespace EcoTribe.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Organizations", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Volunteers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    City = table.Column<string>(type: "text", nullable: false),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    Skills = table.Column<string>(type: "text", nullable: true),
-                    PreferredEvents = table.Column<string>(type: "text", nullable: true),
-                    Latitude = table.Column<decimal>(type: "numeric(9,6)", precision: 9, scale: 6, nullable: false),
-                    Longitude = table.Column<decimal>(type: "numeric(9,6)", precision: 9, scale: 6, nullable: false),
-                    Number = table.Column<string>(type: "text", nullable: false),
-                    Instagram = table.Column<string>(type: "text", nullable: true),
-                    Facebook = table.Column<string>(type: "text", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Volunteers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -242,6 +219,35 @@ namespace EcoTribe.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Volunteers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    City = table.Column<string>(type: "text", nullable: false),
+                    Email = table.Column<string>(type: "text", nullable: false),
+                    Skills = table.Column<string>(type: "text", nullable: true),
+                    PreferredEvents = table.Column<string>(type: "text", nullable: true),
+                    Latitude = table.Column<decimal>(type: "numeric(9,6)", precision: 9, scale: 6, nullable: false),
+                    Longitude = table.Column<decimal>(type: "numeric(9,6)", precision: 9, scale: 6, nullable: false),
+                    Number = table.Column<string>(type: "text", nullable: false),
+                    Instagram = table.Column<string>(type: "text", nullable: true),
+                    Facebook = table.Column<string>(type: "text", nullable: true),
+                    DateOfBirth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Volunteers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Volunteers_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventResources",
                 columns: table => new
                 {
@@ -266,6 +272,31 @@ namespace EcoTribe.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EventSponsors",
+                columns: table => new
+                {
+                    EventId = table.Column<int>(type: "integer", nullable: false),
+                    OrganizationId = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EventSponsors", x => new { x.EventId, x.OrganizationId });
+                    table.ForeignKey(
+                        name: "FK_EventSponsors_Events_EventId",
+                        column: x => x.EventId,
+                        principalTable: "Events",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_EventSponsors_Organizations_OrganizationId",
+                        column: x => x.OrganizationId,
+                        principalTable: "Organizations",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "EventVolunteers",
                 columns: table => new
                 {
@@ -274,18 +305,11 @@ namespace EcoTribe.Data.Migrations
                     VolunteerId = table.Column<int>(type: "integer", nullable: false),
                     EventId = table.Column<int>(type: "integer", nullable: false),
                     Intention = table.Column<string>(type: "text", nullable: false),
-                    Attended = table.Column<bool>(type: "boolean", nullable: true),
-                    ApplicationUserId = table.Column<string>(type: "text", nullable: false)
+                    Attended = table.Column<bool>(type: "boolean", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_EventVolunteers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EventVolunteers_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_EventVolunteers_Events_EventId",
                         column: x => x.EventId,
@@ -310,18 +334,11 @@ namespace EcoTribe.Data.Migrations
                     VolunteerId = table.Column<int>(type: "integer", nullable: false),
                     Rating = table.Column<int>(type: "integer", nullable: false),
                     Comments = table.Column<string>(type: "text", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ApplicationUserId = table.Column<string>(type: "text", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Feedbacks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Feedbacks_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Feedbacks_Events_EventId",
                         column: x => x.EventId,
@@ -401,9 +418,9 @@ namespace EcoTribe.Data.Migrations
                 column: "EventId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_EventVolunteers_ApplicationUserId",
-                table: "EventVolunteers",
-                column: "ApplicationUserId");
+                name: "IX_EventSponsors_OrganizationId",
+                table: "EventSponsors",
+                column: "OrganizationId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_EventVolunteers_EventId",
@@ -414,11 +431,6 @@ namespace EcoTribe.Data.Migrations
                 name: "IX_EventVolunteers_VolunteerId",
                 table: "EventVolunteers",
                 column: "VolunteerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Feedbacks_ApplicationUserId",
-                table: "Feedbacks",
-                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Feedbacks_EventId",
@@ -434,6 +446,11 @@ namespace EcoTribe.Data.Migrations
                 name: "IX_Notifications_VolunteerId",
                 table: "Notifications",
                 column: "VolunteerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Volunteers_UserId",
+                table: "Volunteers",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -458,6 +475,9 @@ namespace EcoTribe.Data.Migrations
                 name: "EventResources");
 
             migrationBuilder.DropTable(
+                name: "EventSponsors");
+
+            migrationBuilder.DropTable(
                 name: "EventVolunteers");
 
             migrationBuilder.DropTable(
@@ -470,19 +490,19 @@ namespace EcoTribe.Data.Migrations
                 name: "Notifications");
 
             migrationBuilder.DropTable(
-                name: "Organizations");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "Organizations");
 
             migrationBuilder.DropTable(
                 name: "Events");
 
             migrationBuilder.DropTable(
                 name: "Volunteers");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

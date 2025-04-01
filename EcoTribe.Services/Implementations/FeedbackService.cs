@@ -43,8 +43,7 @@ namespace EcoTribe.Services.Implementations
         {
             var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             feedback.Event = context.Events.Find(inputModel.EventId)!;
-            feedback.Volunteer = context.Volunteers.Find(inputModel.VolunteerId)!;
-            feedback.ApplicationUser = context.Users.Find(inputModel.ApplicationUserId)!;
+            feedback.Volunteer = context.Volunteers.Include(v => v.User).FirstOrDefault(v => inputModel.VolunteerId == v.Id)!;
 
             context.Feedbacks.Add(feedback);
             context.SaveChanges();
@@ -113,8 +112,8 @@ namespace EcoTribe.Services.Implementations
 
         public bool HasUserProvidedFeedback(int eventId, string userId)
         {
-            return context.Feedbacks
-                .Any(f => f.EventId == eventId && f.ApplicationUserId == userId);
+            return context.Feedbacks.Include(f => f.Volunteer)
+                .Any(f => f.EventId == eventId && f.Volunteer.UserId == userId);
         }
 
         public bool HasEventStarted(int eventId)

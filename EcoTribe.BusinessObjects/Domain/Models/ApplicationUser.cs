@@ -7,9 +7,5 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public string? FirstName { get; set; }
         public string? LastName { get; set; } 
         public string? Address { get; set; } 
-        public DateTime DateOfBirth { get; set; }
-        public ICollection<EventVolunteer>? EventVolunteers { get; set; }
-        public ICollection<Feedback>? Feedbacks { get; set; }
-        public int? VolunteerId { get; set; }
     }
 }
