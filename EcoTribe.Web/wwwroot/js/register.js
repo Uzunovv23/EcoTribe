@@ -5,7 +5,7 @@
     const confirmPassword = document.querySelector('#ConfirmPassword');
 
     function togglePasswordVisibility(button, input) {
-        button.addEventListener('click', function () {
+        button?.addEventListener('click', function () {
             const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
             input.setAttribute('type', type);
             this.querySelector('i').classList.toggle('bi-eye');
@@ -34,39 +34,62 @@
         const strengthLabels = ['Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
         const strengthColors = ['#dc3545', '#ffc107', '#28a745', '#198754', '#0d6efd'];
 
-        strengthBar.style.width = `${(strength / 5) * 100}%`;
-        strengthBar.style.backgroundColor = strengthColors[strength - 1] || '';
-        strengthText.textContent = strength > 0 ? strengthLabels[strength - 1] : '';
+        if (strengthBar) {
+            strengthBar.style.width = `${(strength / 5) * 100}%`;
+            strengthBar.style.backgroundColor = strengthColors[strength - 1] || '';
+        }
+        if (strengthText) {
+            strengthText.textContent = strength > 0 ? strengthLabels[strength - 1] : '';
+        }
     }
 
-    password.addEventListener('input', function () {
+    password?.addEventListener('input', function () {
         checkPasswordStrength(this.value);
     });
 
     const form = document.querySelector('#registerForm');
-    const submitButton = form.querySelector('button[type="submit"]');
-    const spinner = submitButton.querySelector('.spinner-border');
-    const buttonText = submitButton.querySelector('span');
+    const submitButton = form?.querySelector('button[type="submit"]');
+    const spinner = submitButton?.querySelector('.spinner-border');
+    const buttonText = submitButton?.querySelector('span');
 
-    form.addEventListener('submit', function (e) {
+    form?.addEventListener('submit', function (e) {
         if (!form.checkValidity()) {
             e.preventDefault();
             return;
         }
 
-        submitButton.disabled = true;
-        spinner.classList.remove('d-none');
-        buttonText.textContent = 'Creating Account...';
+        if (submitButton && spinner && buttonText) {
+            submitButton.disabled = true;
+            spinner.classList.remove('d-none');
+            buttonText.textContent = 'Creating Account...';
+        }
     });
 
     const inputs = document.querySelectorAll('.form-control');
     inputs.forEach(input => {
         input.addEventListener('focus', function () {
-            this.closest('.input-group').classList.add('focused');
+            this.closest('.input-group')?.classList.add('focused');
         });
 
         input.addEventListener('blur', function () {
-            this.closest('.input-group').classList.remove('focused');
+            this.closest('.input-group')?.classList.remove('focused');
         });
+    });
+
+    const expandButton = document.querySelector('.expand-button');
+    const additionalInfo = document.querySelector('.additional-info');
+    const sectionCards = document.querySelectorAll('.section-card');
+
+    expandButton?.addEventListener('click', function () {
+        this.classList.toggle('expanded');
+        additionalInfo?.classList.toggle('expanded');
+
+        if (additionalInfo?.classList.contains('expanded')) {
+            setTimeout(() => {
+                sectionCards.forEach(card => card.classList.add('visible'));
+            }, 100);
+        } else {
+            sectionCards.forEach(card => card.classList.remove('visible'));
+        }
     });
 });
