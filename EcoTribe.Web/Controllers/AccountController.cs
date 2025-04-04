@@ -58,8 +58,6 @@ namespace EcoTribe.Web.Controllers
             {
                 await _userManager.AddToRoleAsync(user, "User");
 
-                model.Latitude = Convert.ToDecimal(model.Latitude, CultureInfo.InvariantCulture);
-                model.Longitude = Convert.ToDecimal(model.Longitude, CultureInfo.InvariantCulture);
 
                 var volunteer = new VolunteerInputModel
                 {
@@ -68,8 +66,6 @@ namespace EcoTribe.Web.Controllers
                     Email = model.Email,
                     Skills = model.Skills,
                     PreferredEvents = model.PreferredEvents,
-                    Latitude = model.Latitude,
-                    Longitude = model.Longitude,
                     Number = model.Number,
                     Instagram = model.Instagram,
                     Facebook = model.Facebook

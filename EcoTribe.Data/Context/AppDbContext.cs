@@ -24,14 +24,6 @@ namespace EcoTribe.Data.Context
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Volunteer>()
-                .Property(v => v.Latitude)
-                .HasPrecision(9, 6);
-
-            modelBuilder.Entity<Volunteer>()
-                .Property(v => v.Longitude)
-                .HasPrecision(9, 6);
-
             modelBuilder.Entity<Event>()
                 .Property(e => e.Latitude)
                 .HasPrecision(9, 6);

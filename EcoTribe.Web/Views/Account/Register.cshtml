@@ -19,7 +19,7 @@
 
                     <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
                         <div class="mb-4">
-                            <label asp-for="FullName" class="form-label"></label>
+                            <label asp-for="FullName" class="form-label">Full Name</label>
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-person"></i>
@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="Email" class="form-label"></label>
+                            <label asp-for="Email" class="form-label">Email</label>
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-envelope"></i>
@@ -41,7 +41,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="Password" class="form-label"></label>
+                            <label asp-for="Password" class="form-label">Password</label>
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-lock"></i>
@@ -61,7 +61,7 @@
                         </div>
 
                         <div class="mb-4">
-                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
                             <div class="input-group">
                                 <span class="input-group-text">
                                     <i class="bi bi-lock"></i>
@@ -109,7 +109,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="City" class="form-label"></label>
+                        <label asp-for="City" class="form-label">City</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-geo-alt"></i>
@@ -131,7 +131,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="Skills" class="form-label"></label>
+                        <label asp-for="Skills" class="form-label">Skills</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-tools"></i>
@@ -152,29 +152,6 @@
                         <span asp-validation-for="PreferredEvents" class="text-danger small"></span>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-4">
-                            <label asp-for="Latitude" class="form-label"></label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-geo"></i>
-                                </span>
-                                <input asp-for="Latitude" class="form-control" placeholder="Enter latitude" type="text" />
-                            </div>
-                            <span asp-validation-for="Latitude" class="text-danger small"></span>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <label asp-for="Longitude" class="form-label"></label>
-                            <div class="input-group">
-                                <span class="input-group-text">
-                                    <i class="bi bi-geo"></i>
-                                </span>
-                                <input asp-for="Longitude" class="form-control" placeholder="Enter longitude" type="text" />
-                            </div>
-                            <span asp-validation-for="Longitude" class="text-danger small"></span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -183,7 +160,7 @@
                     <h2 class="section-title">Social Media</h2>
 
                     <div class="mb-4">
-                        <label asp-for="Instagram" class="form-label"></label>
+                        <label asp-for="Instagram" class="form-label">Instagram</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-instagram"></i>
@@ -194,7 +171,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label asp-for="Facebook" class="form-label"></label>
+                        <label asp-for="Facebook" class="form-label">Facebook</label>
                         <div class="input-group">
                             <span class="input-group-text">
                                 <i class="bi bi-facebook"></i>

@@ -9,7 +9,6 @@ namespace EcoTribe.BusinessObjects.InputModels
 {
     public class RegisterVolunteerInputModel
     {
-        // User Fields
         [Required]
         public string FullName { get; set; } = null!;
 
@@ -26,7 +25,6 @@ namespace EcoTribe.BusinessObjects.InputModels
         [Compare("Password", ErrorMessage = "Passwords do not match.")]
         public string ConfirmPassword { get; set; } = null!;
 
-        // Volunteer Fields
         [Required]
         [StringLength(100, MinimumLength = 2)]
         public string Name { get; set; } = null!;
@@ -40,12 +38,6 @@ namespace EcoTribe.BusinessObjects.InputModels
 
         [StringLength(200)]
         public string? PreferredEvents { get; set; }
-
-        [Range(-90, 90)]
-        public decimal Latitude { get; set; }
-
-        [Range(-180, 180)]
-        public decimal Longitude { get; set; }
 
         [Required]
         [Phone]

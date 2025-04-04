@@ -38,8 +38,6 @@ namespace EcoTribe.Web.Controllers
             }
             try
             {
-                inputModel.Latitude = Convert.ToDecimal(inputModel.Latitude, CultureInfo.InvariantCulture);
-                inputModel.Longitude = Convert.ToDecimal(inputModel.Longitude, CultureInfo.InvariantCulture);
 
                 volunteerService.Create(inputModel);
                 return RedirectToAction(nameof(Index));
@@ -74,8 +72,6 @@ namespace EcoTribe.Web.Controllers
             }
             try
             {
-                inputModel.Latitude = Convert.ToDecimal(inputModel.Latitude, CultureInfo.InvariantCulture);
-                inputModel.Longitude = Convert.ToDecimal(inputModel.Longitude, CultureInfo.InvariantCulture);
                 volunteerService.Update(id, inputModel);
                 return RedirectToAction(nameof(Index));
             }
