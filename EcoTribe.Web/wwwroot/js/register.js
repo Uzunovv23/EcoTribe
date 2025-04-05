@@ -1,4 +1,9 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
+    const expandButton = document.querySelector('.expand-button');
+    const additionalInfo = document.querySelector('.additional-info');
+    const submitButton = document.querySelector('.submit-button');
+    const form = document.querySelector('#registerForm');
+
     const togglePassword = document.querySelector('#togglePassword');
     const toggleConfirmPassword = document.querySelector('#toggleConfirmPassword');
     const password = document.querySelector('#Password');
@@ -47,10 +52,14 @@
         checkPasswordStrength(this.value);
     });
 
-    const form = document.querySelector('#registerForm');
-    const submitButton = form?.querySelector('button[type="submit"]');
-    const spinner = submitButton?.querySelector('.spinner-border');
-    const buttonText = submitButton?.querySelector('span');
+    expandButton?.addEventListener('click', function () {
+        this.classList.toggle('expanded');
+        additionalInfo.classList.toggle('expanded');
+
+        setTimeout(() => {
+            submitButton.classList.toggle('visible');
+        }, additionalInfo.classList.contains('expanded') ? 300 : 0);
+    });
 
     form?.addEventListener('submit', function (e) {
         if (!form.checkValidity()) {
@@ -58,11 +67,12 @@
             return;
         }
 
-        if (submitButton && spinner && buttonText) {
-            submitButton.disabled = true;
-            spinner.classList.remove('d-none');
-            buttonText.textContent = 'Creating Account...';
-        }
+        const spinner = submitButton.querySelector('.spinner-border');
+        const buttonText = submitButton.querySelector('span');
+
+        submitButton.disabled = true;
+        spinner.classList.remove('d-none');
+        buttonText.textContent = 'Creating Account...';
     });
 
     const inputs = document.querySelectorAll('.form-control');
@@ -74,22 +84,5 @@
         input.addEventListener('blur', function () {
             this.closest('.input-group')?.classList.remove('focused');
         });
-    });
-
-    const expandButton = document.querySelector('.expand-button');
-    const additionalInfo = document.querySelector('.additional-info');
-    const sectionCards = document.querySelectorAll('.section-card');
-
-    expandButton?.addEventListener('click', function () {
-        this.classList.toggle('expanded');
-        additionalInfo?.classList.toggle('expanded');
-
-        if (additionalInfo?.classList.contains('expanded')) {
-            setTimeout(() => {
-                sectionCards.forEach(card => card.classList.add('visible'));
-            }, 100);
-        } else {
-            sectionCards.forEach(card => card.classList.remove('visible'));
-        }
     });
 });

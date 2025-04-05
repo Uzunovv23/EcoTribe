@@ -1,23 +1,27 @@
 ﻿@model EcoTribe.BusinessObjects.InputModels.RegisterVolunteerInputModel
 
+@{
+    Layout = "_AuthLayout";
+}
+
 @section Styles {
     <link rel="stylesheet" href="~/css/register.css" asp-append-version="true" />
 }
 
 <div class="min-vh-100 d-flex align-items-center justify-content-center py-5">
     <div class="registration-container">
-        <div class="main-form">
-            <div class="card shadow-lg">
-                <div class="card-body p-5">
-                    <h2 class="section-title">Create Volunteer Account</h2>
-                    <p class="text-center text-muted mb-4">
-                        Already have an account?
-                        <a href="@Url.Action("Login", "Account")" class="text-success fw-semibold text-decoration-none">
-                            Sign in
-                        </a>
-                    </p>
+        <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
+            <div class="main-form">
+                <div class="card shadow-lg">
+                    <div class="card-body p-5">
+                        <h2 class="section-title">Create Volunteer Account</h2>
+                        <p class="text-center text-muted mb-4">
+                            Already have an account?
+                            <a href="@Url.Action("Login", "Account")" class="text-success fw-semibold text-decoration-none">
+                                Sign in
+                            </a>
+                        </p>
 
-                    <form asp-controller="Account" asp-action="Register" method="post" id="registerForm">
                         <div class="mb-4">
                             <label asp-for="FullName" class="form-label">Full Name</label>
                             <div class="input-group">
@@ -74,115 +78,108 @@
                             <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                         </div>
 
-                        <button type="submit" class="btn btn-success w-100 d-flex align-items-center justify-content-center gap-2">
-                            <i class="bi bi-person-plus"></i>
-                            <span>Create Volunteer Account</span>
-                            <div class="spinner-border spinner-border-sm d-none" role="status">
-                                <span class="visually-hidden">Loading...</span>
+                        <div class="text-center mt-4">
+                            <button type="button" class="expand-button">
+                                <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="additional-info">
+                <div class="card shadow-lg section-card volunteer-info-card">
+                    <div class="card-body p-5">
+                        <h2 class="section-title">Additional Information</h2>
+
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label">Display Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-person-badge"></i>
+                                </span>
+                                <input asp-for="Name" class="form-control" placeholder="Enter display name" />
                             </div>
-                        </button>
-                    </form>
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
 
-                    <div class="text-center mt-4">
-                        <button class="expand-button">
-                            <i class="bi bi-chevron-right"></i>
-                        </button>
+                        <div class="mb-4">
+                            <label asp-for="City" class="form-label">City</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-geo-alt"></i>
+                                </span>
+                                <input asp-for="City" class="form-control" placeholder="Enter your city" />
+                            </div>
+                            <span asp-validation-for="City" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Number" class="form-label">Phone Number</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-telephone"></i>
+                                </span>
+                                <input asp-for="Number" class="form-control" placeholder="Enter your phone number" />
+                            </div>
+                            <span asp-validation-for="Number" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Skills" class="form-label">Skills</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-tools"></i>
+                                </span>
+                                <textarea asp-for="Skills" class="form-control" rows="2" placeholder="Describe your skills"></textarea>
+                            </div>
+                            <span asp-validation-for="Skills" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="PreferredEvents" class="form-label">Preferred Events</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-calendar-event"></i>
+                                </span>
+                                <textarea asp-for="PreferredEvents" class="form-control" rows="2" placeholder="Describe preferred events"></textarea>
+                            </div>
+                            <span asp-validation-for="PreferredEvents" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Instagram" class="form-label">Instagram</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-instagram"></i>
+                                </span>
+                                <input asp-for="Instagram" class="form-control" placeholder="Instagram profile" />
+                            </div>
+                            <span asp-validation-for="Instagram" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Facebook" class="form-label">Facebook</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-facebook"></i>
+                                </span>
+                                <input asp-for="Facebook" class="form-control" placeholder="Facebook profile" />
+                            </div>
+                            <span asp-validation-for="Facebook" class="text-danger small"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="additional-info">
-            <div class="card shadow-lg section-card volunteer-info-card">
-                <div class="card-body p-5">
-                    <h2 class="section-title">Volunteer Information</h2>
-
-                    <div class="mb-4">
-                        <label asp-for="Name" class="form-label">Display Name</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-person-badge"></i>
-                            </span>
-                            <input asp-for="Name" class="form-control" placeholder="Enter display name" />
-                        </div>
-                        <span asp-validation-for="Name" class="text-danger small"></span>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="City" class="form-label">City</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-geo-alt"></i>
-                            </span>
-                            <input asp-for="City" class="form-control" placeholder="Enter your city" />
-                        </div>
-                        <span asp-validation-for="City" class="text-danger small"></span>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="Number" class="form-label">Phone Number</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-telephone"></i>
-                            </span>
-                            <input asp-for="Number" class="form-control" placeholder="Enter your phone number" />
-                        </div>
-                        <span asp-validation-for="Number" class="text-danger small"></span>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="Skills" class="form-label">Skills</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-tools"></i>
-                            </span>
-                            <textarea asp-for="Skills" class="form-control" rows="2" placeholder="Describe your skills"></textarea>
-                        </div>
-                        <span asp-validation-for="Skills" class="text-danger small"></span>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="PreferredEvents" class="form-label">Preferred Events</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-calendar-event"></i>
-                            </span>
-                            <textarea asp-for="PreferredEvents" class="form-control" rows="2" placeholder="Describe preferred events"></textarea>
-                        </div>
-                        <span asp-validation-for="PreferredEvents" class="text-danger small"></span>
-                    </div>
-
+            <button type="submit" class="submit-button btn btn-success position-fixed bottom-0 start-50 translate-middle-x mb-4 px-5 py-2 d-flex align-items-center justify-content-center gap-2">
+                <i class="bi bi-person-plus"></i>
+                <span>Create Volunteer Account</span>
+                <div class="spinner-border spinner-border-sm d-none" role="status">
+                    <span class="visually-hidden">Loading...</span>
                 </div>
-            </div>
-
-            <div class="card shadow-lg section-card social-media-card">
-                <div class="card-body p-5">
-                    <h2 class="section-title">Social Media</h2>
-
-                    <div class="mb-4">
-                        <label asp-for="Instagram" class="form-label">Instagram</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-instagram"></i>
-                            </span>
-                            <input asp-for="Instagram" class="form-control" placeholder="Instagram profile" />
-                        </div>
-                        <span asp-validation-for="Instagram" class="text-danger small"></span>
-                    </div>
-
-                    <div class="mb-4">
-                        <label asp-for="Facebook" class="form-label">Facebook</label>
-                        <div class="input-group">
-                            <span class="input-group-text">
-                                <i class="bi bi-facebook"></i>
-                            </span>
-                            <input asp-for="Facebook" class="form-control" placeholder="Facebook profile" />
-                        </div>
-                        <span asp-validation-for="Facebook" class="text-danger small"></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </button>
+        </form>
     </div>
 </div>
 
