@@ -132,6 +132,7 @@ namespace EcoTribe.Web.Controllers
 
             string? userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             string? userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+            Volunteer volunteer = volunteerService.GetByUserId(userId);
 
             viewModel.UserId = userId;
             viewModel.UserRole = userRole;
@@ -139,7 +140,6 @@ namespace EcoTribe.Web.Controllers
             if (userRole == "User" && !string.IsNullOrEmpty(userId))
             {
                 // Fetch the volunteer entity (not a ViewModel)
-                var volunteer = volunteerService.GetByUserId(userId);
                 viewModel.VolunteerId = volunteer?.Id; // Use only the ID, discard the rest
             }
             else
@@ -152,7 +152,8 @@ namespace EcoTribe.Web.Controllers
                 EventId = id,
                 // ApplicationUserId = userId,
                 VolunteerId = viewModel.VolunteerId ?? 0,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                VolunteerName = volunteer.Name
             };
 
             return View(viewModel);

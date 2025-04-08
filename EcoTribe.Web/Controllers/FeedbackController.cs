@@ -182,7 +182,6 @@ namespace EcoTribe.Web.Controllers
             }
 
             //inputModel.ApplicationUserId = userId;
-
             if (!ModelState.IsValid)
             {
                 return View(inputModel);
@@ -196,6 +195,8 @@ namespace EcoTribe.Web.Controllers
 
             try
             {
+                inputModel.CreatedAt = DateTime.UtcNow;
+
                 feedbackService.Create(inputModel);
                 TempData["SuccessMessage"] = "Feedback submitted successfully.";
                 return RedirectToAction("Details", "Event", new { id = inputModel.EventId });

@@ -52,15 +52,14 @@ namespace EcoTribe.Web.Controllers
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
-        
 
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(user, "User");
 
-
                 var volunteer = new VolunteerInputModel
                 {
+                    UserId = user.Id, 
                     Name = model.Name,
                     City = model.City,
                     Email = model.Email,
@@ -71,7 +70,7 @@ namespace EcoTribe.Web.Controllers
                     Facebook = model.Facebook
                 };
 
-                _volunteerService.Create(volunteer);
+                _volunteerService.Create(volunteer); 
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 return RedirectToAction("Index", "Home");

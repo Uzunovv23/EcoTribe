@@ -26,5 +26,6 @@ namespace EcoTribe.BusinessObjects.InputModels
         [Required]
         [DataType(DataType.DateTime)]
         public DateTime CreatedAt { get; set; }
+        public string? VolunteerName { get; set; } 
     }
 }

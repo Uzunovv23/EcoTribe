@@ -111,7 +111,7 @@ else
             @foreach (var feedback in Model.Feedbacks)
             {
                 <tr>
-                    <td>@feedback.ApplicationUserName</td>
+                    <td>@feedback.VolunteerName</td>
                     <td>@feedback.Rating / 5</td>
                     <td>@(string.IsNullOrEmpty(feedback.Comments) ? "No comments" : feedback.Comments)</td>
                     <td>@feedback.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>

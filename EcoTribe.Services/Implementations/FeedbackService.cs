@@ -44,7 +44,7 @@ namespace EcoTribe.Services.Implementations
             var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             feedback.Event = context.Events.Find(inputModel.EventId)!;
             feedback.Volunteer = context.Volunteers.Include(v => v.User).FirstOrDefault(v => inputModel.VolunteerId == v.Id)!;
-
+            feedback.CreatedAt = DateTime.Now;
             context.Feedbacks.Add(feedback);
             context.SaveChanges();
         }

@@ -36,5 +36,7 @@ namespace EcoTribe.BusinessObjects.InputModels
 
         [Url(ErrorMessage = "Invalid Facebook URL format.")]
         public string? Facebook { get; set; }
+
+        public string? UserId { get; set; }
     }
 }
