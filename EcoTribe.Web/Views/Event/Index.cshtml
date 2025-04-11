@@ -48,9 +48,13 @@
                     <td>@eventItem.End.ToString("yyyy-MM-dd HH:mm")</td>
                     <td>
                         <div class="btn-group">
-                            <a href="@Url.Action("Details", "Event", new { id = eventItem.Id })" class="btn btn-info me-2">Details</a>
+                            @if (User.IsInRole("User"))
+                            {
+                                <a href="@Url.Action("Details", "Event", new { id = eventItem.Id })" class="btn btn-info me-2">Details</a>
+                            }
                             @if (User.IsInRole("Administrator"))
                             {
+                                <a href="@Url.Action("AdminDetails", "Event", new { id = eventItem.Id })" class="btn btn-info me-2">Details</a>
                                 <a href="@Url.Action("Edit", "Event", new { id = eventItem.Id })" class="btn btn-primary me-2">Edit</a>
                                 <button class="btn btn-danger" onclick="deleteEvent(@eventItem.Id)">Delete</button>
                             }

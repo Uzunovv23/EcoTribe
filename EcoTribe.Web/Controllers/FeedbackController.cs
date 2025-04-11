@@ -195,7 +195,7 @@ namespace EcoTribe.Web.Controllers
 
             try
             {
-                inputModel.CreatedAt = DateTime.UtcNow;
+                inputModel.CreatedAt = DateTime.UtcNow; 
 
                 feedbackService.Create(inputModel);
                 TempData["SuccessMessage"] = "Feedback submitted successfully.";

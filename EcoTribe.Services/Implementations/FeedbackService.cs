@@ -27,13 +27,14 @@ namespace EcoTribe.Services.Implementations
             return context.Feedbacks
                 .Include(fb => fb.Event)
                 .Include(fb => fb.Volunteer)
+                    .ThenInclude(v => v.User)
                 .AsEnumerable()
                 .Select(fb =>
                 {
                     var viewModel = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(fb);
                     viewModel.Event = fb.Event;
                     viewModel.Volunteer = fb.Volunteer;
-                    viewModel.VolunteerName = fb.Volunteer.Name; 
+                    viewModel.VolunteerName = fb.Volunteer?.Name;
                     return viewModel;
                 })
                 .ToList();
@@ -44,7 +45,7 @@ namespace EcoTribe.Services.Implementations
             var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             feedback.Event = context.Events.Find(inputModel.EventId)!;
             feedback.Volunteer = context.Volunteers.Include(v => v.User).FirstOrDefault(v => inputModel.VolunteerId == v.Id)!;
-            feedback.CreatedAt = DateTime.Now;
+            feedback.CreatedAt = DateTime.UtcNow;
             context.Feedbacks.Add(feedback);
             context.SaveChanges();
         }
