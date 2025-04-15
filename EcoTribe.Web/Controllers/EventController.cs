@@ -122,9 +122,9 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
-        
 
-        
+
+
         public IActionResult Details(int id)
         {
             var viewModel = eventService.GetByIdWithVolunteersAndSponsorsAndFeedbacks(id);
@@ -133,34 +133,44 @@ namespace EcoTribe.Web.Controllers
                 return NotFound();
             }
 
-            string? userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            string? userRole = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
-            Volunteer volunteer = volunteerService.GetByUserId(userId);
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            string? userRole = User.FindFirst(ClaimTypes.Role)?.Value;
 
             viewModel.UserId = userId;
             viewModel.UserRole = userRole;
 
             if (userRole == "User" && !string.IsNullOrEmpty(userId))
             {
-                // Fetch the volunteer entity (not a ViewModel)
-                viewModel.VolunteerId = volunteer?.Id; // Use only the ID, discard the rest
+                Volunteer volunteer = volunteerService.GetByUserId(userId);
+
+                if (volunteer != null)
+                {
+                    viewModel.VolunteerId = volunteer.Id;
+
+                    viewModel.FeedbackInput = new FeedbackInputModel
+                    {
+                        EventId = id,
+                        VolunteerId = volunteer.Id,
+                        CreatedAt = DateTime.UtcNow,
+                        VolunteerName = volunteer.Name
+                    };
+                }
+                else
+                {
+                    // In case somehow a user has no volunteer record
+                    viewModel.VolunteerId = null;
+                }
             }
             else
             {
+                // If not a volunteer, no need for FeedbackInput
                 viewModel.VolunteerId = null;
+                viewModel.FeedbackInput = null;
             }
-
-            viewModel.FeedbackInput = new FeedbackInputModel
-            {
-                EventId = id,
-                // ApplicationUserId = userId,
-                VolunteerId = viewModel.VolunteerId ?? 0,
-                CreatedAt = DateTime.UtcNow,
-                VolunteerName = volunteer.Name
-            };
 
             return View(viewModel);
         }
+
 
 
         [Authorize(Roles = "Administrator, Organizator")]
