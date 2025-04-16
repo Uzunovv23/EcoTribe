@@ -22,14 +22,14 @@ namespace EcoTribe.Web.Controllers
             return View(organizations);
         }
 
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator , Organizator")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [Authorize(Roles = "Administrator")]
+        [Authorize(Roles = "Administrator , Organizator" )]
         [ValidateAntiForgeryToken]
         public IActionResult Create(OrganizationInputModel inputModel)
         {

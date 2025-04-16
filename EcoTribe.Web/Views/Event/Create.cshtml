@@ -7,6 +7,20 @@
 <h2>Create New Event</h2>
 
 <form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label for="addressSearch" class="form-label">Find by address</label>
+        <div class="input-group">
+            <input type="text" id="addressSearch" class="form-control" placeholder="Enter city, street, etc.">
+            <button type="button" class="btn btn-outline-primary" onclick="geocodeAddress()">Find location</button>
+        </div>
+    </div>
+
+    <div id="map" style="height: 400px;" class="mb-4"></div>
+
+    <input asp-for="Latitude" type="hidden" />
+    <input asp-for="Longitude" type="hidden" />
+
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
         <input asp-for="Name" class="form-control" />
@@ -44,18 +58,6 @@
     </div>
 
     <div class="mb-3">
-        <label asp-for="Latitude" class="form-label"></label>
-        <input asp-for="Latitude" class="form-control" type="number" step="0.000001" />
-        <span asp-validation-for="Latitude" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Longitude" class="form-label"></label>
-        <input asp-for="Longitude" class="form-control" type="number" step="0.000001" />
-        <span asp-validation-for="Longitude" class="text-danger"></span>
-    </div>
-
-    <div class="mb-3">
         <label asp-for="Start" class="form-label"></label>
         <input asp-for="Start" class="form-control" type="datetime-local" />
         <span asp-validation-for="Start" class="text-danger"></span>
@@ -71,3 +73,63 @@
     <a asp-controller="Location" asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
 
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+<script>
+    const map = L.map('map').setView([42.6977, 23.3219], 13); // Default: Sofia
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+
+    let marker;
+
+    map.on('click', function (e) {
+        const lat = e.latlng.lat.toFixed(6);
+        const lng = e.latlng.lng.toFixed(6);
+
+        if (!marker) {
+            marker = L.marker([lat, lng]).addTo(map);
+        } else {
+            marker.setLatLng([lat, lng]);
+        }
+
+        document.querySelector('[name="Latitude"]').value = lat;
+        document.querySelector('[name="Longitude"]').value = lng;
+    });
+
+    function geocodeAddress() {
+        const address = document.getElementById("addressSearch").value;
+
+        if (!address) {
+            alert("Please enter an address.");
+            return;
+        }
+
+        fetch("https://nominatim.openstreetmap.org/search?format=json&q=" + encodeURIComponent(address))
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.length > 0) {
+                    const lat = parseFloat(data[0].lat).toFixed(6);
+                    const lon = parseFloat(data[0].lon).toFixed(6);
+
+                    map.setView([lat, lon], 15);
+
+                    if (!marker) {
+                        marker = L.marker([lat, lon]).addTo(map);
+                    } else {
+                        marker.setLatLng([lat, lon]);
+                    }
+
+                    document.querySelector('[name="Latitude"]').value = lat;
+                    document.querySelector('[name="Longitude"]').value = lon;
+                } else {
+                    alert("Location not found. Try a more specific address.");
+                }
+            })
+            .catch(err => {
+                console.error("Geocoding error:", err);
+                alert("Error searching address.");
+            });
+    }
+</script>

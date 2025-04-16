@@ -5,7 +5,7 @@
 <h2 class="text-center my-4">Organizations</h2>
 
 <div class="container">
-    @if (User.IsInRole("Administrator"))
+    @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
     {
         <div class="d-flex justify-content-end mb-3">
             <a asp-controller="Organization" asp-action="Create" class="btn btn-success">
