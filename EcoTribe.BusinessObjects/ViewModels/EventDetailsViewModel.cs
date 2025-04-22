@@ -15,8 +15,8 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public string Type { get; set; }
         public int RequiredVolunteers { get; set; }
         public string Description { get; set; }
-        public double Latitude { get; set; }
-        public double Longitude { get; set; }
+        public decimal Latitude { get; set; }
+        public decimal Longitude { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
 

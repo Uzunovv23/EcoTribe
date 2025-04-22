@@ -29,7 +29,7 @@
 
     <div class="mb-3">
         <label asp-for="City" class="form-label"></label>
-        <input asp-for="City" class="form-control" />
+        <input asp-for="City" class="form-control" id="CityInput" />
         <span asp-validation-for="City" class="text-danger"></span>
     </div>
 
@@ -77,7 +77,7 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 <script>
-    const map = L.map('map').setView([42.6977, 23.3219], 13); // Default: Sofia
+    const map = L.map('map').setView([42.6977, 23.3219], 13); 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
@@ -96,6 +96,8 @@
 
         document.querySelector('[name="Latitude"]').value = lat;
         document.querySelector('[name="Longitude"]').value = lng;
+
+        reverseGeocode(lat, lng); 
     });
 
     function geocodeAddress() {
@@ -123,6 +125,8 @@
 
                     document.querySelector('[name="Latitude"]').value = lat;
                     document.querySelector('[name="Longitude"]').value = lon;
+
+                    reverseGeocode(lat, lon); 
                 } else {
                     alert("Location not found. Try a more specific address.");
                 }
@@ -130,6 +134,22 @@
             .catch(err => {
                 console.error("Geocoding error:", err);
                 alert("Error searching address.");
+            });
+    }
+
+    function reverseGeocode(lat, lon) {
+        fetch(`/api/geolocation/reverse?lat=${lat}&lon=${lon}`)
+            .then(response => {
+                if (!response.ok) throw new Error("Backend reverse geocoding failed");
+                return response.json();
+            })
+            .then(data => {
+                if (data && data.length > 0 && data[0].name) {
+                    document.getElementById("CityInput").value = data[0].name;
+                }
+            })
+            .catch(err => {
+                console.error("Reverse geocoding failed:", err);
             });
     }
 </script>
