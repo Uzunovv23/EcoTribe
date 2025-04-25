@@ -1,8 +1,199 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<button class="side-nav-toggle">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+<nav class="side-nav">
+    <div class="side-nav-header">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+            <i class="bi bi-leaf"></i>
+            <span>EcoTribe</span>
+        </a>
+    </div>
+    <ul class="side-nav-menu">
+        <li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
+        <li><a asp-controller="Event" asp-action="Index">Events</a></li>
+        <li><a asp-controller="Organization" asp-action="Index">Organizations</a></li>
+        <li><a asp-controller="Volunteer" asp-action="Index">Volunteers</a></li>
+        <li><a asp-controller="EventResource" asp-action="Index">Event Resources</a></li>
+        <li><a asp-controller="EventVolunteer" asp-action="Index">Event Volunteers</a></li>
+        <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
+        <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
+        <li><a asp-controller="Notification" asp-action="Index">Notifications</a></li>
+        @if (User.IsInRole("Administrator"))
+        {
+            <li>
+                <a asp-controller="Admin" asp-action="Index">
+                    <i class="bi bi-gear-fill"></i> Admin Panel
+                </a>
+            </li>
+        }
+    </ul>
+    <div class="side-nav-footer">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-success">Logout</a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-success mb-2">Log In</a>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-success">Sign Up</a>
+        }
+    </div>
+</nav>
+
+<div class="hero-section">
+    <div class="hero-content">
+        <h1 class="fade-in">Making Earth Better, Together</h1>
+        <p class="lead slide-up">Join a community of passionate individuals and organizations working towards a sustainable future.</p>
+        <div class="hero-buttons slide-up">
+            <a asp-controller="Event" asp-action="Index" class="btn btn-primary btn-lg">Find Events</a>
+            <a asp-controller="Organization" asp-action="Index" class="btn btn-outline-light btn-lg">Partner With Us</a>
+        </div>
+    </div>
+    <div class="scroll-indicator">
+        <div class="mouse">
+            <div class="wheel"></div>
+        </div>
+        <div class="arrow">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
 </div>
+
+<section class="impact-stats">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4">
+                <div class="stat-card fade-in">
+                    <i class="bi bi-tree-fill"></i>
+                    <h3>1,234</h3>
+                    <p>Trees Planted</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card fade-in" style="transition-delay: 0.2s">
+                    <i class="bi bi-people-fill"></i>
+                    <h3>5,678</h3>
+                    <p>Active Volunteers</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stat-card fade-in" style="transition-delay: 0.4s">
+                    <i class="bi bi-globe2"></i>
+                    <h3>890</h3>
+                    <p>Projects Completed</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="featured-initiatives">
+    <div class="container">
+        <h2 class="section-title fade-in">Current Initiatives</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="initiative-card">
+                    <img src="https://images.pexels.com/photos/4488636/pexels-photo-4488636.jpeg" alt="Beach Cleanup">
+                    <div class="initiative-content">
+                        <h3>Beach Cleanup Drive</h3>
+                        <p>Join our monthly beach cleanup initiative to protect marine life and keep our coastlines pristine for future generations.</p>
+                        <a asp-controller="Event" asp-action="Index" class="btn btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="initiative-card">
+                    <img src="https://images.pexels.com/photos/5417678/pexels-photo-5417678.jpeg" alt="Urban Gardening">
+                    <div class="initiative-content">
+                        <h3>Urban Gardening</h3>
+                        <p>Transform urban spaces into thriving community gardens that provide fresh produce and green spaces for city dwellers.</p>
+                        <a asp-controller="Event" asp-action="Index" class="btn btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="initiative-card">
+                    <img src="https://images.pexels.com/photos/9800002/pexels-photo-9800002.jpeg" alt="Recycling Workshop">
+                    <div class="initiative-content">
+                        <h3>Recycling Workshop</h3>
+                        <p>Learn creative ways to reduce waste and recycle effectively through hands-on workshops and educational sessions.</p>
+                        <a asp-controller="Event" asp-action="Index" class="btn btn-outline-success">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="get-involved">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 fade-in active">
+                <h2>Ready to Make a Difference?</h2>
+                <p>Join EcoTribe today and be part of the solution. Whether you're an individual volunteer or an organization, there's a place for you in our community.</p>
+                <div class="involvement-buttons">
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-success btn-lg">Join as Volunteer</a>
+                    <a asp-controller="Organization" asp-action="Index" class="btn btn-outline-success btn-lg">Partner with Us</a>
+                </div>
+            </div>
+            <div class="col-lg-6 mt-4 mt-lg-0 slide-up">
+                <img src="https://images.pexels.com/photos/6591154/pexels-photo-6591154.jpeg" alt="Volunteers Working" class="img-fluid rounded">
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer class="footer">
+    <div class="container">
+        <p>&copy; 2025 - EcoTribe - <a asp-controller="Home" asp-action="Privacy">Privacy</a></p>
+    </div>
+</footer>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.fade-in, .slide-up').forEach(element => {
+                    element.classList.add('active');
+                });
+            }, 100);
+
+            const sideNavToggle = document.querySelector('.side-nav-toggle');
+            const sideNav = document.querySelector('.side-nav');
+            const body = document.body;
+
+            sideNavToggle.addEventListener('click', () => {
+                sideNavToggle.classList.toggle('active');
+                sideNav.classList.toggle('active');
+                body.classList.toggle('nav-open');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!sideNav.contains(e.target) && !sideNavToggle.contains(e.target)) {
+                    sideNavToggle.classList.remove('active');
+                    sideNav.classList.remove('active');
+                    body.classList.remove('nav-open');
+                }
+            });
+
+            const scrollIndicator = document.querySelector('.scroll-indicator');
+            if (scrollIndicator) {
+                scrollIndicator.addEventListener('click', () => {
+                    const statsSection = document.querySelector('.impact-stats');
+                    if (statsSection) {
+                        statsSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                });
+            }
+        });
+    </script>
+}
