@@ -1,17 +1,12 @@
-﻿/* Event Details Styling */
-:root {
-    /* Primary Color Palette - Nature Inspired */
-    --primary-color: #3E885B; /* Forest Green */
+﻿:root {
+    --primary-color: #3E885B; 
     --primary-light: #70af8a;
     --primary-dark: #2a6840;
-    /* Secondary Colors */
-    --secondary-color: #4A6FA5; /* Calm Blue */
-    --accent-color: #E9B44C; /* Warm Amber */
-    /* Status Colors */
+    --secondary-color: #4A6FA5; 
+    --accent-color: #E9B44C; 
     --success-color: #4CAF50;
     --warning-color: #FF9800;
     --error-color: #F44336;
-    /* Neutral Tones */
     --neutral-50: #fafafa;
     --neutral-100: #f5f5f5;
     --neutral-200: #eeeeee;
@@ -22,22 +17,19 @@
     --neutral-700: #616161;
     --neutral-800: #424242;
     --neutral-900: #212121;
-    /* Other Variables */
     --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     --border-radius: 12px;
     --transition-speed: 0.3s;
 }
 
-/* General Layout */
 .event-details-container {
     padding-bottom: 64px;
 }
 
-/* Hero Section */
 .event-hero {
     position: relative;
     height: 280px;
-    background-image: url('https://images.pexels.com/photos/2747449/pexels-photo-2747449.jpeg');
+    background-image: url('https://images.pexels.com/photos/957024/forest-trees-perspective-bright-957024.jpeg');
     background-size: cover;
     background-position: center;
     color: white;
@@ -93,7 +85,6 @@
         margin-right: 6px;
     }
 
-/* Content Cards */
 .content-card {
     background-color: white;
     border-radius: var(--border-radius);
@@ -124,7 +115,6 @@
         color: var(--primary-color);
     }
 
-/* Event Description Section */
 .event-description {
     font-size: 1.05rem;
     line-height: 1.6;
@@ -178,7 +168,6 @@
     color: var(--neutral-800);
 }
 
-/* Map Section */
 .event-map {
     height: 300px;
     border-radius: 8px;
@@ -186,7 +175,6 @@
     box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
 }
 
-/* Actions Card */
 .card-actions {
     display: flex;
     flex-direction: column;
@@ -209,7 +197,6 @@
         box-shadow: 0 4px 12px rgba(62, 136, 91, 0.3);
     }
 
-/* Volunteers List */
 .volunteers-list, .sponsors-list {
     display: flex;
     flex-direction: column;
@@ -282,7 +269,6 @@
         text-decoration: underline;
     }
 
-/* Sponsor Card */
 .sponsor-name {
     font-size: 1.1rem;
     font-weight: 600;
@@ -298,7 +284,6 @@
     margin-top: 8px;
 }
 
-/* Feedback Section */
 .feedback-list {
     display: flex;
     flex-direction: column;
@@ -350,7 +335,6 @@
     line-height: 1.5;
 }
 
-/* Star Rating in Form */
 .star-rating {
     display: flex;
     flex-direction: row-reverse;
@@ -375,7 +359,6 @@
             color: var(--accent-color);
         }
 
-/* Form Styling */
 .custom-input {
     border: 1px solid var(--neutral-300);
     border-radius: 8px;
@@ -395,7 +378,6 @@
     color: var(--neutral-800);
 }
 
-/* Empty States */
 .empty-state {
     text-align: center;
     padding: 24px;
@@ -408,7 +390,6 @@
     opacity: 0.5;
 }
 
-/* Animations */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -459,7 +440,6 @@
     transform: translateX(0) translateY(0);
 }
 
-/* Media Queries */
 @media (max-width: 991.98px) {
     .event-title {
         font-size: 2rem;

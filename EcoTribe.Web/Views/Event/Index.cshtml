@@ -4,95 +4,190 @@
     ViewData["Title"] = "Events";
 }
 
-<h2 class="mb-4">Events</h2>
-
-@if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
-{
-    <a href="@Url.Action("Create", "Event")" class="btn btn-primary mt-3">Create New Event</a>
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/events.css" />
 }
 
-@if (Model != null && Model.Any())
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Name</th>
-                <th>City</th>
-                <th>Type</th>
-                <th>Volunteers Required</th>
-                <th>Description</th>
-                <th>Latitude</th>
-                <th>Longitude</th>
-                <th>Start</th>
-                <th>End</th>
-                @if(User.IsInRole("Administrator") || User.IsInRole("Organizator"))
-                {
-                    <th>Actions</th>
-                }
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var eventItem in Model)
+<button class="side-nav-toggle">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
+
+<nav class="side-nav">
+    <div class="side-nav-header">
+        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+            <i class="bi bi-leaf"></i>
+            <span>EcoTribe</span>
+        </a>
+    </div>
+    <ul class="side-nav-menu">
+        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li><a asp-controller="Event" asp-action="Index" class="active">Events</a></li>
+        <li><a asp-controller="Organization" asp-action="Index">Organizations</a></li>
+        <li><a asp-controller="Volunteer" asp-action="Index">Volunteers</a></li>
+        <li><a asp-controller="EventResource" asp-action="Index">Event Resources</a></li>
+        <li><a asp-controller="EventVolunteer" asp-action="Index">Event Volunteers</a></li>
+        <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
+        <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
+        <li><a asp-controller="Notification" asp-action="Index">Notifications</a></li>
+        @if (User.IsInRole("Administrator"))
+        {
+            <li>
+                <a asp-controller="Admin" asp-action="Index">
+                    <i class="bi bi-gear-fill"></i> Admin Panel
+                </a>
+            </li>
+        }
+    </ul>
+    <div class="side-nav-footer">
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-success">Logout</a>
+        }
+        else
+        {
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-success mb-2">Log In</a>
+            <a asp-controller="Account" asp-action="Register" class="btn btn-success">Sign Up</a>
+        }
+    </div>
+</nav>
+
+<div class="events-page">
+    <div class="events-hero">
+        <div class="hero-overlay"></div>
+        <div class="container position-relative">
+            <h1 class="display-4 text-white fw-bold">Eco Events</h1>
+            <p class="lead text-white">Join us in making a difference for our planet</p>
+
+            @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
             {
-                <tr id="event-row-@eventItem.Id">
-                    <td>@eventItem.Id</td>
-                    <td>@eventItem.Name</td>
-                    <td>@eventItem.City</td>
-                    <td>@eventItem.Type</td>
-                    <td>@eventItem.RequiredVolunteers</td>
-                    <td>@eventItem.Description</td>
-                    <td>@eventItem.Latitude</td>
-                    <td>@eventItem.Longitude</td>
-                    <td>@eventItem.Start.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>@eventItem.End.ToString("yyyy-MM-dd HH:mm")</td>
-                    <td>
-                        <div class="btn-group">
-                            <a href="@Url.Action("Details", "Event", new { id = eventItem.Id })" class="btn btn-info me-2">Details</a>
-                            @if (User.IsInRole("Administrator"))
-                            {
-                                <a href="@Url.Action("Edit", "Event", new { id = eventItem.Id })" class="btn btn-primary me-2">Edit</a>
-                                <button class="btn btn-danger" onclick="deleteEvent(@eventItem.Id)">Delete</button>
-                            }
-                        </div>
-                    </td>
-                </tr>
+                <a href="@Url.Action("Create", "Event")" class="btn btn-eco-primary btn-lg mt-3">
+                    <i class="bi bi-plus-circle"></i> Create New Event
+                </a>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No events available.</p>
-}
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="filters-section mb-4 animate-on-scroll fade-in">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                                <input type="text" id="eventSearch" class="form-control" placeholder="Search events...">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="eventTypeFilter" class="form-select">
+                                <option value="">All Event Types</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <select id="eventCityFilter" class="form-select">
+                                <option value="">All Cities</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 events-grid">
+            @if (Model != null && Model.Any())
+            {
+                foreach (var eventItem in Model)
+                {
+                    <div class="col-md-6 col-lg-4 event-card-wrapper"
+                         data-event-id="@eventItem.Id"
+                         data-event-name="@eventItem.Name"
+                         data-event-city="@eventItem.City"
+                         data-event-type="@eventItem.Type">
+                        <div class="card h-100 event-card animate-on-scroll fade-in">
+                            <div class="event-card-header">
+                                <span class="event-type-badge">@eventItem.Type</span>
+                                <h3 class="card-title">@eventItem.Name</h3>
+                                <div class="event-meta">
+                                    <span><i class="bi bi-geo-alt"></i> @eventItem.City</span>
+                                    <span><i class="bi bi-calendar"></i> @eventItem.Start.ToString("MMM d, yyyy")</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="event-time mb-3">
+                                    <i class="bi bi-clock"></i>
+                                    <span>@eventItem.Start.ToString("h:mm tt") - @eventItem.End.ToString("h:mm tt")</span>
+                                </div>
+                                <p class="card-text event-description">@(eventItem.Description.Length > 100 ? eventItem.Description.Substring(0, 100) + "..." : eventItem.Description)</p>
+                                <div class="event-volunteers-required">
+                                    <i class="bi bi-people"></i> <span>@eventItem.RequiredVolunteers</span> volunteers needed
+                                </div>
+                                <div class="event-map-container mt-3">
+                                    <div id="map-@eventItem.Id" class="event-map"></div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="btn-group event-actions">
+                                    <a href="@Url.Action("Details", "Event", new { id = eventItem.Id })" class="btn btn-outline-primary">
+                                        <i class="bi bi-info-circle"></i> Details
+                                    </a>
+                                    @if (User.IsInRole("Administrator"))
+                                    {
+                                        <a href="@Url.Action("Edit", "Event", new { id = eventItem.Id })" class="btn btn-outline-success">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <button class="btn btn-outline-danger" onclick="deleteEvent(@eventItem.Id)">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+                            <div class="event-coords" data-lat="@eventItem.Latitude" data-lng="@eventItem.Longitude" hidden></div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="col-12">
+                    <div class="empty-state animate-on-scroll fade-in">
+                        <i class="bi bi-calendar-x empty-icon"></i>
+                        <p>No events available.</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @Html.AntiForgeryToken()
 
-<script>
-    function deleteEvent(eventId) {
-        if (!confirm("Are you sure you want to delete this event?")) {
-            return;
-        }
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="~/js/events.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sideNavToggle = document.querySelector('.side-nav-toggle');
+            const sideNav = document.querySelector('.side-nav');
+            const body = document.body;
 
-        const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+            sideNavToggle.addEventListener('click', () => {
+                sideNavToggle.classList.toggle('active');
+                sideNav.classList.toggle('active');
+                body.classList.toggle('nav-open');
+            });
 
-        fetch(`/Event/DeleteConfirmed`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-                "RequestVerificationToken": token
-            },
-            body: new URLSearchParams({ id: eventId })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error("Failed to delete event.");
-            }
-            return response.text();
-        })
-        .then(() => {
-            document.getElementById(`event-row-${eventId}`).remove();
-        })
-        .catch(error => alert(error.message));
-    }
-</script>
+            document.addEventListener('click', (e) => {
+                if (!sideNav.contains(e.target) && !sideNavToggle.contains(e.target)) {
+                    sideNavToggle.classList.remove('active');
+                    sideNav.classList.remove('active');
+                    body.classList.remove('nav-open');
+                }
+            });
+        });
+    </script>
+}

@@ -5,7 +5,6 @@
 }
 
 <div class="event-details-container">
-    <!-- Hero Section -->
     <div class="event-hero">
         <div class="event-hero-overlay"></div>
         <div class="container position-relative">
@@ -20,9 +19,7 @@
 
     <div class="container mt-4">
         <div class="row">
-            <!-- Left Column - Event Info -->
             <div class="col-lg-8">
-                <!-- Event Description Card -->
                 <div class="content-card mb-4 animate-on-scroll fade-in">
                     <h2 class="section-title"><i class="bi bi-info-circle"></i> About This Event</h2>
                     <p class="event-description">@Model.Description</p>
@@ -66,13 +63,11 @@
                     </div>
                 </div>
 
-                <!-- Map Card -->
                 <div class="content-card mb-4 animate-on-scroll fade-in">
                     <h2 class="section-title"><i class="bi bi-map"></i> Location</h2>
                     <div id="map" class="event-map"></div>
                 </div>
 
-                <!-- Feedback Section -->
                 <div class="content-card mb-4 animate-on-scroll fade-in">
                     <h2 class="section-title"><i class="bi bi-chat-dots"></i> Feedback</h2>
                     @if (Model.Feedbacks.Any())
@@ -151,9 +146,7 @@
                 </div>
             </div>
 
-            <!-- Right Column - Volunteers & Sponsors -->
             <div class="col-lg-4">
-                <!-- Actions Card -->
                 <div class="content-card mb-4 animate-on-scroll slide-in-right">
                     <div class="card-actions">
                         <a asp-action="Index" class="btn btn-outline-secondary">
@@ -172,7 +165,6 @@
                     </div>
                 </div>
 
-                <!-- Volunteers Card -->
                 <div class="content-card mb-4 animate-on-scroll slide-in-right">
                     <h2 class="section-title"><i class="bi bi-people"></i> Volunteers</h2>
                     @if (Model.AttendingVolunteers.Any())
@@ -211,7 +203,6 @@
                     }
                 </div>
 
-                <!-- Sponsors Card -->
                 <div class="content-card mb-4 animate-on-scroll slide-in-right">
                     <h2 class="section-title"><i class="bi bi-building"></i> Sponsors</h2>
                     @if (Model.Sponsors.Any())
