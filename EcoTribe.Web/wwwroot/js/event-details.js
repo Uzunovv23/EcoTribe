@@ -1,7 +1,10 @@
 ﻿
+/**
+ *Initialize the Leaflet map
  @param {number} latitude 
  @param {number} longitude 
  @param {string} eventName 
+ */
  
 function initMap(latitude, longitude, eventName) {
     const map = L.map('map').setView([latitude, longitude], 14);
