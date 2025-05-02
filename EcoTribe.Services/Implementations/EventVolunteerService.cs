@@ -68,5 +68,30 @@ namespace EcoTribe.Services.Implementations
             context.EventVolunteers.Remove(eventVolunteer);
             context.SaveChanges();
         }
+
+        public bool HasUserAlreadyParticipated(int eventId, int volunteerId)
+        {
+            return context.EventVolunteers
+                .Any(ev => ev.EventId == eventId && ev.VolunteerId == volunteerId);
+        }
+
+        public void Participate(int eventId, int volunteerId, string intention = "Wants to help.")
+        {
+            if (!HasUserAlreadyParticipated(eventId, volunteerId))
+            {
+                var eventVolunteer = new EventVolunteer
+                {
+                    EventId = eventId,
+                    VolunteerId = volunteerId,
+                    Intention = intention,
+                };
+                context.EventVolunteers.Add(eventVolunteer);
+                context.SaveChanges();
+            }
+            else
+            {
+                throw new InvalidOperationException("User has already participated in this event.");
+            }
+        }
     }
 }

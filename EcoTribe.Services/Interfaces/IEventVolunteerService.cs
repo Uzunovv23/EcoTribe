@@ -10,6 +10,7 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IEventVolunteerService : IService<EventVolunteerViewModel, EventVolunteerInputModel>
     {
-        
+        bool HasUserAlreadyParticipated(int eventId, int volunteerId);
+        void Participate(int eventId, int volunteerId, string intention = "Wants to help.");
     }
 }

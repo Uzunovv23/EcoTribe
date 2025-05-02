@@ -1,8 +1,10 @@
 ﻿using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
+using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
@@ -12,10 +14,14 @@ namespace EcoTribe.Web.Controllers
     public class EventVolunteerController : Controller
     {
         private readonly IEventVolunteerService eventVolunteerService;
+        private readonly IVolunteerService volunteerService;
 
-        public EventVolunteerController(IEventVolunteerService eventVolunteerService)
+        public EventVolunteerController(
+            IEventVolunteerService eventVolunteerService,
+            IVolunteerService volunteerService)
         {
             this.eventVolunteerService = eventVolunteerService;
+            this.volunteerService = volunteerService;
         }
         public IActionResult Index()
         {
@@ -117,5 +123,36 @@ namespace EcoTribe.Web.Controllers
                 return BadRequest("Error deleting the event volunteer.");
             }
         }
+
+        [HttpPost]
+        [Authorize(Roles = "User")]
+        [ValidateAntiForgeryToken]
+        public IActionResult Participate([FromBody] ParticipateInputModel model)
+            {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var volunteer = volunteerService.GetByUserId(userId);
+
+            if (volunteer == null)
+            {
+                return Unauthorized(); 
+            }
+
+            bool alreadyJoined = eventVolunteerService.HasUserAlreadyParticipated(model.EventId, volunteer.Id);
+            if (alreadyJoined)
+            {
+                return Conflict("You have already signed up for this event.");
+            }
+
+            try
+            {
+                eventVolunteerService.Participate(model.EventId, volunteer.Id);
+                return Ok(new { message = "Successfully signed up." });
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "An error occurred while processing your participation.");
+            }
+        }
+
     }
 }
