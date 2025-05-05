@@ -15,11 +15,13 @@ namespace EcoTribe.Web.Controllers
     {
         private readonly IEventService eventService;
         private readonly IVolunteerService volunteerService;
+        private readonly IEventVolunteerService eventVolunteerService;
 
-        public EventController(IEventService eventService, IVolunteerService volunteerService)
+        public EventController(IEventService eventService, IVolunteerService volunteerService, IEventVolunteerService eventVolunteerService)
         {
             this.eventService = eventService;
             this.volunteerService = volunteerService;
+            this.eventVolunteerService = eventVolunteerService;
         }
         public IActionResult Index()
         {
@@ -147,6 +149,9 @@ namespace EcoTribe.Web.Controllers
                 {
                     viewModel.VolunteerId = volunteer.Id;
 
+                    // Check if user is already participating
+                    viewModel.IsParticipating = eventVolunteerService.HasUserAlreadyParticipated(id, volunteer.Id);
+
                     viewModel.FeedbackInput = new FeedbackInputModel
                     {
                         EventId = id,
@@ -157,15 +162,15 @@ namespace EcoTribe.Web.Controllers
                 }
                 else
                 {
-                    // In case somehow a user has no volunteer record
                     viewModel.VolunteerId = null;
+                    viewModel.IsParticipating = false;
                 }
             }
             else
             {
-                // If not a volunteer, no need for FeedbackInput
                 viewModel.VolunteerId = null;
                 viewModel.FeedbackInput = null;
+                viewModel.IsParticipating = false;
             }
 
             return View(viewModel);

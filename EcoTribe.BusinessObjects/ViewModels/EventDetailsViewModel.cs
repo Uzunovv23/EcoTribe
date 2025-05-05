@@ -29,5 +29,7 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public int? VolunteerId { get; set; } 
 
         public FeedbackInputModel FeedbackInput { get; set; }
+
+        public bool IsParticipating { get; set; }
     }
 }

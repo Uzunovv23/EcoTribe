@@ -12,5 +12,6 @@ namespace EcoTribe.Services.Interfaces
     {
         bool HasUserAlreadyParticipated(int eventId, int volunteerId);
         void Participate(int eventId, int volunteerId, string intention = "Wants to help.");
+        void Unparticipate(int eventId, int volunteerId);
     }
 }

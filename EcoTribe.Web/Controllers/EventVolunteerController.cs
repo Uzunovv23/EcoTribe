@@ -127,32 +127,45 @@ namespace EcoTribe.Web.Controllers
         [HttpPost]
         [Authorize(Roles = "User")]
         [ValidateAntiForgeryToken]
-        public IActionResult Participate([FromBody] ParticipateInputModel model)
-            {
+        public IActionResult ToggleParticipation([FromForm] ParticipateInputModel model)
+        {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var volunteer = volunteerService.GetByUserId(userId);
 
             if (volunteer == null)
             {
-                return Unauthorized(); 
+                return Unauthorized();
             }
 
             bool alreadyJoined = eventVolunteerService.HasUserAlreadyParticipated(model.EventId, volunteer.Id);
-            if (alreadyJoined)
-            {
-                return Conflict("You have already signed up for this event.");
-            }
 
             try
             {
-                eventVolunteerService.Participate(model.EventId, volunteer.Id);
-                return Ok(new { message = "Successfully signed up." });
+                if (alreadyJoined)
+                {
+                    eventVolunteerService.Unparticipate(model.EventId, volunteer.Id);
+                    return Ok(new
+                    {
+                        isParticipating = false,
+                        message = "You have successfully canceled your participation."
+                    });
+                }
+                else
+                {
+                    eventVolunteerService.Participate(model.EventId, volunteer.Id);
+                    return Ok(new
+                    {
+                        isParticipating = true,
+                        message = "You have successfully signed up!"
+                    });
+                }
             }
             catch (Exception)
             {
-                return StatusCode(500, "An error occurred while processing your participation.");
+                return StatusCode(500, "An error occurred while processing your request.");
             }
         }
+
 
     }
 }

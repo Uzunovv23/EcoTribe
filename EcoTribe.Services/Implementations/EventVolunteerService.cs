@@ -93,5 +93,17 @@ namespace EcoTribe.Services.Implementations
                 throw new InvalidOperationException("User has already participated in this event.");
             }
         }
+
+        public void Unparticipate(int eventId, int volunteerId)
+        {
+            var ev = context.EventVolunteers
+                .FirstOrDefault(ev => ev.EventId == eventId && ev.VolunteerId == volunteerId);
+
+            if (ev != null)
+            {
+                context.EventVolunteers.Remove(ev);
+                context.SaveChanges();
+            }
+        }
     }
 }
