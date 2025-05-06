@@ -19,11 +19,14 @@
         <li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
         <li><a asp-controller="Event" asp-action="Index">Events</a></li>
         <li><a asp-controller="Organization" asp-action="Index">Organizations</a></li>
-        <li><a asp-controller="Volunteer" asp-action="Index">Volunteers</a></li>
-        <li><a asp-controller="EventResource" asp-action="Index">Event Resources</a></li>
-        <li><a asp-controller="EventVolunteer" asp-action="Index">Event Volunteers</a></li>
-        <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
-        <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
+        @if(User.IsInRole("Administrator")|| User.IsInRole("Organizator"))
+        {
+            <li><a asp-controller="Volunteer" asp-action="Index">Volunteers</a></li>
+            <li><a asp-controller="EventResource" asp-action="Index">Event Resources</a></li>
+            <li><a asp-controller="EventVolunteer" asp-action="Index">Event Volunteers</a></li>
+            <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
+            <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
+        }
         <li><a asp-controller="Notification" asp-action="Index">Notifications</a></li>
         @if (User.IsInRole("Administrator"))
         {
