@@ -124,9 +124,6 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
-
-
-
         public IActionResult Details(int id)
         {
             var viewModel = eventService.GetByIdWithVolunteersAndSponsorsAndFeedbacks(id);
@@ -149,8 +146,22 @@ namespace EcoTribe.Web.Controllers
                 {
                     viewModel.VolunteerId = volunteer.Id;
 
-                    // Check if user is already participating
-                    viewModel.IsParticipating = eventVolunteerService.HasUserAlreadyParticipated(id, volunteer.Id);
+                    bool isParticipating = eventVolunteerService.HasUserAlreadyParticipated(id, volunteer.Id);
+                    viewModel.IsParticipating = isParticipating;
+
+                    if (Request.Query.ContainsKey("toggle"))
+                    {
+                        if (isParticipating)
+                        {
+                            eventVolunteerService.Unparticipate(id, volunteer.Id);
+                        }
+                        else
+                        {
+                            eventVolunteerService.Participate(id, volunteer.Id);
+                        }
+
+                        return RedirectToAction(nameof(Details), new { id });
+                    }
 
                     viewModel.FeedbackInput = new FeedbackInputModel
                     {
@@ -175,6 +186,8 @@ namespace EcoTribe.Web.Controllers
 
             return View(viewModel);
         }
+
+
 
 
 
