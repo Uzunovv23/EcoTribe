@@ -2,54 +2,6 @@
     ViewData["Title"] = "Home";
 }
 
-<button class="side-nav-toggle">
-    <span></span>
-    <span></span>
-    <span></span>
-</button>
-
-<nav class="side-nav">
-    <div class="side-nav-header">
-        <a class="navbar-brand" asp-controller="Home" asp-action="Index">
-            <i class="bi bi-leaf"></i>
-            <span>EcoTribe</span>
-        </a>
-    </div>
-    <ul class="side-nav-menu">
-        <li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
-        <li><a asp-controller="Event" asp-action="Index">Events</a></li>
-        <li><a asp-controller="Organization" asp-action="Index">Organizations</a></li>
-        @if(User.IsInRole("Administrator")|| User.IsInRole("Organizator"))
-        {
-            <li><a asp-controller="Volunteer" asp-action="Index">Volunteers</a></li>
-            <li><a asp-controller="EventResource" asp-action="Index">Event Resources</a></li>
-            <li><a asp-controller="EventVolunteer" asp-action="Index">Event Volunteers</a></li>
-            <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
-            <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
-        }
-        <li><a asp-controller="Notification" asp-action="Index">Notifications</a></li>
-        @if (User.IsInRole("Administrator"))
-        {
-            <li>
-                <a asp-controller="Admin" asp-action="Index">
-                    <i class="bi bi-gear-fill"></i> Admin Panel
-                </a>
-            </li>
-        }
-    </ul>
-    <div class="side-nav-footer">
-        @if (User.Identity.IsAuthenticated)
-        {
-            <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-success">Logout</a>
-        }
-        else
-        {
-            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-success mb-2">Log In</a>
-            <a asp-controller="Account" asp-action="Register" class="btn btn-success">Sign Up</a>
-        }
-    </div>
-</nav>
-
 <div class="hero-section">
     <div class="hero-content">
         <h1 class="fade-in">Making Earth Better, Together</h1>
@@ -161,42 +113,3 @@
     </div>
 </footer>
 
-@section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            setTimeout(() => {
-                document.querySelectorAll('.fade-in, .slide-up').forEach(element => {
-                    element.classList.add('active');
-                });
-            }, 100);
-
-            const sideNavToggle = document.querySelector('.side-nav-toggle');
-            const sideNav = document.querySelector('.side-nav');
-            const body = document.body;
-
-            sideNavToggle.addEventListener('click', () => {
-                sideNavToggle.classList.toggle('active');
-                sideNav.classList.toggle('active');
-                body.classList.toggle('nav-open');
-            });
-
-            document.addEventListener('click', (e) => {
-                if (!sideNav.contains(e.target) && !sideNavToggle.contains(e.target)) {
-                    sideNavToggle.classList.remove('active');
-                    sideNav.classList.remove('active');
-                    body.classList.remove('nav-open');
-                }
-            });
-
-            const scrollIndicator = document.querySelector('.scroll-indicator');
-            if (scrollIndicator) {
-                scrollIndicator.addEventListener('click', () => {
-                    const statsSection = document.querySelector('.impact-stats');
-                    if (statsSection) {
-                        statsSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                });
-            }
-        });
-    </script>
-}
