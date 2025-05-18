@@ -1,5 +1,4 @@
 ﻿using EcoTribe.BusinessObjects.ViewModels;
-using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -16,19 +15,43 @@ namespace EcoTribe.Web.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            var notifications = await notificationService.GetUserNotificationsAsync(userId);
+            return View(notifications);
+        }
+
+        [HttpGet]
         public async Task<IActionResult> UnreadCount()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+                return Json(0);
+
             var count = await notificationService.GetUnreadCountAsync(userId);
             return Json(count);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> All()
+        [HttpPost]
+        public async Task<IActionResult> MarkAllAsRead()
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var notifications = await notificationService.GetUserNotificationsAsync(userId);
-            return View(notifications); // Create a view for listing
+            if (string.IsNullOrEmpty(userId))
+                return Unauthorized();
+
+            await notificationService.MarkUserNotificationsAsReadAsync(userId);
+            return Ok();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAsRead(int id)
+        {
+            await notificationService.MarkAsReadAsync(id);
+            return Ok();
         }
     }
 }

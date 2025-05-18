@@ -1,40 +1,31 @@
-﻿@model List<EcoTribe.BusinessObjects.ViewModels.NotificationViewModel>
+﻿@model IEnumerable<EcoTribe.BusinessObjects.ViewModels.NotificationViewModel>
 
 @{
     ViewData["Title"] = "Notifications";
 }
 
-<h2>Notifications</h2>
+<h2 class="text-2xl font-bold mb-4">Your Notifications</h2>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Volunteer ID</th>
-            <th>Message</th>
-            <th>Created At</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
+@if (!Model.Any())
+{
+    <p>You have no notifications.</p>
+}
+else
+{
+    <ul class="space-y-3">
         @foreach (var notification in Model)
         {
-            <tr>
-                <td>@notification.Id</td>
-                <td>@notification.VolunteerId</td>
-                <td>@notification.Message</td>
-                <td>@notification.CreatedAt.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>
-                    @if (notification.IsRead)
-                    {
-                        <span class="badge bg-success">Read</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-warning">Unread</span>
-                    }
-                </td>
-            </tr>
+            <li class="border rounded-lg p-4 @(notification.IsRead ? "bg-gray-100" : "bg-yellow-100")">
+                <strong>@notification.Title</strong>
+                <p>@notification.Message</p>
+                <small class="text-gray-600">@notification.CreatedAt.ToLocalTime().ToString("g")</small>
+
+                @if (!notification.IsRead)
+                {
+                    <a href="@Url.Action("MarkAsRead", "Notification", new { id = notification.Id })" class="text-blue-500 hover:underline">Mark as read</a>
+                }
+            </li>
         }
-    </tbody>
-</table>
+    </ul>
+}
+

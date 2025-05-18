@@ -10,10 +10,9 @@ namespace EcoTribe.BusinessObjects.ViewModels
     public class NotificationViewModel
     {
         public int Id { get; set; }
-        public int VolunteerId { get; set; }
-        public Volunteer Volunteer { get; set; } = null!;
+        public string Title { get; set; } = null!;
         public string Message { get; set; } = null!;
+        public bool IsRead { get; set; }
         public DateTime CreatedAt { get; set; }
-        public bool IsRead { get; set; } = false;
     }
 }

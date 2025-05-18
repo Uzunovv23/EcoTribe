@@ -3,12 +3,10 @@ using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
-using EcoTribe.Services.Utils;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Implementations
@@ -22,12 +20,68 @@ namespace EcoTribe.Services.Implementations
             this.context = context;
         }
 
+        public async Task<int> GetUnreadCountAsync(string userId)
+        {
+            return await context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .CountAsync();
+        }
+
+        public async Task<IEnumerable<NotificationViewModel>> GetUserUnreadNotifications(string userId)
+        {
+            return await context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .OrderByDescending(n => n.CreatedAt)
+                .Select(n => new NotificationViewModel
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Message = n.Message,
+                    CreatedAt = n.CreatedAt,
+                    IsRead = n.IsRead
+                })
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<NotificationViewModel>> GetUserNotificationsAsync(string userId)
+        {
+            return await context.Notifications
+                .Where(n => n.UserId == userId)
+                .OrderByDescending(n => n.CreatedAt)
+                .Select(n => new NotificationViewModel
+                {
+                    Id = n.Id,
+                    Title = n.Title,
+                    Message = n.Message,
+                    CreatedAt = n.CreatedAt,
+                    IsRead = n.IsRead
+                })
+                .ToListAsync();
+        }
+
         public async Task MarkAsReadAsync(int notificationId)
         {
             var notification = await context.Notifications.FindAsync(notificationId);
-            if (notification != null)
+            if (notification != null && !notification.IsRead)
             {
                 notification.IsRead = true;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task MarkUserNotificationsAsReadAsync(string userId)
+        {
+            var unreadNotifications = await context.Notifications
+                .Where(n => n.UserId == userId && !n.IsRead)
+                .ToListAsync();
+
+            if (unreadNotifications.Any())
+            {
+                foreach (var notification in unreadNotifications)
+                {
+                    notification.IsRead = true;
+                }
+
                 await context.SaveChangesAsync();
             }
         }
@@ -37,7 +91,6 @@ namespace EcoTribe.Services.Implementations
             var now = DateTime.UtcNow;
             var in24Hours = now.AddHours(24);
 
-            // 1. Get events starting within the next 24 hours
             var upcomingEvents = await context.Events
                 .Where(e => e.Start > now && e.Start <= in24Hours)
                 .Include(e => e.EventVolunteers)
@@ -55,7 +108,6 @@ namespace EcoTribe.Services.Implementations
                     if (string.IsNullOrEmpty(userId))
                         continue;
 
-                    // 2. Avoid duplicate notifications
                     bool exists = await context.Notifications.AnyAsync(n =>
                         n.UserId == userId &&
                         n.EventId == ev.Id &&
@@ -79,42 +131,27 @@ namespace EcoTribe.Services.Implementations
             await context.SaveChangesAsync();
         }
 
-        public async Task<int> GetUnreadCountAsync(string userId)
-        {
-            return await context.Notifications
-                .Where(n => n.UserId == userId && !n.IsRead)
-                .CountAsync();
-        }
-
-        public async Task<IEnumerable<Notification>> GetUserNotificationsAsync(string userId)
-        {
-            return await context.Notifications
-                .Where(n => n.UserId == userId)
-                .OrderByDescending(n => n.CreatedAt)
-                .ToListAsync();
-        }
-
-        IEnumerable<NotificationViewModel> IService<NotificationViewModel, NotificationInputModel>.GetAll()
+        public IEnumerable<NotificationViewModel> GetAll()
         {
             throw new NotImplementedException();
         }
 
-        NotificationViewModel? IService<NotificationViewModel, NotificationInputModel>.GetById(int id)
+        public NotificationViewModel? GetById(int id)
         {
             throw new NotImplementedException();
         }
 
-        void IService<NotificationViewModel, NotificationInputModel>.Create(NotificationInputModel inputModel)
+        public void Create(NotificationInputModel inputModel)
         {
             throw new NotImplementedException();
         }
 
-        void IService<NotificationViewModel, NotificationInputModel>.Update(int id, NotificationInputModel inputModel)
+        public void Update(int id, NotificationInputModel inputModel)
         {
             throw new NotImplementedException();
         }
 
-        void IService<NotificationViewModel, NotificationInputModel>.Delete(int id)
+        public void Delete(int id)
         {
             throw new NotImplementedException();
         }

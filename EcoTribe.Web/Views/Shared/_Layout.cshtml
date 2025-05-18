@@ -42,7 +42,14 @@
                     <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
                     <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
                 }
-                <li><a asp-controller="Notification" asp-action="Index">Notifications</a></li>
+                <li class="position-relative">
+                    <a asp-controller="Notification" asp-action="Index">
+                        <i class="bi bi-bell"></i> Notifications
+                        <span id="notification-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle d-none" style="font-size: 0.75rem;">
+                            0
+                        </span>
+                    </a>
+                </li>
                 @if (User.IsInRole("Administrator"))
                 {
                     <li>
@@ -64,16 +71,18 @@
                 }
             </div>
         </nav>
+
         @RenderBody()
     </main>
+
     @await RenderSectionAsync("Scripts", required: false)
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-    
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             setTimeout(() => {
                 document.querySelectorAll('.fade-in, .slide-up').forEach(element => {
                     element.classList.add('active');
@@ -107,6 +116,13 @@
                     }
                 });
             }
+
+            $.get('/Notification/UnreadCount', function (data) {
+                const count = parseInt(data);
+                if (count > 0) {
+                    $('#notification-count').text(count).removeClass('d-none');
+                }
+            });
         });
     </script>
 </body>
