@@ -1,0 +1,135 @@
+﻿.event-create-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+.page-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.page-title {
+    color: #2E8B57;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+    .page-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100px;
+        height: 3px;
+        background-color: #3CB371;
+    }
+
+.subtitle {
+    color: #666;
+    font-size: 1.1rem;
+}
+
+.event-form-container {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+}
+
+.form-section {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e9ecef;
+}
+
+    .form-section h3 {
+        color: #2E8B57;
+        font-size: 1.3rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+        .form-section h3 i {
+            color: #3CB371;
+        }
+
+.form-label {
+    color: #2E8B57;
+    font-weight: 500;
+}
+
+.form-control, .form-select {
+    border-color: #ced4da;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+    .form-control:focus, .form-select:focus {
+        border-color: #3CB371;
+        box-shadow: 0 0 0 0.2rem rgba(60, 179, 113, 0.25);
+    }
+
+#map {
+    height: 300px;
+    border-radius: 10px;
+    border: 2px solid #3CB371;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.btn-success {
+    background-color: #2E8B57;
+    border-color: #2E8B57;
+    padding: 0.5rem 1.5rem;
+}
+
+    .btn-success:hover {
+        background-color: #1a5e3a;
+        border-color: #1a5e3a;
+    }
+
+.btn-outline-success {
+    color: #2E8B57;
+    border-color: #2E8B57;
+}
+
+    .btn-outline-success:hover {
+        background-color: #2E8B57;
+        border-color: #2E8B57;
+    }
+
+.input-group .btn {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .event-form-container {
+        padding: 1rem;
+    }
+
+    .form-section {
+        padding: 1rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+        .form-actions .btn {
+            width: 100%;
+        }
+}

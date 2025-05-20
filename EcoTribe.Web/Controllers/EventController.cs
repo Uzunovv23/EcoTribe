@@ -50,7 +50,7 @@ namespace EcoTribe.Web.Controllers
                 model.Start = DateTime.SpecifyKind(model.Start, DateTimeKind.Utc);
                 model.End = DateTime.SpecifyKind(model.End, DateTimeKind.Utc);
 
-                eventService.Create(model);
+                eventService.CreateAndNotifyUsers(model);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)

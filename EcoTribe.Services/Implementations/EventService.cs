@@ -172,5 +172,30 @@ namespace EcoTribe.Services.Implementations
                 .ToList();
         }
 
+        public void CreateAndNotifyUsers(EventInputModel inputModel)
+        {
+            var eventEntity = ModelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
+            context.Events.Add(eventEntity);
+            context.SaveChanges(); 
+
+            var allUserIds = context.Users.Select(u => u.Id).ToList();
+
+            foreach (var userId in allUserIds)
+            {
+                var notification = new Notification
+                {
+                    UserId = userId,
+                    EventId = eventEntity.Id,
+                    Title = "New Event Created",
+                    Message = $"A new event \"{eventEntity.Name}\" has been created in {eventEntity.City}.",
+                    CreatedAt = DateTime.UtcNow,
+                    IsRead = false
+                };
+
+                context.Notifications.Add(notification);
+            }
+
+            context.SaveChanges(); 
+        }
     }
 }

@@ -17,5 +17,6 @@ namespace EcoTribe.Services.Interfaces
         List<Organization> GetOrganizations();
         void AddFeedback(FeedbackInputModel inputModel);
         List<FeedbackViewModel> GetFeedbacksForEvent(int eventId);
+        void CreateAndNotifyUsers(EventInputModel inputModel);
     }
 }

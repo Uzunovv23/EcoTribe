@@ -4,28 +4,82 @@
     ViewData["Title"] = "Notifications";
 }
 
-<h2 class="text-2xl font-bold mb-4">Your Notifications</h2>
-
-@if (!Model.Any())
-{
-    <p>You have no notifications.</p>
-}
-else
-{
-    <ul class="space-y-3">
-        @foreach (var notification in Model)
+<div class="notification-container">
+    <div class="page-header">
+        <h2 class="page-title">Your Notifications</h2>
+        @if (Model.Any(n => !n.IsRead))
         {
-            <li class="border rounded-lg p-4 @(notification.IsRead ? "bg-gray-100" : "bg-yellow-100")">
-                <strong>@notification.Title</strong>
-                <p>@notification.Message</p>
-                <small class="text-gray-600">@notification.CreatedAt.ToLocalTime().ToString("g")</small>
-
-                @if (!notification.IsRead)
-                {
-                    <a href="@Url.Action("MarkAsRead", "Notification", new { id = notification.Id })" class="text-blue-500 hover:underline">Mark as read</a>
-                }
-            </li>
+            <button id="markAllRead" class="btn btn-outline-success">
+                <i class="bi bi-check2-all"></i> Mark All as Read
+            </button>
         }
-    </ul>
+    </div>
+
+    <div class="notification-content">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i class="bi bi-tree"></i>
+                <h3>Your Garden is Quiet</h3>
+                <p>No notifications at the moment. While you wait, remember that small eco-friendly actions today create a greener tomorrow.</p>
+                <div class="eco-tip">
+                    <small>"Did you know? A single tree can absorb as much as 48 pounds of carbon dioxide per year."</small>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Notification</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var notification in Model.OrderByDescending(n => n.CreatedAt))
+                        {
+                            <tr class="@(!notification.IsRead ? "unread" : "")" data-id="@notification.Id">
+                                <td>
+                                    <div class="notification-message">
+                                        <h5>@notification.Title</h5>
+                                        <p>@notification.Message</p>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="timeago" data-timestamp="@notification.CreatedAt.ToString("o")">
+                                        @notification.CreatedAt.ToLocalTime().ToString("g")
+                                    </span>
+                                </td>
+                                <td>
+                                    @if (!notification.IsRead)
+                                    {
+                                        <button class="btn btn-sm btn-outline-success mark-read" data-id="@notification.Id">
+                                            <i class="bi bi-check2"></i> Mark as Read
+                                        </button>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-read">
+                                            <i class="bi bi-check2-all"></i> Read
+                                        </span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/notifications.js"></script>
 }
 
+@section Styles {
+    <link rel="stylesheet" href="~/css/notifications.css" />
+}
