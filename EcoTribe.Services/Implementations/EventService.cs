@@ -31,6 +31,7 @@ namespace EcoTribe.Services.Implementations
         public void Create(EventInputModel inputModel)
         {
             var eventEntity = ModelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
+            eventEntity.CreatedBy = inputModel.CreatedBy;
             context.Events.Add(eventEntity);
             context.SaveChanges();
         }       
@@ -175,6 +176,7 @@ namespace EcoTribe.Services.Implementations
         public void CreateAndNotifyUsers(EventInputModel inputModel)
         {
             var eventEntity = ModelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
+            eventEntity.CreatedBy = inputModel.CreatedBy;
             context.Events.Add(eventEntity);
             context.SaveChanges(); 
 

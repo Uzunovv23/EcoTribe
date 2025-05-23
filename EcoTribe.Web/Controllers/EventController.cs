@@ -16,12 +16,14 @@ namespace EcoTribe.Web.Controllers
         private readonly IEventService eventService;
         private readonly IVolunteerService volunteerService;
         private readonly IEventVolunteerService eventVolunteerService;
+        private readonly IOrganizationService organizationService;
 
-        public EventController(IEventService eventService, IVolunteerService volunteerService, IEventVolunteerService eventVolunteerService)
+        public EventController(IEventService eventService, IVolunteerService volunteerService, IEventVolunteerService eventVolunteerService, IOrganizationService organizationService)
         {
             this.eventService = eventService;
             this.volunteerService = volunteerService;
             this.eventVolunteerService = eventVolunteerService;
+            this.organizationService = organizationService;
         }
         public IActionResult Index()
         {
@@ -47,18 +49,31 @@ namespace EcoTribe.Web.Controllers
 
             try
             {
+                string? userIdString = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+                if (userIdString == null)
+                {
+                    return Unauthorized();
+                }
+
+
+
+                model.CreatedBy = organizationService.GetByUserId(userIdString).Id;
+
                 model.Start = DateTime.SpecifyKind(model.Start, DateTimeKind.Utc);
                 model.End = DateTime.SpecifyKind(model.End, DateTimeKind.Utc);
 
                 eventService.CreateAndNotifyUsers(model);
+
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ModelState.AddModelError("", "An error occurred while saving the event.");
                 return View(model);
             }
         }
+
 
         [Authorize(Roles = "Administrator")]
         public IActionResult Edit(int id)

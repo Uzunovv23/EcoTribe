@@ -41,6 +41,15 @@ namespace EcoTribe.Services.Implementations
                 : null;
         }
 
+        public OrganizationViewModel? GetByUserId(string userId)
+        {
+            var organization = context.Organizations
+                .FirstOrDefault(org => org.UserId == userId);
+            return organization != null
+                ? ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization)
+                : null;
+        }
+
         public void Update(int id, OrganizationInputModel inputModel)
         {
             var existingOrganization = context.Organizations.Find(id);

@@ -10,6 +10,6 @@ namespace EcoTribe.Services.Interfaces
 {
     public interface IOrganizationService : IService<OrganizationViewModel, OrganizationInputModel>
     {
-        
+        public OrganizationViewModel? GetByUserId(string userId);
     }
 }
