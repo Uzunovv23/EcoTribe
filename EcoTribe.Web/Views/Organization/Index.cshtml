@@ -2,81 +2,110 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 
-<h2 class="text-center my-4">Organizations</h2>
-
-<div class="container">
-    @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
-    {
-        <div class="d-flex justify-content-end mb-3">
-            <a asp-controller="Organization" asp-action="Create" class="btn btn-success">
-                <i class="fas fa-plus"></i> Add Organization
-            </a>
+<div class="eco-organizations">
+    <div class="eco-header">
+        <div class="eco-header-content">
+            <h1>Environmental Organizations</h1>
+            <p>Connecting communities with organizations working towards a greener future</p>
         </div>
-    }
+    </div>
 
-    <table class="table table-striped table-bordered text-center">
-        <thead class="thead-dark">
-            <tr>
-                <th>Name</th>
-                <th>City</th>
-                <th>Contact Email</th>
-                <th>Phone</th>
-                <th>Website</th>
-                <th>Description</th>
-                <th>Created At</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var organization in Model)
-            {
-                <tr id="organization-row-@organization.Id">
-                    <td>@organization.Name</td>
-                    <td>@organization.City</td>
-                    <td>@organization.ContactEmail</td>
-                    <td>@organization.Phone</td>
-                    <td>
-                        @if (!string.IsNullOrEmpty(organization.Website))
-                        {
-                            <a href="@organization.Website" target="_blank">Visit</a>
-                        }
-                        else
-                        {
-                            <span>-</span>
-                        }
-                    </td>
-                    <td>@organization.Description</td>
-                    <td>@organization.CreatedAt.ToString("yyyy-MM-dd")</td>
-                    <td>
+    <div class="container">
+        @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
+        {
+            <div class="eco-actions">
+                <a asp-controller="Organization" asp-action="Create" class="eco-btn eco-btn-add">
+                    <i class="fas fa-plus"></i> Add Organization
+                </a>
+            </div>
+        }
+        
+        <div class="eco-search">
+            <i class="fas fa-search"></i>
+            <input type="text" id="organizationSearch" placeholder="Search organizations...">
+        </div>
+
+        <div class="eco-table-wrapper">
+            <table class="eco-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>Contact Email</th>
+                        <th>Phone</th>
+                        <th>Website</th>
+                        <th>Description</th>
+                        <th>Created At</th>
                         @if (User.IsInRole("Administrator"))
                         {
-                            <div class="d-flex gap-2">
-                                <a asp-controller="Organization" asp-action="Edit" asp-route-id="@organization.Id" class="btn btn-primary">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <button class="btn btn-danger" onclick="confirmDelete(@organization.Id)">
-                                    <i class="fas fa-trash"></i> Delete
-                                </button>
-                            </div>
+                            <th>Actions</th>
                         }
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var organization in Model)
+                    {
+                        <tr id="organization-row-@organization.Id" data-name="@organization.Name" data-city="@organization.City">
+                            <td>@organization.Name</td>
+                            <td>@organization.City</td>
+                            <td>@organization.ContactEmail</td>
+                            <td>@organization.Phone</td>
+                            <td>
+                                @if (!string.IsNullOrEmpty(organization.Website))
+                                {
+                                    <a href="@organization.Website" target="_blank" class="eco-website-link">Visit Website</a>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
+                            <td>@organization.Description</td>
+                            <td>@organization.CreatedAt.ToString("MMM dd, yyyy")</td>
+                            @if (User.IsInRole("Administrator"))
+                            {
+                                <td>
+                                    <div class="eco-actions-cell">
+                                        <a asp-controller="Organization" asp-action="Edit" asp-route-id="@organization.Id" class="eco-btn eco-btn-edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button class="eco-btn eco-btn-delete" onclick="confirmDelete(@organization.Id, '@organization.Name')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="eco-empty-state" style="display: none;">
+            <div class="eco-empty-icon">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <h3>No organizations found</h3>
+            <p>Try adjusting your search criteria</p>
+        </div>
+    </div>
 </div>
 
 @Html.AntiForgeryToken()
 
 <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete this organization?
+                <div class="delete-confirmation-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Are you sure you want to delete <span id="organizationName"></span>?</p>
+                    <p class="delete-warning">This action cannot be undone.</p>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -86,39 +115,5 @@
     </div>
 </div>
 
-<script>
-    let deleteId = null;
-
-    function confirmDelete(id) {
-        deleteId = id;
-        var deleteModal = new bootstrap.Modal(document.getElementById("deleteConfirmationModal"));
-        deleteModal.show();
-    }
-
-    document.getElementById("confirmDeleteBtn").addEventListener("click", function () {
-        if (deleteId !== null) {
-            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
-
-            fetch(`/Organization/DeleteConfirmed`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded",
-                    "RequestVerificationToken": token
-                },
-                body: new URLSearchParams({ id: deleteId })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("Failed to delete organization.");
-                }
-                return response.text();
-            })
-            .then(() => {
-                document.getElementById(`organization-row-${deleteId}`).remove();
-                deleteId = null;
-                bootstrap.Modal.getInstance(document.getElementById("deleteConfirmationModal")).hide();
-            })
-            .catch(error => alert(error.message));
-        }
-    });
-</script>
+<link rel="stylesheet" href="~/css/organizations.css" />
+<script src="~/js/organizations.js"></script>
