@@ -28,9 +28,30 @@ namespace EcoTribe.Services.Implementations
         public void Create(OrganizationInputModel inputModel)
         {
             var organization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
-            organization.CreatedAt = DateTime.UtcNow; // Set creation date
+            organization.CreatedAt = DateTime.UtcNow; 
             context.Organizations.Add(organization);
             context.SaveChanges();
+        }
+
+        public async Task CreateAsync(OrganizationInputModel inputModel, string userId)
+        {
+
+            var organization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
+
+            organization.CreatedAt = DateTime.UtcNow;
+            organization.Approved = false;
+
+            context.Organizations.Add(organization);
+            await context.SaveChangesAsync(); 
+
+            var userOrganization = new UserOrganization
+            {
+                UserId = userId,
+                OrganizationId = organization.Id
+            };
+
+            context.UserOrganizations.Add(userOrganization);
+            await context.SaveChangesAsync();
         }
 
         public OrganizationViewModel? GetById(int id)
@@ -44,7 +65,9 @@ namespace EcoTribe.Services.Implementations
         public OrganizationViewModel? GetByUserId(string userId)
         {
             var organization = context.Organizations
-                .FirstOrDefault(org => org.UserId == userId);
+                .Where(o => o.UserOrganizations.Any(uo => uo.UserId == userId) && o.Approved)
+                .FirstOrDefault();
+
             return organization != null
                 ? ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization)
                 : null;

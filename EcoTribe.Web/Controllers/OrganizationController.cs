@@ -3,7 +3,9 @@ using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace EcoTribe.Web.Controllers
 {
@@ -31,7 +33,7 @@ namespace EcoTribe.Web.Controllers
         [HttpPost]
         [Authorize(Roles = "Administrator , Organizator" )]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(OrganizationInputModel inputModel)
+        public async Task<IActionResult> Create(OrganizationInputModel inputModel)
         {
             if (!ModelState.IsValid)
             {
@@ -40,10 +42,16 @@ namespace EcoTribe.Web.Controllers
 
             try
             {
-                organizationService.Create(inputModel);
+                var user = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
+
+                await organizationService.CreateAsync(inputModel, user);  
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 ModelState.AddModelError("", "An error occurred while saving the organization.");
                 return View(inputModel);

@@ -19,6 +19,7 @@ namespace EcoTribe.Data.Context
         public DbSet<Location> Locations { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<EventSponsor> EventSponsors { get; set; }
+        public DbSet<UserOrganization> UserOrganizations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -45,7 +46,20 @@ namespace EcoTribe.Data.Context
                 .HasOne(es => es.Organization)
                 .WithMany(o => o.EventSponsors)
                 .HasForeignKey(es => es.OrganizationId)
-                .OnDelete(DeleteBehavior.Cascade);  
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<UserOrganization>()
+                .HasKey(uo => new { uo.UserId, uo.OrganizationId });
+
+            modelBuilder.Entity<UserOrganization>()
+                .HasOne(uo => uo.User)
+                .WithMany(u => u.UserOrganizations)
+                .HasForeignKey(uo => uo.UserId);
+
+            modelBuilder.Entity<UserOrganization>()
+                .HasOne(uo => uo.Organization)
+                .WithMany(o => o.UserOrganizations)
+                .HasForeignKey(uo => uo.OrganizationId);
         }
     }
 }

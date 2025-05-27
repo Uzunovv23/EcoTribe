@@ -17,13 +17,11 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public string Description { get; set; } = null!;
         public string City { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+        public bool Approved { get; set; } = false;
 
         public ICollection<EventSponsor> EventSponsors { get; set; } = new List<EventSponsor>();
 
-        public string? UserId { get; set; }
-
-        [ForeignKey(nameof(UserId))]
-        public virtual ApplicationUser User { get; set; } = null!;
+        public ICollection<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
 
     }
 }

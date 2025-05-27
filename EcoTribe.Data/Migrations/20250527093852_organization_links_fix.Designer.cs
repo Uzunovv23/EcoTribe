@@ -3,6 +3,7 @@ using System;
 using EcoTribe.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EcoTribe.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250527093852_organization_links_fix")]
+    partial class organization_links_fix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -380,7 +383,7 @@ namespace EcoTribe.Data.Migrations
 
                     b.HasIndex("OrganizationId");
 
-                    b.ToTable("UserOrganizations");
+                    b.ToTable("UserOrganization");
                 });
 
             modelBuilder.Entity("EcoTribe.BusinessObjects.Domain.Models.Volunteer", b =>
