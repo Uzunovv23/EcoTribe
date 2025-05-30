@@ -16,5 +16,6 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public string Description { get; set; } = null!;
         public string City { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+        public bool Approved { get; set; } = false;
     }
 }

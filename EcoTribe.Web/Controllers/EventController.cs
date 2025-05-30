@@ -27,13 +27,29 @@ namespace EcoTribe.Web.Controllers
         }
         public IActionResult Index()
         {
+            OrganizationViewModel? organiozation = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (organiozation != null && !organiozation.Approved)
+            {
+                organiozation = null;
+            }
             List<EventViewModel> events = eventService.GetAll().ToList();
-            return View(events);
+            EventsViewModel eventsViewModel = new EventsViewModel();
+            eventsViewModel.Events = events;
+            eventsViewModel.UserApprovedOrganization = organiozation;
+            
+            return View(eventsViewModel);
         }
 
         [Authorize(Roles = "Administrator, Organizator")]
         public IActionResult Create()
         {
+            // Check if the action is called by an approved organization
+            OrganizationViewModel? organiozation = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (organiozation != null && !organiozation.Approved)
+            {
+                return Unauthorized();
+            }
+
             return View();
         }
 
@@ -42,6 +58,12 @@ namespace EcoTribe.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventInputModel model)
         {
+            OrganizationViewModel? organiozation = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (organiozation != null && !organiozation.Approved)
+            {
+                return Unauthorized();
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);
