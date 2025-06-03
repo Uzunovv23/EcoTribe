@@ -1,6 +1,7 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Implementations;
+using EcoTribe.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -12,50 +13,43 @@ namespace EcoTribe.Web.Controllers
     [Authorize(Roles = "Administrator")]
     public class AdminController : Controller
     {
-        private readonly AdminService _adminService;
+        private readonly IAdminService _adminService;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IOrganizationService _organizationService;
 
-        public AdminController(AdminService adminService, UserManager<ApplicationUser> userManager)
+        public AdminController(IAdminService adminService, UserManager<ApplicationUser> userManager, IOrganizationService organizationService)
         {
             _adminService = adminService;
             _userManager = userManager;
+            _organizationService = organizationService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> UserManagement()
         {
             var users = await _adminService.GetAllUsersAsync();
-            var userRoles = new Dictionary<string, string>();
-            var admins = new List<ApplicationUser>();
-            var organizators = new List<ApplicationUser>();
-            var normalUsers = new List<ApplicationUser>();
+            var userViewModels = new List<UserViewModel>();
 
             foreach (var user in users)
             {
-                var role = await _adminService.GetUserRoleAsync(user);
-                userRoles[user.Id] = role;
-
-                if (role == "Administrator")
+                userViewModels.Add(new UserViewModel
                 {
-                    admins.Add(user);
-                }
-                else if (role == "Organizator")
-                {
-                    organizators.Add(user);
-                }
-                else
-                {
-                    normalUsers.Add(user);
-                }
+                    Id = user.Id,
+                    Email = user.Email,
+                    Role = await _adminService.GetUserRoleAsync(user)
+                });
             }
 
-            var model = new AdminViewModel
+            var unapprovedOrgs = await _organizationService.GetUnapprovedOrganizationsAsync();
+
+            var viewModel = new UserManagementViewModel
             {
-                Users = admins.Concat(organizators).Concat(normalUsers).ToList(),
-                UserRoles = userRoles
+                Users = userViewModels,
+                UnapprovedOrganizations = unapprovedOrgs
             };
 
-            return View(model);
+            return View(viewModel);
         }
+
 
 
         [HttpPost]

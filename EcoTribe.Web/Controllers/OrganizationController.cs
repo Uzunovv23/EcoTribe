@@ -121,5 +121,7 @@ namespace EcoTribe.Web.Controllers
                 return BadRequest("Error deleting the organization.");
             }
         }
+
+
     }
 }

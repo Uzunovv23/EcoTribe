@@ -6,6 +6,7 @@ using EcoTribe.Services.Interfaces;
 using System.Collections.Generic;
 using System.Linq;
 using EcoTribe.BusinessObjects.InputModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace EcoTribe.Services.Implementations
 {
@@ -98,6 +99,19 @@ namespace EcoTribe.Services.Implementations
 
             context.Organizations.Remove(organization);
             context.SaveChanges();
+        }
+
+        public async Task<List<OrganizationViewModel>> GetUnapprovedOrganizationsAsync()
+        {
+            return await context.Organizations
+                .Where(o => !o.IsApproved)
+                .Select(o => new OrganizationViewModel
+                {
+                    Id = o.Id,
+                    Name = o.Name,
+                    OwnerEmail = o.Owner.Email 
+                })
+                .ToListAsync();
         }
     }
 }
