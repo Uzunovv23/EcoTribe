@@ -1,6 +1,7 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
+using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Implementations
 {
-    public class AdminService
+    public class AdminService : IAdminService
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppDbContext _context;
@@ -80,8 +81,7 @@ namespace EcoTribe.Services.Implementations
 
             return new UserManagementViewModel
             {
-                Users = userViewModels,
-                UnapprovedOrganizations = unapprovedOrganizations
+                Users = userViewModels
             };
         }
     }

@@ -104,14 +104,30 @@ namespace EcoTribe.Services.Implementations
         public async Task<List<OrganizationViewModel>> GetUnapprovedOrganizationsAsync()
         {
             return await context.Organizations
-                .Where(o => !o.IsApproved)
+                .Where(o => !o.Approved)
                 .Select(o => new OrganizationViewModel
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    OwnerEmail = o.Owner.Email 
+                    ContactEmail = o.ContactEmail
                 })
                 .ToListAsync();
+        }
+
+        public async Task<bool> ApproveOrganizationAsync(int organizationId)
+        {
+            var organization = await context.Organizations
+                .FirstOrDefaultAsync(o => o.Id == organizationId);
+
+            if (organization == null)
+                return false;
+
+            organization.Approved = true;
+
+            context.Organizations.Update(organization);
+            await context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

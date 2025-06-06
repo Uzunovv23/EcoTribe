@@ -9,6 +9,5 @@ namespace EcoTribe.BusinessObjects.ViewModels
     public class UserManagementViewModel
     {
         public List<UserViewModel> Users { get; set; } = new();
-        public List<OrganizationViewModel> UnapprovedOrganizations { get; set; } = new();
     }
 }

@@ -1,11 +1,10 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.ViewModels;
-using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace EcoTribe.Web.Controllers
@@ -24,6 +23,7 @@ namespace EcoTribe.Web.Controllers
             _organizationService = organizationService;
         }
 
+
         public async Task<IActionResult> UserManagement()
         {
             var users = await _adminService.GetAllUsersAsync();
@@ -39,53 +39,65 @@ namespace EcoTribe.Web.Controllers
                 });
             }
 
-            var unapprovedOrgs = await _organizationService.GetUnapprovedOrganizationsAsync();
-
             var viewModel = new UserManagementViewModel
             {
-                Users = userViewModels,
-                UnapprovedOrganizations = unapprovedOrgs
+                Users = userViewModels
             };
 
             return View(viewModel);
         }
-
-
 
         [HttpPost]
         public async Task<IActionResult> AddOrganizator(string userId)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
-            {
                 return NotFound();
-            }
 
             if (await _userManager.IsInRoleAsync(user, "Administrator"))
             {
                 TempData["Error"] = "Administrators cannot be assigned as Organizators.";
-                return RedirectToAction("Index");
+                return RedirectToAction("UserManagement");
             }
 
             var success = await _adminService.AddOrganizatorRoleAsync(userId);
             if (!success)
-            {
                 TempData["Error"] = "Failed to assign the Organizator role.";
-                return RedirectToAction("Index");
-            }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("UserManagement");
         }
-
 
         [HttpPost]
         public async Task<IActionResult> RemoveOrganizator(string userId)
         {
             var success = await _adminService.RemoveOrganizatorRoleAsync(userId);
-            if (!success) return NotFound();
+            if (!success)
+                TempData["Error"] = "Failed to remove Organizator role.";
 
-            return RedirectToAction("Index");
+            return RedirectToAction("UserManagement");
         }
 
+        public async Task<IActionResult> OrganizationManagement()
+        {
+            var unapprovedOrganizations = await _organizationService.GetUnapprovedOrganizationsAsync();
+
+            var viewModel = new OrganizationManagementViewModel
+            {
+                UnapprovedOrganizations = unapprovedOrganizations
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveOrganization(int organizationId)
+        {
+            var success = await _organizationService.ApproveOrganizationAsync(organizationId);
+
+            if (!success)
+                TempData["Error"] = "Failed to approve organization.";
+
+            return RedirectToAction("OrganizationManagement");
+        }
     }
 }

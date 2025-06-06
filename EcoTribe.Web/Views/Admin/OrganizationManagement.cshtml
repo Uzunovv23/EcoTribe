@@ -1,0 +1,49 @@
+﻿@model EcoTribe.BusinessObjects.ViewModels.OrganizationManagementViewModel
+
+@{
+    ViewData["Title"] = "Organization Management";
+}
+
+<h2>Organization Management</h2>
+
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger">@TempData["Error"]</div>
+}
+
+@if (Model.UnapprovedOrganizations != null && Model.UnapprovedOrganizations.Any())
+{
+    <h3>Unapproved Organizations</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Organization Name</th>
+                <th>Description</th>
+                <th>Approve</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var org in Model.UnapprovedOrganizations)
+            {
+                <tr>
+                    <td>@org.Name</td>
+                    <td>@org.Description</td>
+                    <td>
+                        <form asp-action="ApproveOrganization" asp-controller="Admin" method="post">
+                            <input type="hidden" name="organizationId" value="@org.Id" />
+                            <button type="submit" class="btn btn-primary">Approve</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No unapproved organizations.</p>
+}
+
+<div class="mt-3">
+    <a class="btn btn-secondary" href="@Url.Action("UserManagement", "Admin")">Back to User Management</a>
+</div>
