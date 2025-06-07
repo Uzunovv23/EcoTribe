@@ -129,5 +129,21 @@ namespace EcoTribe.Services.Implementations
 
             return true;
         }
+
+        public async Task<List<OrganizationViewModel>> GetAllOrganizationsAsync()
+        {
+            var organizations = await context.Organizations
+                .Select(o => new OrganizationViewModel
+                {
+                    Id = o.Id,
+                    Name = o.Name,
+                    Description = o.Description,
+                    Approved = o.Approved
+                })
+                .ToListAsync();
+
+            return organizations;
+        }
+
     }
 }

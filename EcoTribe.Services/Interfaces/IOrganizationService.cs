@@ -14,5 +14,6 @@ namespace EcoTribe.Services.Interfaces
         public Task CreateAsync(OrganizationInputModel inputModel, string userId);
         public Task<List<OrganizationViewModel>> GetUnapprovedOrganizationsAsync();
         Task<bool> ApproveOrganizationAsync(int organizationId);
+        public Task<List<OrganizationViewModel>> GetAllOrganizationsAsync();
     }
 }

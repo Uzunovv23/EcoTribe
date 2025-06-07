@@ -79,11 +79,11 @@ namespace EcoTribe.Web.Controllers
 
         public async Task<IActionResult> OrganizationManagement()
         {
-            var unapprovedOrganizations = await _organizationService.GetUnapprovedOrganizationsAsync();
+            var allOrganizations = await _organizationService.GetAllOrganizationsAsync();
 
             var viewModel = new OrganizationManagementViewModel
             {
-                UnapprovedOrganizations = unapprovedOrganizations
+                AllOrganizations = allOrganizations
             };
 
             return View(viewModel);
