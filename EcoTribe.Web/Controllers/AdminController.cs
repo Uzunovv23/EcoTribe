@@ -1,5 +1,7 @@
-﻿using EcoTribe.BusinessObjects.Domain.Models;
+﻿using EcoTribe.BusinessObjects.Domain.Enums;
+using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.ViewModels;
+using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -99,5 +101,62 @@ namespace EcoTribe.Web.Controllers
 
             return RedirectToAction("OrganizationManagement");
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> DisapproveOrganization(int organizationId)
+        {
+            var success = await _organizationService.ChangeStatusAsync(organizationId, OrganizationStatus.Disapproved);
+
+            if (!success)
+                TempData["Error"] = "Failed to disapprove organization.";
+
+            return RedirectToAction("OrganizationManagement");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeOrganizationStatus(int organizationId, OrganizationStatus newStatus)
+        {
+            var success = await _organizationService.ChangeStatusAsync(organizationId, newStatus);
+            if (!success)
+            {
+                TempData["Error"] = "Failed to change organization status.";
+            }
+
+            return RedirectToAction("OrganizationManagement");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ToggleOrganizationStatus(int organizationId)
+        {
+            var organization = await _organizationService.GetOrganizationByIdAsync(organizationId);
+
+            if (organization == null)
+            {
+                TempData["Error"] = "Organization not found.";
+                return RedirectToAction("OrganizationManagement");
+            }
+
+            OrganizationStatus newStatus;
+
+            if (organization.Status == OrganizationStatus.Approved)
+                newStatus = OrganizationStatus.Disapproved;
+            else if (organization.Status == OrganizationStatus.Disapproved)
+                newStatus = OrganizationStatus.Approved;
+            else
+            {
+                TempData["Error"] = "Cannot change status of a pending organization.";
+                return RedirectToAction("OrganizationManagement");
+            }
+
+            var success = await _organizationService.ChangeStatusAsync(organizationId, newStatus);
+
+            if (!success)
+                TempData["Error"] = "Failed to change organization status.";
+
+            return RedirectToAction("OrganizationManagement");
+        }
+
+
     }
 }

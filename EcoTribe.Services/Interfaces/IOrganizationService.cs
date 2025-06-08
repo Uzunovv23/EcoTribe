@@ -1,4 +1,6 @@
-﻿using EcoTribe.BusinessObjects.InputModels;
+﻿using EcoTribe.BusinessObjects.Domain.Enums;
+using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -15,5 +17,7 @@ namespace EcoTribe.Services.Interfaces
         public Task<List<OrganizationViewModel>> GetUnapprovedOrganizationsAsync();
         Task<bool> ApproveOrganizationAsync(int organizationId);
         public Task<List<OrganizationViewModel>> GetAllOrganizationsAsync();
+        Task<bool> ChangeStatusAsync(int organizationId, OrganizationStatus newStatus);
+        Task<Organization> GetOrganizationByIdAsync(int id);
     }
 }

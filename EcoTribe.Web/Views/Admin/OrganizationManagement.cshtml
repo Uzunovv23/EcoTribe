@@ -1,4 +1,7 @@
-﻿<h3>Organizations</h3>
+﻿@using EcoTribe.BusinessObjects.Domain.Enums
+@model EcoTribe.BusinessObjects.ViewModels.OrganizationManagementViewModel
+
+<h3>Organizations</h3>
 
 <table class="table">
     <thead>
@@ -16,19 +19,28 @@
                 <td>@org.Name</td>
                 <td>@org.Description</td>
                 <td>
-                    @(org.Approved ? "Approved" : "Pending")
+                    @(org.Status == OrganizationStatus.Approved ? "Approved" :
+                        org.Status == OrganizationStatus.Disapproved ? "Disapproved" : "Pending")
                 </td>
                 <td>
-                    @if (!org.Approved)
+                    @if (org.Status == OrganizationStatus.Pending)
                     {
-                        <form asp-action="ApproveOrganization" asp-controller="Admin" method="post">
+                        <form asp-action="ApproveOrganization" asp-controller="Admin" method="post" style="display:inline;">
                             <input type="hidden" name="organizationId" value="@org.Id" />
                             <button type="submit" class="btn btn-sm btn-success">Approve</button>
+                        </form>
+
+                        <form asp-action="DisapproveOrganization" asp-controller="Admin" method="post" style="display:inline;">
+                            <input type="hidden" name="organizationId" value="@org.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Disapprove</button>
                         </form>
                     }
                     else
                     {
-                        <span class="text-muted">No actions</span>
+                        <form asp-action="ToggleOrganizationStatus" method="post" style="display:inline;">
+                            <input type="hidden" name="organizationId" value="@org.Id" />
+                            <button type="submit" class="btn btn-warning btn-sm">Change Status</button>
+                        </form>
                     }
                 </td>
             </tr>

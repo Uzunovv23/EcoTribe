@@ -3,10 +3,9 @@ using EcoTribe.Services.Utils;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
-using System.Collections.Generic;
-using System.Linq;
 using EcoTribe.BusinessObjects.InputModels;
 using Microsoft.EntityFrameworkCore;
+using EcoTribe.BusinessObjects.Domain.Enums;
 
 namespace EcoTribe.Services.Implementations
 {
@@ -29,21 +28,20 @@ namespace EcoTribe.Services.Implementations
         public void Create(OrganizationInputModel inputModel)
         {
             var organization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
-            organization.CreatedAt = DateTime.UtcNow; 
+            organization.CreatedAt = DateTime.UtcNow;
+            organization.Status = OrganizationStatus.Pending;
             context.Organizations.Add(organization);
             context.SaveChanges();
         }
 
         public async Task CreateAsync(OrganizationInputModel inputModel, string userId)
         {
-
             var organization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
-
             organization.CreatedAt = DateTime.UtcNow;
-            organization.Approved = false;
+            organization.Status = OrganizationStatus.Pending;
 
             context.Organizations.Add(organization);
-            await context.SaveChangesAsync(); 
+            await context.SaveChangesAsync();
 
             var userOrganization = new UserOrganization
             {
@@ -66,7 +64,7 @@ namespace EcoTribe.Services.Implementations
         public OrganizationViewModel? GetByUserId(string userId)
         {
             var organization = context.Organizations
-                .Where(o => o.UserOrganizations.Any(uo => uo.UserId == userId) && o.Approved)
+                .Where(o => o.UserOrganizations.Any(uo => uo.UserId == userId) && o.Status == OrganizationStatus.Approved)
                 .FirstOrDefault();
 
             return organization != null
@@ -78,24 +76,21 @@ namespace EcoTribe.Services.Implementations
         {
             var existingOrganization = context.Organizations.Find(id);
             if (existingOrganization == null)
-            {
                 throw new ArgumentException("Organization not found.");
-            }
 
             var updatedOrganization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
-            updatedOrganization.Id = id; 
+            updatedOrganization.Id = id;
+            updatedOrganization.Status = existingOrganization.Status;
 
             context.Entry(existingOrganization).CurrentValues.SetValues(updatedOrganization);
-
             context.SaveChanges();
         }
+
         public void Delete(int id)
         {
             var organization = context.Organizations.Find(id);
             if (organization == null)
-            {
                 throw new ArgumentException("Organization not found.");
-            }
 
             context.Organizations.Remove(organization);
             context.SaveChanges();
@@ -104,46 +99,55 @@ namespace EcoTribe.Services.Implementations
         public async Task<List<OrganizationViewModel>> GetUnapprovedOrganizationsAsync()
         {
             return await context.Organizations
-                .Where(o => !o.Approved)
+                .Where(o => o.Status == OrganizationStatus.Pending)
                 .Select(o => new OrganizationViewModel
                 {
                     Id = o.Id,
                     Name = o.Name,
-                    ContactEmail = o.ContactEmail
+                    ContactEmail = o.ContactEmail,
+                    Status = o.Status
                 })
                 .ToListAsync();
         }
 
         public async Task<bool> ApproveOrganizationAsync(int organizationId)
         {
-            var organization = await context.Organizations
-                .FirstOrDefaultAsync(o => o.Id == organizationId);
-
+            var organization = await context.Organizations.FirstOrDefaultAsync(o => o.Id == organizationId);
             if (organization == null)
                 return false;
 
-            organization.Approved = true;
-
-            context.Organizations.Update(organization);
+            organization.Status = OrganizationStatus.Approved;
             await context.SaveChangesAsync();
-
             return true;
         }
 
         public async Task<List<OrganizationViewModel>> GetAllOrganizationsAsync()
         {
-            var organizations = await context.Organizations
+            return await context.Organizations
                 .Select(o => new OrganizationViewModel
                 {
                     Id = o.Id,
                     Name = o.Name,
                     Description = o.Description,
-                    Approved = o.Approved
+                    Status = o.Status
                 })
                 .ToListAsync();
-
-            return organizations;
         }
 
+        public async Task<bool> ChangeStatusAsync(int id, OrganizationStatus newStatus)
+        {
+            var organization = await context.Organizations.FindAsync(id);
+            if (organization == null)
+                return false;
+
+            organization.Status = newStatus;
+            await context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<Organization> GetOrganizationByIdAsync(int id)
+        {
+            return await context.Organizations.FindAsync(id);
+        }
     }
 }

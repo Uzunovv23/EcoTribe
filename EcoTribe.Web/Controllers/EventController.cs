@@ -1,4 +1,5 @@
-﻿using EcoTribe.BusinessObjects.Domain.Models;
+﻿using EcoTribe.BusinessObjects.Domain.Enums;
+using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Implementations;
@@ -27,25 +28,30 @@ namespace EcoTribe.Web.Controllers
         }
         public IActionResult Index()
         {
-            OrganizationViewModel? organiozation = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if (organiozation != null && !organiozation.Approved)
+            OrganizationViewModel? organization = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            if (organization != null && organization.Status != OrganizationStatus.Approved)
             {
-                organiozation = null;
+                organization = null;  
             }
+
             List<EventViewModel> events = eventService.GetAll().ToList();
-            EventsViewModel eventsViewModel = new EventsViewModel();
-            eventsViewModel.Events = events;
-            eventsViewModel.UserApprovedOrganization = organiozation;
-            
+
+            EventsViewModel eventsViewModel = new EventsViewModel
+            {
+                Events = events,
+                UserApprovedOrganization = organization  
+            };
+
             return View(eventsViewModel);
         }
+
 
         [Authorize(Roles = "Administrator, Organizator")]
         public IActionResult Create()
         {
-            // Check if the action is called by an approved organization
-            OrganizationViewModel? organiozation = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if (organiozation != null && !organiozation.Approved)
+            OrganizationViewModel? organization = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (organization != null && organization.Status != OrganizationStatus.Approved)
             {
                 return Unauthorized();
             }
@@ -58,8 +64,8 @@ namespace EcoTribe.Web.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(EventInputModel model)
         {
-            OrganizationViewModel? organiozation = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            if (organiozation != null && !organiozation.Approved)
+            OrganizationViewModel? organization = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            if (organization != null && organization.Status != OrganizationStatus.Approved)
             {
                 return Unauthorized();
             }

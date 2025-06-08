@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcoTribe.BusinessObjects.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,6 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public string Description { get; set; } = null!;
         public string City { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public bool Approved { get; set; } = false;
+        public OrganizationStatus Status { get; set; }
     }
 }

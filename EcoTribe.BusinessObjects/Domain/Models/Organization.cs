@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EcoTribe.BusinessObjects.Domain.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -17,7 +18,7 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public string Description { get; set; } = null!;
         public string City { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
-        public bool Approved { get; set; } = false;
+        public OrganizationStatus Status { get; set; } = OrganizationStatus.Pending;
 
         public ICollection<EventSponsor> EventSponsors { get; set; } = new List<EventSponsor>();
 

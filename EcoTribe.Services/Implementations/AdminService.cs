@@ -1,4 +1,5 @@
-﻿using EcoTribe.BusinessObjects.Domain.Models;
+﻿using EcoTribe.BusinessObjects.Domain.Enums;
+using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
@@ -75,7 +76,7 @@ namespace EcoTribe.Services.Implementations
             }
 
             var unapprovedOrganizations = _context.Organizations
-                .Where(o => !o.Approved)
+                .Where(o => o.Status == OrganizationStatus.Pending)
                 .Select(o => ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(o))
                 .ToList();
 
@@ -84,5 +85,6 @@ namespace EcoTribe.Services.Implementations
                 Users = userViewModels
             };
         }
+
     }
 }
