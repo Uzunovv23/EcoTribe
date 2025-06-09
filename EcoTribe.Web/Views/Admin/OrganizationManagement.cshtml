@@ -1,49 +1,215 @@
 ﻿@using EcoTribe.BusinessObjects.Domain.Enums
 @model EcoTribe.BusinessObjects.ViewModels.OrganizationManagementViewModel
 
-<h3>Organizations</h3>
+@{
+    ViewData["Title"] = "Organization Management";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var org in Model.AllOrganizations)
+<link rel="stylesheet" href="~/css/organizationManagement.css" />
+
+<main role="main">
+    <button class="side-nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+
+    <nav class="side-nav">
+        <div class="side-nav-header">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-leaf"></i>
+                <span>EcoTribe</span>
+            </a>
+        </div>
+        <ul class="side-nav-menu">
+            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li><a asp-controller="Event" asp-action="Index">Events</a></li>
+            <li><a asp-controller="Organization" asp-action="Index">Organizations</a></li>
+            @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
+            {
+                <li><a asp-controller="Volunteer" asp-action="Index">Volunteers</a></li>
+                <li><a asp-controller="EventResource" asp-action="Index">Event Resources</a></li>
+                <li><a asp-controller="EventVolunteer" asp-action="Index">Event Volunteers</a></li>
+                <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
+                <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
+            }
+            <li class="position-relative">
+                <a asp-controller="Notification" asp-action="Index">
+                    <i class="bi bi-bell"></i> Notifications
+                    <span id="notification-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle d-none" style="font-size: 0.75rem;">
+                        0
+                    </span>
+                </a>
+            </li>
+            @if (User.IsInRole("Administrator"))
+            {
+                <li>
+                    <a asp-controller="Admin" asp-action="Index">
+                        <i class="bi bi-gear-fill"></i> Admin Panel
+                    </a>
+                </li>
+            }
+        </ul>
+        <div class="side-nav-footer">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-success">Logout</a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-success mb-2">Log In</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-success">Sign Up</a>
+            }
+            </div>
+    </nav>
+
+    <div class="organization-management-container">
+        <div class="page-header">
+            <div class="header-content">
+                <div class="back-button">
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-success">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+                <h1 class="page-title">
+                    <i class="bi bi-building me-3"></i>
+                    Organization Management
+                </h1>
+                <p class="page-subtitle">Review and manage environmental organizations</p>
+            </div>
+        </div>
+
+        @if (TempData["Error"] != null)
         {
-            <tr>
-                <td>@org.Name</td>
-                <td>@org.Description</td>
-                <td>
-                    @(org.Status == OrganizationStatus.Approved ? "Approved" :
-                        org.Status == OrganizationStatus.Disapproved ? "Disapproved" : "Pending")
-                </td>
-                <td>
-                    @if (org.Status == OrganizationStatus.Pending)
-                    {
-                        <form asp-action="ApproveOrganization" asp-controller="Admin" method="post" style="display:inline;">
-                            <input type="hidden" name="organizationId" value="@org.Id" />
-                            <button type="submit" class="btn btn-sm btn-success">Approve</button>
-                        </form>
-
-                        <form asp-action="DisapproveOrganization" asp-controller="Admin" method="post" style="display:inline;">
-                            <input type="hidden" name="organizationId" value="@org.Id" />
-                            <button type="submit" class="btn btn-sm btn-danger">Disapprove</button>
-                        </form>
-                    }
-                    else
-                    {
-                        <form asp-action="ToggleOrganizationStatus" method="post" style="display:inline;">
-                            <input type="hidden" name="organizationId" value="@org.Id" />
-                            <button type="submit" class="btn btn-warning btn-sm">Change Status</button>
-                        </form>
-                    }
-                </td>
-            </tr>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         }
-    </tbody>
-</table>
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+
+        <div class="organizations-section">
+            <div class="status-filter mb-4">
+                <div class="btn-group" role="group" aria-label="Status filter">
+                    <input type="radio" class="btn-check" name="statusFilter" id="all" value="all" checked>
+                    <label class="btn btn-outline-success" for="all">All Organizations</label>
+
+                    <input type="radio" class="btn-check" name="statusFilter" id="pending" value="pending">
+                    <label class="btn btn-outline-warning" for="pending">Pending</label>
+
+                    <input type="radio" class="btn-check" name="statusFilter" id="approved" value="approved">
+                    <label class="btn btn-outline-success" for="approved">Approved</label>
+
+                    <input type="radio" class="btn-check" name="statusFilter" id="disapproved" value="disapproved">
+                    <label class="btn btn-outline-danger" for="disapproved">Disapproved</label>
+                </div>
+            </div>
+
+            <div class="organizations-grid">
+                @foreach (var org in Model.AllOrganizations)
+                {
+                    <div class="organization-card" data-status="@org.Status.ToString().ToLower()">
+                        <div class="card h-100 shadow-sm">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="bi bi-building-fill text-success me-2"></i>
+                                    @org.Name
+                                </h5>
+                                <span class="status-badge badge 
+                                    @(org.Status == OrganizationStatus.Approved ? "bg-success" :
+                                      org.Status == OrganizationStatus.Disapproved ? "bg-danger" : "bg-warning")">
+                                    @(org.Status == OrganizationStatus.Approved ? "Approved" :
+                                      org.Status == OrganizationStatus.Disapproved ? "Disapproved" : "Pending")
+                                </span>
+                            </div>
+                            <div class="card-body">
+                                <div class="organization-info mb-3">
+                                    <p class="card-text">
+                                        <i class="bi bi-info-circle text-muted me-2"></i>
+                                        @org.Description
+                                    </p>
+                                </div>
+                                
+                                <div class="organization-actions">
+                                    @if (org.Status == OrganizationStatus.Pending)
+                                    {
+                                        <div class="d-flex gap-2">
+                                            <form asp-action="ApproveOrganization" asp-controller="Admin" method="post" class="flex-fill">
+                                                <input type="hidden" name="organizationId" value="@org.Id" />
+                                                <button type="submit" class="btn btn-success w-100" 
+                                                        onclick="return confirm('Are you sure you want to approve this organization?')">
+                                                    <i class="bi bi-check-circle me-1"></i>
+                                                    Approve
+                                                </button>
+                                            </form>
+
+                                            <form asp-action="DisapproveOrganization" asp-controller="Admin" method="post" class="flex-fill">
+                                                <input type="hidden" name="organizationId" value="@org.Id" />
+                                                <button type="submit" class="btn btn-danger w-100"
+                                                        onclick="return confirm('Are you sure you want to disapprove this organization?')">
+                                                    <i class="bi bi-x-circle me-1"></i>
+                                                    Disapprove
+                                                </button>
+                                            </form>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="ToggleOrganizationStatus" method="post" class="w-100">
+                                            <input type="hidden" name="organizationId" value="@org.Id" />
+                                            <button type="submit" class="btn btn-outline-warning w-100"
+                                                    onclick="return confirm('Are you sure you want to change this organization status?')">
+                                                <i class="bi bi-arrow-repeat me-1"></i>
+                                                Change Status
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </div>
+                            <div class="card-footer text-muted">
+                                <small>
+                                    <i class="bi bi-calendar3 me-1"></i>
+                                    Application submitted
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            @if (!Model.AllOrganizations.Any())
+            {
+                <div class="empty-state text-center py-5">
+                    <i class="bi bi-building-x display-1 text-muted"></i>
+                    <h3 class="text-muted mt-3">No Organizations Found</h3>
+                    <p class="text-muted">No environmental organizations have been registered yet.</p>
+                </div>
+            }
+        </div>
+
+        <div class="navigation-section mt-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="btn btn-outline-primary" href="@Url.Action("Index", "Admin")">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Back to Dashboard
+                </a>
+                <a class="btn btn-primary" href="@Url.Action("UserManagement", "Admin")">
+                    <i class="bi bi-people me-2"></i>
+                    User Management
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="~/js/organizationManagement.js"></script>

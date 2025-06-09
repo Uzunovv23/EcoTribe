@@ -4,70 +4,276 @@
     ViewData["Title"] = "User Management";
 }
 
-<h2>User Management</h2>
+<link rel="stylesheet" href="~/css/userManagement.css" />
 
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
+<main role="main">
+    <button class="side-nav-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <th colspan="3">Administrators</th>
-        </tr>
-        @foreach (var user in Model.Users.Where(u => u.Role == "Administrator"))
+    <nav class="side-nav">
+        <div class="side-nav-header">
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                <i class="bi bi-leaf"></i>
+                <span>EcoTribe</span>
+            </a>
+        </div>
+        <ul class="side-nav-menu">
+            <li><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li><a asp-controller="Event" asp-action="Index">Events</a></li>
+            <li><a asp-controller="Organization" asp-action="Index">Organizations</a></li>
+            @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
+            {
+                <li><a asp-controller="Volunteer" asp-action="Index">Volunteers</a></li>
+                <li><a asp-controller="EventResource" asp-action="Index">Event Resources</a></li>
+                <li><a asp-controller="EventVolunteer" asp-action="Index">Event Volunteers</a></li>
+                <li><a asp-controller="Feedback" asp-action="Index">Feedback</a></li>
+                <li><a asp-controller="Location" asp-action="Index">Locations</a></li>
+            }
+            <li class="position-relative">
+                <a asp-controller="Notification" asp-action="Index">
+                    <i class="bi bi-bell"></i> Notifications
+                    <span id="notification-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle d-none" style="font-size: 0.75rem;">
+                        0
+                    </span>
+                </a>
+            </li>
+            @if (User.IsInRole("Administrator"))
+            {
+                <li>
+                    <a asp-controller="Admin" asp-action="Index">
+                        <i class="bi bi-gear-fill"></i> Admin Panel
+                    </a>
+                </li>
+            }
+        </ul>
+        <div class="side-nav-footer">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Account" asp-action="Logout" class="btn btn-outline-success">Logout</a>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-success mb-2">Log In</a>
+                <a asp-controller="Account" asp-action="Register" class="btn btn-success">Sign Up</a>
+            }
+        </div>
+    </nav>
+
+    <div class="user-management-container">
+        <div class="page-header">
+            <div class="header-content">
+                <div class="back-button">
+                    <a asp-controller="Admin" asp-action="Index" class="btn btn-outline-success">
+                        <i class="bi bi-arrow-left"></i> Back to Dashboard
+                    </a>
+                </div>
+                <h1 class="page-title">
+                    <i class="bi bi-people-fill me-3"></i>
+                    User Management
+                </h1>
+                <p class="page-subtitle">Manage environmental community members and their roles</p>
+            </div>
+        </div>
+
+        @if (TempData["Error"] != null)
         {
-            <tr>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
-                <td></td>
-            </tr>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                @TempData["Error"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         }
 
-        <tr>
-            <th colspan="3">Organizators</th>
-        </tr>
-        @foreach (var user in Model.Users.Where(u => u.Role == "Organizator"))
+        @if (TempData["Success"] != null)
         {
-            <tr>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
-                <td>
-                    <form asp-action="RemoveOrganizator" asp-controller="Admin" method="post">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-danger">Remove Organizator</button>
-                    </form>
-                </td>
-            </tr>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                @TempData["Success"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
         }
 
-        <tr>
-            <th colspan="3">Users</th>
-        </tr>
-        @foreach (var user in Model.Users.Where(u => u.Role == "User"))
-        {
-            <tr>
-                <td>@user.Email</td>
-                <td>@user.Role</td>
-                <td>
-                    <form asp-action="AddOrganizator" asp-controller="Admin" method="post">
-                        <input type="hidden" name="userId" value="@user.Id" />
-                        <button type="submit" class="btn btn-success">Make Organizator</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <div class="users-section">
+            <div class="user-group-card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-shield-check me-2"></i>
+                        Administrators
+                        <span class="badge bg-light text-primary ms-2">@Model.Users.Count(u => u.Role == "Administrator")</span>
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.Users.Any(u => u.Role == "Administrator"))
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="bi bi-envelope me-1"></i>Email</th>
+                                        <th><i class="bi bi-person-badge me-1"></i>Role</th>
+                                        <th><i class="bi bi-gear me-1"></i>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.Users.Where(u => u.Role == "Administrator"))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="user-info">
+                                                    <i class="bi bi-person-circle text-primary me-2"></i>
+                                                    @user.Email
+                                                </div>
+                                            </td>
+                                            <td><span class="badge bg-primary">@user.Role</span></td>
+                                            <td><span class="text-muted">Protected Role</span></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="bi bi-person-x display-1 text-muted"></i>
+                            <p class="text-muted">No administrators found</p>
+                        </div>
+                    }
+                </div>
+            </div>
 
-<div class="mt-3">
-    <a class="btn btn-secondary" href="@Url.Action("OrganizationManagement", "Admin")">Go to Organization Management</a>
-</div>
+            <div class="user-group-card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-person-gear me-2"></i>
+                        Event Organizers
+                        <span class="badge bg-light text-success ms-2">@Model.Users.Count(u => u.Role == "Organizator")</span>
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.Users.Any(u => u.Role == "Organizator"))
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="bi bi-envelope me-1"></i>Email</th>
+                                        <th><i class="bi bi-person-badge me-1"></i>Role</th>
+                                        <th><i class="bi bi-gear me-1"></i>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.Users.Where(u => u.Role == "Organizator"))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="user-info">
+                                                    <i class="bi bi-person-circle text-success me-2"></i>
+                                                    @user.Email
+                                                </div>
+                                            </td>
+                                            <td><span class="badge bg-success">@user.Role</span></td>
+                                            <td>
+                                                <form asp-action="RemoveOrganizator" asp-controller="Admin" method="post" class="d-inline">
+                                                    <input type="hidden" name="userId" value="@user.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger action-btn"
+                                                            onclick="return confirm('Are you sure you want to remove organizer role from this user?')">
+                                                        <i class="bi bi-person-dash me-1"></i>
+                                                        Remove Role
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="bi bi-person-x display-1 text-muted"></i>
+                            <p class="text-muted">No organizers found</p>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="user-group-card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-people me-2"></i>
+                        Community Members
+                        <span class="badge bg-light text-info ms-2">@Model.Users.Count(u => u.Role == "User")</span>
+                    </h3>
+                </div>
+                <div class="card-body">
+                    @if (Model.Users.Any(u => u.Role == "User"))
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th><i class="bi bi-envelope me-1"></i>Email</th>
+                                        <th><i class="bi bi-person-badge me-1"></i>Role</th>
+                                        <th><i class="bi bi-gear me-1"></i>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var user in Model.Users.Where(u => u.Role == "User"))
+                                    {
+                                        <tr>
+                                            <td>
+                                                <div class="user-info">
+                                                    <i class="bi bi-person-circle text-info me-2"></i>
+                                                    @user.Email
+                                                </div>
+                                            </td>
+                                            <td><span class="badge bg-info">@user.Role</span></td>
+                                            <td>
+                                                <form asp-action="AddOrganizator" asp-controller="Admin" method="post" class="d-inline">
+                                                    <input type="hidden" name="userId" value="@user.Id" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-success action-btn"
+                                                            onclick="return confirm('Are you sure you want to promote this user to organizer?')">
+                                                        <i class="bi bi-person-plus me-1"></i>
+                                                        Make Organizer
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state">
+                            <i class="bi bi-person-x display-1 text-muted"></i>
+                            <p class="text-muted">No community members found</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="navigation-section mt-4">
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="btn btn-outline-primary" href="@Url.Action("Index", "Admin")">
+                    <i class="bi bi-arrow-left me-2"></i>
+                    Back to Dashboard
+                </a>
+                <a class="btn btn-success" href="@Url.Action("OrganizationManagement", "Admin")">
+                    <i class="bi bi-building me-2"></i>
+                    Organization Management
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="~/js/userManagement.js"></script>

@@ -24,7 +24,10 @@ namespace EcoTribe.Web.Controllers
             _userManager = userManager;
             _organizationService = organizationService;
         }
-
+        public IActionResult Index()
+        {
+            return View();
+        }
 
         public async Task<IActionResult> UserManagement()
         {
