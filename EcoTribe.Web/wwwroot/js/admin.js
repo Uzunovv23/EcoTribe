@@ -4,36 +4,6 @@
     initManagementCards();
 });
 
-function initSideNavigation() {
-    const sideNavToggle = document.querySelector('.side-nav-toggle');
-    const sideNav = document.querySelector('.side-nav');
-    const body = document.body;
-
-    if (!sideNavToggle || !sideNav) return;
-
-    sideNavToggle.addEventListener('click', function () {
-        sideNavToggle.classList.toggle('active');
-        sideNav.classList.toggle('active');
-        body.classList.toggle('nav-open');
-    });
-
-    document.addEventListener('click', function (e) {
-        if (!sideNav.contains(e.target) && !sideNavToggle.contains(e.target)) {
-            sideNavToggle.classList.remove('active');
-            sideNav.classList.remove('active');
-            body.classList.remove('nav-open');
-        }
-    });
-
-    document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') {
-            sideNavToggle.classList.remove('active');
-            sideNav.classList.remove('active');
-            body.classList.remove('nav-open');
-        }
-    });
-}
-
 function initDashboardAnimations() {
     const cards = document.querySelectorAll('.management-card, .stat-card');
 
