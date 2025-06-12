@@ -2,6 +2,7 @@
 @using EcoTribe.BusinessObjects.Domain.Models
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
+@inject Microsoft.Extensions.Localization.IStringLocalizer<EcoTribe.Web.Resources.SharedResource> Localizer
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,7 +32,7 @@
                 </a>
             </div>
             <ul class="side-nav-menu">
-                <li><a asp-controller="Home" asp-action="Index" class="active">Home</a></li>
+                <li><a asp-controller="Home" asp-action="Index" class="active">@Localizer["GLOBAL_MENU_HOME"]</a></li>
                 <li><a asp-controller="Event" asp-action="Index">Events</a></li>
                 <li><a asp-controller="Organization" asp-action="Index">Organizations</a></li>
                 @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
