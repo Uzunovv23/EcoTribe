@@ -74,6 +74,8 @@
         </nav>
 
         @RenderBody()
+
+        <p>Culture: @System.Globalization.CultureInfo.CurrentUICulture.Name</p>
     </main>
 
     @await RenderSectionAsync("Scripts", required: false)

@@ -18,11 +18,13 @@ namespace EcoTribe.Services.Implementations
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppDbContext _context;
+        private readonly IModelConverter _modelConverter;
 
-        public AdminService(UserManager<ApplicationUser> userManager, AppDbContext context)
+        public AdminService(UserManager<ApplicationUser> userManager, AppDbContext context, IModelConverter modelConverter)
         {
             _userManager = userManager;
             _context = context;
+            _modelConverter = modelConverter;
         }
 
         public async Task<List<ApplicationUser>> GetAllUsersAsync()
@@ -77,7 +79,7 @@ namespace EcoTribe.Services.Implementations
 
             var unapprovedOrganizations = _context.Organizations
                 .Where(o => o.Status == OrganizationStatus.Pending)
-                .Select(o => ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(o))
+                .Select(o => _modelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(o))
                 .ToList();
 
             return new UserManagementViewModel

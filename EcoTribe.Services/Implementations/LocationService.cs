@@ -15,22 +15,24 @@ namespace EcoTribe.Services.Implementations
     public class LocationService : ILocationService
     {
         private readonly AppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public LocationService(AppDbContext context)
+        public LocationService(AppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
 
         public IEnumerable<LocationViewModel> GetAll()
         {
             return context.Locations
-                .Select(loc => ModelConverter.ConvertToViewModel<Location, LocationViewModel>(loc))
+                .Select(loc => modelConverter.ConvertToViewModel<Location, LocationViewModel>(loc))
                 .ToList();
         }
 
         public void Create(LocationInputModel inputModel)
         {
-            var location = ModelConverter.ConvertToModel<LocationInputModel, Location>(inputModel);
+            var location = modelConverter.ConvertToModel<LocationInputModel, Location>(inputModel);
             context.Locations.Add(location);
             context.SaveChanges();
         }
@@ -38,7 +40,7 @@ namespace EcoTribe.Services.Implementations
         {
             var location = context.Locations.Find(id);
             return location != null
-                ? ModelConverter.ConvertToViewModel<Location, LocationViewModel>(location)
+                ? modelConverter.ConvertToViewModel<Location, LocationViewModel>(location)
                 : null;
         }
         public void Update(int id, LocationInputModel inputModel)
@@ -49,7 +51,7 @@ namespace EcoTribe.Services.Implementations
                 throw new ArgumentException("Location not found.");
             }
 
-            var updatedLocation = ModelConverter.ConvertToModel<LocationInputModel, Location>(inputModel);
+            var updatedLocation = modelConverter.ConvertToModel<LocationInputModel, Location>(inputModel);
             updatedLocation.Id = id; 
 
             context.Entry(existingLocation).CurrentValues.SetValues(updatedLocation);

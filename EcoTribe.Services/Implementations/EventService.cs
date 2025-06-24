@@ -16,21 +16,23 @@ namespace EcoTribe.Services.Implementations
     public class EventService : IEventService
     {
         private readonly AppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public EventService(AppDbContext context)
+        public EventService(AppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
         public IEnumerable<EventViewModel> GetAll()
         {
             return context.Events
-                .Select(ev => ModelConverter.ConvertToViewModel<Event, EventViewModel>(ev))
+                .Select(ev => modelConverter.ConvertToViewModel<Event, EventViewModel>(ev))
                 .ToList();
         }
 
         public void Create(EventInputModel inputModel)
         {
-            var eventEntity = ModelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
+            var eventEntity = modelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
             eventEntity.CreatedBy = inputModel.CreatedBy;
             context.Events.Add(eventEntity);
             context.SaveChanges();
@@ -39,7 +41,7 @@ namespace EcoTribe.Services.Implementations
         {
             var eventEntity = context.Events.Find(id);
             return eventEntity != null
-                ? ModelConverter.ConvertToViewModel<Event, EventViewModel> (eventEntity)
+                ? modelConverter.ConvertToViewModel<Event, EventViewModel> (eventEntity)
                 : null;
         }
 
@@ -59,20 +61,20 @@ namespace EcoTribe.Services.Implementations
                 return null;
             }
 
-            var eventDetailsViewModel = ModelConverter.ConvertToViewModel<Event, EventDetailsViewModel>(eventEntity);
+            var eventDetailsViewModel = modelConverter.ConvertToViewModel<Event, EventDetailsViewModel>(eventEntity);
 
             eventDetailsViewModel.AttendingVolunteers = eventEntity.EventVolunteers
-                .Select(ev => ModelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(ev.Volunteer))
+                .Select(ev => modelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(ev.Volunteer))
                 .ToList();
 
             eventDetailsViewModel.Sponsors = eventEntity.EventSponsors
-                .Select(es => ModelConverter.ConvertToViewModel<Organization, EventSponsorViewModel>(es.Organization))
+                .Select(es => modelConverter.ConvertToViewModel<Organization, EventSponsorViewModel>(es.Organization))
                 .ToList();
 
             eventDetailsViewModel.Feedbacks = eventEntity.Feedbacks
                 .Select(f =>
                 {
-                    var feedbackVM = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f);
+                    var feedbackVM = modelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f);
                     feedbackVM.VolunteerName = f.Volunteer.Name;
                     return feedbackVM;
                 })
@@ -91,7 +93,7 @@ namespace EcoTribe.Services.Implementations
                 throw new ArgumentException("Event not found.");
             }
 
-            var updatedEvent = ModelConverter.ConvertToModel<EventInputModel, Event> (inputModel);
+            var updatedEvent = modelConverter.ConvertToModel<EventInputModel, Event> (inputModel);
             updatedEvent.Id = id;
 
             context.Entry(existingEvent).CurrentValues.SetValues(updatedEvent);
@@ -157,7 +159,7 @@ namespace EcoTribe.Services.Implementations
                 throw new ArgumentException("Invalid Volunteer ID.");
             }
 
-            var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
+            var feedback = modelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             var volunteer = context.Volunteers.FirstOrDefault(v => v.Id == inputModel.VolunteerId);
             var user = 
             feedback.Volunteer.User = context.Users.FirstOrDefault(u => u.Id == volunteer.UserId);
@@ -169,13 +171,13 @@ namespace EcoTribe.Services.Implementations
         {
             return context.Feedbacks
                 .Where(f => f.EventId == eventId)
-                .Select(f => ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f))
+                .Select(f => modelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f))
                 .ToList();
         }
 
         public void CreateAndNotifyUsers(EventInputModel inputModel)
         {
-            var eventEntity = ModelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
+            var eventEntity = modelConverter.ConvertToModel<EventInputModel, Event>(inputModel);
             eventEntity.CreatedBy = inputModel.CreatedBy;
             context.Events.Add(eventEntity);
             context.SaveChanges(); 

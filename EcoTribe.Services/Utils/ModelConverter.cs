@@ -7,37 +7,37 @@ using System.Threading.Tasks;
 
 namespace EcoTribe.Services.Utils
 {
-    public class ModelConverter
+    public class ModelConverter : IModelConverter
     {
-        public static TViewModel ConvertToViewModel<TModel, TViewModel>(TModel model)
+        public TViewModel ConvertToViewModel<TModel, TViewModel>(TModel model)
              where TViewModel : new()
         {
             if (model == null) throw new ArgumentNullException(nameof(model));
             return Convert<TModel, TViewModel>(model);
         }
 
-        public static TModel ConvertToModel<TInputModel, TModel>(TInputModel inputModel)
+        public TModel ConvertToModel<TInputModel, TModel>(TInputModel inputModel)
             where TModel : new()
         {
             if (inputModel == null) throw new ArgumentNullException(nameof(inputModel));
             return Convert<TInputModel, TModel>(inputModel);
         }
 
-        public static List<TViewModel> ConvertListToViewModel<TModel, TViewModel>(IEnumerable<TModel> models)
+        public List<TViewModel> ConvertListToViewModel<TModel, TViewModel>(IEnumerable<TModel> models)
             where TViewModel : new()
         {
             if (models == null) return new List<TViewModel>();
             return models.Select(m => Convert<TModel, TViewModel>(m)).ToList();
         }
 
-        public static List<TModel> ConvertListToModel<TInputModel, TModel>(IEnumerable<TInputModel> inputModels)
+        public List<TModel> ConvertListToModel<TInputModel, TModel>(IEnumerable<TInputModel> inputModels)
             where TModel : new()
         {
             if (inputModels == null) return new List<TModel>();
             return inputModels.Select(m => Convert<TInputModel, TModel>(m)).ToList();
         }
 
-        private static TDestination Convert<TSource, TDestination>(TSource source)
+        private TDestination Convert<TSource, TDestination>(TSource source)
             where TDestination : new()
         {
             var destination = new TDestination();
