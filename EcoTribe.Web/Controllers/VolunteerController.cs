@@ -11,10 +11,12 @@ namespace EcoTribe.Web.Controllers
     public class VolunteerController : Controller
     {
         private readonly IVolunteerService volunteerService;
+        private readonly IModelConverter modelConverter;
 
-        public VolunteerController(IVolunteerService volunteerService)
+        public VolunteerController(IVolunteerService volunteerService, IModelConverter modelConverter)
         {
             this.volunteerService = volunteerService;
+            this.modelConverter = modelConverter;
         }
         public IActionResult Index()
         {
@@ -57,7 +59,7 @@ namespace EcoTribe.Web.Controllers
             {
                 return NotFound();
             }
-            var inputModel = ModelConverter.ConvertToModel<VolunteerViewModel, VolunteerInputModel>(volunteer);
+            var inputModel = modelConverter.ConvertToModel<VolunteerViewModel, VolunteerInputModel>(volunteer);
             return View(inputModel);
         }
 

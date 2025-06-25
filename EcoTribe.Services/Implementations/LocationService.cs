@@ -14,10 +14,10 @@ namespace EcoTribe.Services.Implementations
 {
     public class LocationService : ILocationService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
         private readonly IModelConverter modelConverter;
 
-        public LocationService(AppDbContext context, IModelConverter modelConverter)
+        public LocationService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
             this.modelConverter = modelConverter;

@@ -10,10 +10,12 @@ namespace EcoTribe.Web.Controllers
     public class EventResourceController : Controller
     {
         private readonly IEventResourceService eventResourceService;
+        private readonly IModelConverter modelConverter;
 
-        public EventResourceController(IEventResourceService eventResourceService)
+        public EventResourceController(IEventResourceService eventResourceService, IModelConverter modelConverter)
         {
             this.eventResourceService = eventResourceService;
+            this.modelConverter = modelConverter;
         }
         public IActionResult Index()
         {
@@ -57,7 +59,7 @@ namespace EcoTribe.Web.Controllers
             {
                 return NotFound();
             }
-            var inputModel = ModelConverter.ConvertToModel<EventResourceViewModel, EventResourceInputModel>(eventResourceEntity);
+            var inputModel = modelConverter.ConvertToModel<EventResourceViewModel, EventResourceInputModel>(eventResourceEntity);
             return View(inputModel);
         }
 

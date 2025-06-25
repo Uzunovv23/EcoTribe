@@ -15,10 +15,10 @@ namespace EcoTribe.Services.Implementations
 {
     public class EventService : IEventService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
         private readonly IModelConverter modelConverter;
 
-        public EventService(AppDbContext context, IModelConverter modelConverter)
+        public EventService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
             this.modelConverter = modelConverter;

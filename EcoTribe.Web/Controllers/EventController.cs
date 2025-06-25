@@ -18,13 +18,15 @@ namespace EcoTribe.Web.Controllers
         private readonly IVolunteerService volunteerService;
         private readonly IEventVolunteerService eventVolunteerService;
         private readonly IOrganizationService organizationService;
+        private readonly IModelConverter modelConverter;
 
-        public EventController(IEventService eventService, IVolunteerService volunteerService, IEventVolunteerService eventVolunteerService, IOrganizationService organizationService)
+        public EventController(IEventService eventService, IVolunteerService volunteerService, IEventVolunteerService eventVolunteerService, IOrganizationService organizationService, IModelConverter modelConverter)
         {
             this.eventService = eventService;
             this.volunteerService = volunteerService;
             this.eventVolunteerService = eventVolunteerService;
             this.organizationService = organizationService;
+            this.modelConverter = modelConverter;
         }
         public IActionResult Index()
         {
@@ -112,7 +114,7 @@ namespace EcoTribe.Web.Controllers
                 return NotFound();
             }
 
-            var inputModel = ModelConverter.ConvertToModel<EventViewModel, EventInputModel>(eventEntity);
+            var inputModel = modelConverter.ConvertToModel<EventViewModel, EventInputModel>(eventEntity);
             return View(inputModel);
         }
 

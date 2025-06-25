@@ -12,10 +12,12 @@ namespace EcoTribe.Web.Controllers
     public class OrganizationController : Controller
     {
         private readonly IOrganizationService organizationService;
+        private readonly IModelConverter modelConverter;
 
-        public OrganizationController(IOrganizationService organizationService)
+        public OrganizationController(IOrganizationService organizationService, IModelConverter modelConverter)
         {
             this.organizationService = organizationService;
+            this.modelConverter = modelConverter;
         }
 
         public IActionResult Index()
@@ -67,7 +69,7 @@ namespace EcoTribe.Web.Controllers
                 return NotFound();
             }
 
-            var inputModel = ModelConverter.ConvertToModel<OrganizationViewModel, OrganizationInputModel>(organization);
+            var inputModel = modelConverter.ConvertToModel<OrganizationViewModel, OrganizationInputModel>(organization);
 
             return View(inputModel);
         }

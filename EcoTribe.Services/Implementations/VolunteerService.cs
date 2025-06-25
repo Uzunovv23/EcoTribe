@@ -14,23 +14,25 @@ namespace EcoTribe.Services.Implementations
 {
     public class VolunteerService : IVolunteerService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public VolunteerService(AppDbContext context)
+        public VolunteerService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
 
         public IEnumerable<VolunteerViewModel> GetAll()
         {
             return context.Volunteers
-                .Select(vol => ModelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(vol))
+                .Select(vol => modelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(vol))
                 .ToList();
         }
 
         public void Create(VolunteerInputModel inputModel)
         {
-            var volunteer = ModelConverter.ConvertToModel<VolunteerInputModel, Volunteer>(inputModel);
+            var volunteer = modelConverter.ConvertToModel<VolunteerInputModel, Volunteer>(inputModel);
             context.Volunteers.Add(volunteer);
             context.SaveChanges();
         }
@@ -39,7 +41,7 @@ namespace EcoTribe.Services.Implementations
         {
             var volunteer = context.Volunteers.Find(id);
             return volunteer != null
-                ? ModelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(volunteer)
+                ? modelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(volunteer)
                 : null;
         }
 
@@ -50,7 +52,7 @@ namespace EcoTribe.Services.Implementations
             {
                 throw new ArgumentException("Volunteer not found.");
             }
-            var updatedVolunteer = ModelConverter.ConvertToModel<VolunteerInputModel, Volunteer>(inputModel);
+            var updatedVolunteer = modelConverter.ConvertToModel<VolunteerInputModel, Volunteer>(inputModel);
             updatedVolunteer.Id = id;
 
             context.Entry(existingVolunteer).CurrentValues.SetValues(updatedVolunteer);

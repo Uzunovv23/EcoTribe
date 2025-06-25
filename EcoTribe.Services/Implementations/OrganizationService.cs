@@ -11,23 +11,25 @@ namespace EcoTribe.Services.Implementations
 {
     public class OrganizationService : IOrganizationService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public OrganizationService(AppDbContext context)
+        public OrganizationService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
 
         public IEnumerable<OrganizationViewModel> GetAll()
         {
             return context.Organizations
-                .Select(org => ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(org))
+                .Select(org => modelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(org))
                 .ToList();
         }
 
         public void Create(OrganizationInputModel inputModel)
         {
-            var organization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
+            var organization = modelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
             organization.CreatedAt = DateTime.UtcNow;
             organization.Status = OrganizationStatus.Pending;
             context.Organizations.Add(organization);
@@ -36,7 +38,7 @@ namespace EcoTribe.Services.Implementations
 
         public async Task CreateAsync(OrganizationInputModel inputModel, string userId)
         {
-            var organization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
+            var organization = modelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
             organization.CreatedAt = DateTime.UtcNow;
             organization.Status = OrganizationStatus.Pending;
 
@@ -57,7 +59,7 @@ namespace EcoTribe.Services.Implementations
         {
             var organization = context.Organizations.Find(id);
             return organization != null
-                ? ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization)
+                ? modelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization)
                 : null;
         }
 
@@ -68,7 +70,7 @@ namespace EcoTribe.Services.Implementations
                 .FirstOrDefault();
 
             return organization != null
-                ? ModelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization)
+                ? modelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization)
                 : null;
         }
 
@@ -78,7 +80,7 @@ namespace EcoTribe.Services.Implementations
             if (existingOrganization == null)
                 throw new ArgumentException("Organization not found.");
 
-            var updatedOrganization = ModelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
+            var updatedOrganization = modelConverter.ConvertToModel<OrganizationInputModel, Organization>(inputModel);
             updatedOrganization.Id = id;
             updatedOrganization.Status = existingOrganization.Status;
 

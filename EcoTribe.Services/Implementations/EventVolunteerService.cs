@@ -15,23 +15,25 @@ namespace EcoTribe.Services.Implementations
 {
     public class EventVolunteerService : IEventVolunteerService
     {  
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public EventVolunteerService(AppDbContext context)
+        public EventVolunteerService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
         
         public IEnumerable<EventVolunteerViewModel> GetAll()
         {
             return context.EventVolunteers.Include(ev => ev.Volunteer).Include(ev => ev.Event)
-                .Select(evv => ModelConverter.ConvertToViewModel<EventVolunteer, EventVolunteerViewModel>(evv))
+                .Select(evv => modelConverter.ConvertToViewModel<EventVolunteer, EventVolunteerViewModel>(evv))
                 .ToList();
         }
         
         public void Create(EventVolunteerInputModel inputModel)
         {
-            var eventVolunteer = ModelConverter.ConvertToModel<EventVolunteerInputModel, EventVolunteer>(inputModel);
+            var eventVolunteer = modelConverter.ConvertToModel<EventVolunteerInputModel, EventVolunteer>(inputModel);
             context.EventVolunteers.Add(eventVolunteer);
             context.SaveChanges();
         }
@@ -40,7 +42,7 @@ namespace EcoTribe.Services.Implementations
         {
             var eventVolunteer = context.EventVolunteers.Find(id);
             return eventVolunteer != null
-                ? ModelConverter.ConvertToViewModel<EventVolunteer, EventVolunteerViewModel>(eventVolunteer)
+                ? modelConverter.ConvertToViewModel<EventVolunteer, EventVolunteerViewModel>(eventVolunteer)
                 : null;
         }
         public void Update(int id, EventVolunteerInputModel inputModel)
@@ -50,7 +52,7 @@ namespace EcoTribe.Services.Implementations
             {
                 throw new ArgumentException("EventVolunteer not found.");
             }
-            var updatedEventVolunteer = ModelConverter.ConvertToModel<EventVolunteerInputModel, EventVolunteer>(inputModel);
+            var updatedEventVolunteer = modelConverter.ConvertToModel<EventVolunteerInputModel, EventVolunteer>(inputModel);
             updatedEventVolunteer.Id = id;
 
             context.Entry(existingEventVolunteer).CurrentValues.SetValues(updatedEventVolunteer);

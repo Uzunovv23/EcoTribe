@@ -13,9 +13,9 @@ namespace EcoTribe.Services.Implementations
 {
     public class NotificationService : INotificationService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
 
-        public NotificationService(AppDbContext context)
+        public NotificationService(IAppDbContext context)
         {
             this.context = context;
         }

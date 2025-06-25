@@ -14,22 +14,24 @@ namespace EcoTribe.Services.Implementations
 {
     public class EventResourceService : IEventResourceService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public EventResourceService(AppDbContext context)
+        public EventResourceService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
         public IEnumerable<EventResourceViewModel> GetAll()
         {
             return context.EventResources
-                .Select(evr => ModelConverter.ConvertToViewModel<EventResource, EventResourceViewModel>(evr))
+                .Select(evr => modelConverter.ConvertToViewModel<EventResource, EventResourceViewModel>(evr))
                 .ToList();
         }
 
         public void Create(EventResourceInputModel inputModel)
         {
-            var eventResource = ModelConverter.ConvertToModel<EventResourceInputModel, EventResource>(inputModel);
+            var eventResource = modelConverter.ConvertToModel<EventResourceInputModel, EventResource>(inputModel);
             context.EventResources.Add(eventResource);
             context.SaveChanges();
         }
@@ -38,7 +40,7 @@ namespace EcoTribe.Services.Implementations
         {
             var eventResource = context.EventResources.Find(id);
             return eventResource != null
-                ? ModelConverter.ConvertToViewModel<EventResource, EventResourceViewModel>(eventResource)
+                ? modelConverter.ConvertToViewModel<EventResource, EventResourceViewModel>(eventResource)
                 : null;
         }
 
@@ -50,7 +52,7 @@ namespace EcoTribe.Services.Implementations
                 throw new ArgumentException("Event Resource not found.");
             }
 
-            var updatedEventResource = ModelConverter.ConvertToModel<EventResourceInputModel, EventResource>(inputModel);
+            var updatedEventResource = modelConverter.ConvertToModel<EventResourceInputModel, EventResource>(inputModel);
             updatedEventResource.Id = id;
 
             context.Entry(existingEventResource).CurrentValues.SetValues(updatedEventResource);

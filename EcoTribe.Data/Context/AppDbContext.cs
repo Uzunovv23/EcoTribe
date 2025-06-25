@@ -4,7 +4,7 @@ using EcoTribe.BusinessObjects.Domain.Models;
 
 namespace EcoTribe.Data.Context
 {
-    public class AppDbContext : IdentityDbContext<ApplicationUser>
+    public class AppDbContext : IdentityDbContext<ApplicationUser>, IAppDbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)

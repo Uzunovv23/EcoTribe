@@ -11,10 +11,12 @@ namespace EcoTribe.Web.Controllers
     public class LocationController : Controller
     {
         private readonly ILocationService locationService;
+        private readonly IModelConverter modelConverter;
 
-        public LocationController(ILocationService locationService)
+        public LocationController(ILocationService locationService, IModelConverter modelConverter)
         {
             this.locationService = locationService;
+            this.modelConverter = modelConverter;
         }
         public IActionResult Index()
         {
@@ -58,7 +60,7 @@ namespace EcoTribe.Web.Controllers
                 return NotFound();
             }
 
-            var inputModel = ModelConverter.ConvertToModel<LocationViewModel, LocationInputModel>(location);
+            var inputModel = modelConverter.ConvertToModel<LocationViewModel, LocationInputModel>(location);
 
             return View(inputModel);
         }

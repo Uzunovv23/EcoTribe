@@ -16,11 +16,13 @@ namespace EcoTribe.Services.Implementations
 
     public class EventSponsorService : IEventSponsorService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public EventSponsorService(AppDbContext context)
+        public EventSponsorService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
 
         public IEnumerable<EventSponsorViewModel> GetAll()
@@ -28,7 +30,7 @@ namespace EcoTribe.Services.Implementations
             return context.EventSponsors
                 .Include(es => es.Event)
                 .Include(es => es.Organization)
-                .Select(es => ModelConverter.ConvertToViewModel<EventSponsor, EventSponsorViewModel>(es))
+                .Select(es => modelConverter.ConvertToViewModel<EventSponsor, EventSponsorViewModel>(es))
                 .ToList();
         }
 
@@ -65,7 +67,7 @@ namespace EcoTribe.Services.Implementations
                 return null;
             }
 
-            var viewModel = ModelConverter.ConvertToViewModel<EventSponsor, EventSponsorViewModel>(eventSponsor);
+            var viewModel = modelConverter.ConvertToViewModel<EventSponsor, EventSponsorViewModel>(eventSponsor);
 
             viewModel.Event = eventSponsor.Event;
             viewModel.Organization = eventSponsor.Organization;
@@ -85,7 +87,7 @@ namespace EcoTribe.Services.Implementations
                 throw new ArgumentException("Event sponsor not found.");
             }
 
-            var updatedEventSponsor = ModelConverter.ConvertToModel<EventSponsorInputModel, EventSponsor>(inputModel);
+            var updatedEventSponsor = modelConverter.ConvertToModel<EventSponsorInputModel, EventSponsor>(inputModel);
             updatedEventSponsor.Id = id;
 
             context.Entry(existingEventSponsor).CurrentValues.SetValues(updatedEventSponsor);

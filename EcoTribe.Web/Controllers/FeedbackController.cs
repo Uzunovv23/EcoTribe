@@ -13,10 +13,12 @@ namespace EcoTribe.Web.Controllers
     public class FeedbackController : Controller
     {
         private readonly IFeedbackService feedbackService;
+        private readonly IModelConverter modelConverter;
 
-        public FeedbackController(IFeedbackService feedbackService)
+        public FeedbackController(IFeedbackService feedbackService, IModelConverter modelConverter)
         {
             this.feedbackService = feedbackService;
+            this.modelConverter = modelConverter;
         }
         public IActionResult Index()
         {
@@ -83,7 +85,7 @@ namespace EcoTribe.Web.Controllers
             ViewBag.Events = new SelectList(feedbackService.GetAllEvents(), "Id", "Name");
             ViewBag.Volunteers = new SelectList(feedbackService.GetAllVolunteers(), "Id", "Name");
 
-            var inputModel = ModelConverter.ConvertToModel<FeedbackViewModel, FeedbackInputModel>(feedback);
+            var inputModel = modelConverter.ConvertToModel<FeedbackViewModel, FeedbackInputModel>(feedback);
             return View(inputModel);
         }
 

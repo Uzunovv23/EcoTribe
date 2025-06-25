@@ -17,10 +17,10 @@ namespace EcoTribe.Services.Implementations
     public class AdminService : IAdminService
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly AppDbContext _context;
+        private readonly IAppDbContext _context;
         private readonly IModelConverter _modelConverter;
 
-        public AdminService(UserManager<ApplicationUser> userManager, AppDbContext context, IModelConverter modelConverter)
+        public AdminService(UserManager<ApplicationUser> userManager, IAppDbContext context, IModelConverter modelConverter)
         {
             _userManager = userManager;
             _context = context;

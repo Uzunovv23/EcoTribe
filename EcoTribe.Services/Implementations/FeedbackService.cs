@@ -15,11 +15,13 @@ namespace EcoTribe.Services.Implementations
 {
     public class FeedbackService : IFeedbackService
     {
-        private readonly AppDbContext context;
+        private readonly IAppDbContext context;
+        private readonly IModelConverter modelConverter;
 
-        public FeedbackService(AppDbContext context)
+        public FeedbackService(IAppDbContext context, IModelConverter modelConverter)
         {
             this.context = context;
+            this.modelConverter = modelConverter;
         }
 
         public IEnumerable<FeedbackViewModel> GetAll()
@@ -31,7 +33,7 @@ namespace EcoTribe.Services.Implementations
                 .AsEnumerable()
                 .Select(fb =>
                 {
-                    var viewModel = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(fb);
+                    var viewModel = modelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(fb);
                     viewModel.Event = fb.Event;
                     viewModel.Volunteer = fb.Volunteer;
                     viewModel.VolunteerName = fb.Volunteer?.Name;
@@ -42,7 +44,7 @@ namespace EcoTribe.Services.Implementations
 
         public void Create(FeedbackInputModel inputModel)
         {
-            var feedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
+            var feedback = modelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             feedback.Event = context.Events.Find(inputModel.EventId)!;
             feedback.Volunteer = context.Volunteers.Include(v => v.User).FirstOrDefault(v => inputModel.VolunteerId == v.Id)!;
             feedback.CreatedAt = DateTime.UtcNow;
@@ -59,7 +61,7 @@ namespace EcoTribe.Services.Implementations
 
             if (feedback == null) return null;
 
-            var viewModel = ModelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(feedback);
+            var viewModel = modelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(feedback);
             viewModel.Event = feedback.Event;
             viewModel.Volunteer = feedback.Volunteer;
 
@@ -77,7 +79,7 @@ namespace EcoTribe.Services.Implementations
                 throw new ArgumentException("Feedback not found.");
             }
 
-            var updatedFeedback = ModelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
+            var updatedFeedback = modelConverter.ConvertToModel<FeedbackInputModel, Feedback>(inputModel);
             updatedFeedback.Id = existingFeedback.Id;
             updatedFeedback.Event = context.Events.Find(inputModel.EventId)!;
             updatedFeedback.Volunteer = context.Volunteers.Find(inputModel.VolunteerId)!;

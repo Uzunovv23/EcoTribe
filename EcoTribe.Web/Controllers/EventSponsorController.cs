@@ -11,10 +11,12 @@ namespace EcoTribe.Web.Controllers
     public class EventSponsorController : Controller
     {
         private readonly IEventSponsorService eventSponsorService;
+        private readonly IModelConverter modelConverter;
 
-        public EventSponsorController(IEventSponsorService eventSponsorService)
+        public EventSponsorController(IEventSponsorService eventSponsorService, IModelConverter modelConverter)
         {
             this.eventSponsorService = eventSponsorService;
+            this.modelConverter = modelConverter;
         }
         public IActionResult Index()
         {
@@ -65,7 +67,7 @@ namespace EcoTribe.Web.Controllers
                 return NotFound();
             }
 
-            var inputModel = ModelConverter.ConvertToModel<EventSponsorViewModel, EventSponsorInputModel>(eventSponsor);
+            var inputModel = modelConverter.ConvertToModel<EventSponsorViewModel, EventSponsorInputModel>(eventSponsor);
 
             return View(inputModel);
         }
