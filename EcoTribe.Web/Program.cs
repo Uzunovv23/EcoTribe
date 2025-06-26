@@ -5,37 +5,14 @@ using EcoTribe.Services.Implementations;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
-using System.Globalization;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Localization
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-builder.Services.AddControllersWithViews()
-    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
-    .AddDataAnnotationsLocalization();
-
-builder.Services.Configure<RequestLocalizationOptions>(options =>
-{
-    var supportedCultures = new[]
-    {
-        new CultureInfo("en"),
-        new CultureInfo("bg")
-    };
-
-    options.DefaultRequestCulture = new RequestCulture("bg");
-    options.SupportedCultures = supportedCultures;
-    options.SupportedUICultures = supportedCultures;
-    options.RequestCultureProviders = new List<IRequestCultureProvider>
-    {
-        new QueryStringRequestCultureProvider()
-    };
-});
+// Add services to the container.
+builder.Services.AddControllersWithViews();
 
 // Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -73,9 +50,6 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-var localizationOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>().Value;
-app.UseRequestLocalization(localizationOptions);
 
 app.UseAuthentication();
 
