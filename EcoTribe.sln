@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.Services", "EcoTri
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.Web", "EcoTribe.Web\EcoTribe.Web.csproj", "{3FC0B977-DD5D-46A6-B604-79686D41FCC1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EcoTribe.UnitTests", "EcoTribe.UnitTests\EcoTribe.UnitTests.csproj", "{1C4A353D-7BD9-4F1E-9D87-55012AF48B3B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +35,15 @@ Global
 		{3FC0B977-DD5D-46A6-B604-79686D41FCC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FC0B977-DD5D-46A6-B604-79686D41FCC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FC0B977-DD5D-46A6-B604-79686D41FCC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C4A353D-7BD9-4F1E-9D87-55012AF48B3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C4A353D-7BD9-4F1E-9D87-55012AF48B3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C4A353D-7BD9-4F1E-9D87-55012AF48B3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C4A353D-7BD9-4F1E-9D87-55012AF48B3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51BAB163-0B55-479F-9A4D-202A91034033}
 	EndGlobalSection
 EndGlobal
