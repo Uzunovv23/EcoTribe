@@ -37,7 +37,7 @@ namespace EcoTribe.UnitTests
         public void Test4()
         {
             string str = "A very good eco friendly power plant";
-            Assert.That(str, Does.Contain("Eco"));
+            Assert.That(str, Does.Contain("eco"));
         }
 
         [Test]

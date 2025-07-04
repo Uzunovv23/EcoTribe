@@ -17,4 +17,9 @@
     <PackageReference Include="NUnit3TestAdapter" Version="5.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EcoTribe.BusinessObjects\EcoTribe.BusinessObjects.csproj" />
+    <ProjectReference Include="..\EcoTribe.Services\EcoTribe.Services.csproj" />
+  </ItemGroup>
+
 </Project>
