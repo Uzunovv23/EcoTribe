@@ -4,6 +4,7 @@ using EcoTribe.Services.Utils;
 using NUnit.Framework;
 
 using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.Domain.Enums;
 
 namespace EcoTribe.UnitTests;
 
@@ -80,4 +81,36 @@ public class EntityToViewModelTest
             Assert.That(viewModel.End, Is.EqualTo(ev.End));
         });
     }
+
+        [Test]
+        public void OrganizationEntityToViewModelTest()
+        {
+            var organization = new Organization
+            {
+                Id = 1,
+                Name = "EcoCorp",
+                ContactEmail = "contact@ecocorp.org",
+                Phone = "123-456-7890",
+                Website = "https://ecocorp.org",
+                Description = "An organization for eco-friendly initiatives",
+                City = "Green City",
+                CreatedAt = new DateTime(2024, 10, 1),
+                Status = OrganizationStatus.Approved
+            };
+
+            var viewModel = _modelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization);
+            
+            Assert.Multiple(() =>
+            {
+                Assert.That(viewModel.Id, Is.EqualTo(organization.Id));
+                Assert.That(viewModel.Name, Is.EqualTo(organization.Name));
+                Assert.That(viewModel.ContactEmail, Is.EqualTo(organization.ContactEmail));
+                Assert.That(viewModel.Phone, Is.EqualTo(organization.Phone));
+                Assert.That(viewModel.Website, Is.EqualTo(organization.Website));
+                Assert.That(viewModel.Description, Is.EqualTo(organization.Description));
+                Assert.That(viewModel.City, Is.EqualTo(organization.City));
+                Assert.That(viewModel.CreatedAt, Is.EqualTo(organization.CreatedAt));
+                Assert.That(viewModel.Status, Is.EqualTo(organization.Status));    
+            });
+        }
 }

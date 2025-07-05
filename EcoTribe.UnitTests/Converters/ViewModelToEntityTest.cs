@@ -1,4 +1,5 @@
-﻿using EcoTribe.BusinessObjects.Domain.Models;
+﻿using EcoTribe.BusinessObjects.Domain.Enums;
+using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Services.Utils;
 using NUnit.Framework;
@@ -68,5 +69,37 @@ public class ViewModelToEntityTest
         Assert.That(result.Rating, Is.EqualTo(4));
         Assert.That(result.Comments, Is.EqualTo("Great event!"));
         Assert.That(result.CreatedAt, Is.EqualTo(feedbackViewModel.CreatedAt));
+    }
+
+    [Test]
+    public void OrganizationViewModelToEntityTest()
+    {
+        var organizationViewModel = new OrganizationViewModel
+        {
+            Id = 1,
+            Name = "EcoCorp",
+            ContactEmail = "contact@ecocorp.org",
+            Phone = "123-456-7890",
+            Website = "https://ecocorp.org",
+            Description = "An organization for eco-friendly initiatives",
+            City = "Green City",
+            CreatedAt = new DateTime(2024, 10, 1),
+            Status = OrganizationStatus.Approved
+        };
+
+        var result = _modelConverter.ConvertToModel<OrganizationViewModel, Organization>(organizationViewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(organizationViewModel.Id));
+            Assert.That(result.Name, Is.EqualTo(organizationViewModel.Name));
+            Assert.That(result.ContactEmail, Is.EqualTo(organizationViewModel.ContactEmail));
+            Assert.That(result.Phone, Is.EqualTo(organizationViewModel.Phone));
+            Assert.That(result.Website, Is.EqualTo(organizationViewModel.Website));
+            Assert.That(result.Description, Is.EqualTo(organizationViewModel.Description));
+            Assert.That(result.City, Is.EqualTo(organizationViewModel.City));
+            Assert.That(result.CreatedAt, Is.EqualTo(organizationViewModel.CreatedAt));
+            Assert.That(result.Status, Is.EqualTo(organizationViewModel.Status));
+        });
     }
 }
