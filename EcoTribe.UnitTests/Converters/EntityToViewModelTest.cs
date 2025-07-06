@@ -9,7 +9,7 @@ using EcoTribe.BusinessObjects.Domain.Enums;
 namespace EcoTribe.UnitTests;
 
 public class EntityToViewModelTest
-{ 
+{
     private IModelConverter _modelConverter;
     [SetUp]
     public void Setup()
@@ -82,35 +82,62 @@ public class EntityToViewModelTest
         });
     }
 
-        [Test]
-        public void OrganizationEntityToViewModelTest()
+    [Test]
+    public void OrganizationEntityToViewModelTest()
+    {
+        var organization = new Organization
         {
-            var organization = new Organization
-            {
-                Id = 1,
-                Name = "EcoCorp",
-                ContactEmail = "contact@ecocorp.org",
-                Phone = "123-456-7890",
-                Website = "https://ecocorp.org",
-                Description = "An organization for eco-friendly initiatives",
-                City = "Green City",
-                CreatedAt = new DateTime(2024, 10, 1),
-                Status = OrganizationStatus.Approved
-            };
+            Id = 1,
+            Name = "EcoCorp",
+            ContactEmail = "contact@ecocorp.org",
+            Phone = "123-456-7890",
+            Website = "https://ecocorp.org",
+            Description = "An organization for eco-friendly initiatives",
+            City = "Green City",
+            CreatedAt = new DateTime(2024, 10, 1),
+            Status = OrganizationStatus.Approved
+        };
 
-            var viewModel = _modelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization);
-            
-            Assert.Multiple(() =>
-            {
-                Assert.That(viewModel.Id, Is.EqualTo(organization.Id));
-                Assert.That(viewModel.Name, Is.EqualTo(organization.Name));
-                Assert.That(viewModel.ContactEmail, Is.EqualTo(organization.ContactEmail));
-                Assert.That(viewModel.Phone, Is.EqualTo(organization.Phone));
-                Assert.That(viewModel.Website, Is.EqualTo(organization.Website));
-                Assert.That(viewModel.Description, Is.EqualTo(organization.Description));
-                Assert.That(viewModel.City, Is.EqualTo(organization.City));
-                Assert.That(viewModel.CreatedAt, Is.EqualTo(organization.CreatedAt));
-                Assert.That(viewModel.Status, Is.EqualTo(organization.Status));    
-            });
-        }
+        var viewModel = _modelConverter.ConvertToViewModel<Organization, OrganizationViewModel>(organization);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Id, Is.EqualTo(organization.Id));
+            Assert.That(viewModel.Name, Is.EqualTo(organization.Name));
+            Assert.That(viewModel.ContactEmail, Is.EqualTo(organization.ContactEmail));
+            Assert.That(viewModel.Phone, Is.EqualTo(organization.Phone));
+            Assert.That(viewModel.Website, Is.EqualTo(organization.Website));
+            Assert.That(viewModel.Description, Is.EqualTo(organization.Description));
+            Assert.That(viewModel.City, Is.EqualTo(organization.City));
+            Assert.That(viewModel.CreatedAt, Is.EqualTo(organization.CreatedAt));
+            Assert.That(viewModel.Status, Is.EqualTo(organization.Status));
+        });
+    }
+
+    [Test]
+    public void NotificationEntityToViewModelTest()
+    {
+        var notification = new Notification
+        {
+            Id = 1,
+            Title = "Reminder",
+            Message = "Don't forget your event tomorrow!",
+            CreatedAt = new DateTime(2025, 6, 25, 9, 0, 0),
+            IsRead = false,
+            UserId = "user123",
+            EventId = 42
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<Notification, NotificationViewModel>(notification);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Id, Is.EqualTo(notification.Id));
+            Assert.That(viewModel.Title, Is.EqualTo(notification.Title));
+            Assert.That(viewModel.Message, Is.EqualTo(notification.Message));
+            Assert.That(viewModel.IsRead, Is.EqualTo(notification.IsRead));
+            Assert.That(viewModel.CreatedAt, Is.EqualTo(notification.CreatedAt));
+        });        
+    }
+
 }

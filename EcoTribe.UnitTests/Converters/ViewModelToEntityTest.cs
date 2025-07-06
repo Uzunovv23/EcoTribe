@@ -102,4 +102,28 @@ public class ViewModelToEntityTest
             Assert.That(result.Status, Is.EqualTo(organizationViewModel.Status));
         });
     }
+
+    [Test]
+    public void NotificationViewModelToEntityTest()
+    {
+        var viewModel = new NotificationViewModel
+        {
+            Id = 1,
+            Title = "Reminder",
+            Message = "Don't forget your event tomorrow!",
+            CreatedAt = new DateTime(2025, 6, 25, 9, 0, 0),
+            IsRead = true
+        };
+
+        var entity = _modelConverter.ConvertToModel<NotificationViewModel, Notification>(viewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(entity.Id, Is.EqualTo(viewModel.Id));
+            Assert.That(entity.Title, Is.EqualTo(viewModel.Title));
+            Assert.That(entity.Message, Is.EqualTo(viewModel.Message));
+            Assert.That(entity.CreatedAt, Is.EqualTo(viewModel.CreatedAt));
+            Assert.That(entity.IsRead, Is.EqualTo(viewModel.IsRead));
+        });
+    }
 }
