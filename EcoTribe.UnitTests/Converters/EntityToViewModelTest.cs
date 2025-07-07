@@ -140,4 +140,38 @@ public class EntityToViewModelTest
         });        
     }
 
+    [Test]
+    public void VolunteerEntityToViewModelTest()
+    {
+        var volunteer = new Volunteer
+        {
+            Id = 1,
+            Name = "Anna Petrova",
+            City = "Varna",
+            Email = "anna@volunteers.bg",
+            Skills = "First Aid, Communication",
+            PreferredEvents = "Environmental, Medical",
+            Number = "0888123456",
+            Instagram = "@anna_volunteer",
+            Facebook = "facebook.com/anna.volunteer",
+            DateOfBirth = new DateTime(1998, 3, 10),
+            UserId = "user-123"
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<Volunteer, VolunteerViewModel>(volunteer);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Id, Is.EqualTo(volunteer.Id));
+            Assert.That(viewModel.Name, Is.EqualTo(volunteer.Name));
+            Assert.That(viewModel.City, Is.EqualTo(volunteer.City));
+            Assert.That(viewModel.Email, Is.EqualTo(volunteer.Email));
+            Assert.That(viewModel.Skills, Is.EqualTo(volunteer.Skills));
+            Assert.That(viewModel.PreferredEvents, Is.EqualTo(volunteer.PreferredEvents));
+            Assert.That(viewModel.Number, Is.EqualTo(volunteer.Number));
+            Assert.That(viewModel.Instagram, Is.EqualTo(volunteer.Instagram));
+            Assert.That(viewModel.Facebook, Is.EqualTo(volunteer.Facebook));
+        });
+    }
+
 }

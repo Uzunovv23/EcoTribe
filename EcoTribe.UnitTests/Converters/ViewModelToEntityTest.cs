@@ -126,4 +126,42 @@ public class ViewModelToEntityTest
             Assert.That(entity.IsRead, Is.EqualTo(viewModel.IsRead));
         });
     }
+
+    [Test]
+    public void ConvertToModel_VolunteerViewModel_MapsPropertiesCorrectly()
+    {
+        var viewModel = new VolunteerViewModel
+        {
+            Id = 2,
+            Name = "Georgi Ivanov",
+            City = "Plovdiv",
+            Email = "georgi@ecotribe.bg",
+            Skills = "Photography, Social Media",
+            PreferredEvents = "Recycling Campaigns",
+            Number = "0899112233",
+            Instagram = "@georgi.photo",
+            Facebook = "facebook.com/georgi.ivanov"
+        };
+
+        var model = _modelConverter.ConvertToModel<VolunteerViewModel, Volunteer>(viewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(model.Id, Is.EqualTo(viewModel.Id));
+            Assert.That(model.Name, Is.EqualTo(viewModel.Name));
+            Assert.That(model.City, Is.EqualTo(viewModel.City));
+            Assert.That(model.Email, Is.EqualTo(viewModel.Email));
+            Assert.That(model.Skills, Is.EqualTo(viewModel.Skills));
+            Assert.That(model.PreferredEvents, Is.EqualTo(viewModel.PreferredEvents));
+            Assert.That(model.Number, Is.EqualTo(viewModel.Number));
+            Assert.That(model.Instagram, Is.EqualTo(viewModel.Instagram));
+            Assert.That(model.Facebook, Is.EqualTo(viewModel.Facebook));
+
+            Assert.That(model.UserId, Is.Null);
+            Assert.That(model.DateOfBirth, Is.EqualTo(default(DateTime)));
+            Assert.That(model.User, Is.Null);
+            Assert.That(model.EventVolunteers, Is.Null.Or.Empty);
+            Assert.That(model.Feedbacks, Is.Null.Or.Empty);
+        });
+    }
 }
