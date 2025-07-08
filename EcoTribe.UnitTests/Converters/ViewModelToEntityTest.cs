@@ -128,7 +128,7 @@ public class ViewModelToEntityTest
     }
 
     [Test]
-    public void ConvertToModel_VolunteerViewModel_MapsPropertiesCorrectly()
+    public void VolunteerViewModelToEntityTest()
     {
         var viewModel = new VolunteerViewModel
         {
@@ -162,6 +162,84 @@ public class ViewModelToEntityTest
             Assert.That(model.User, Is.Null);
             Assert.That(model.EventVolunteers, Is.Null.Or.Empty);
             Assert.That(model.Feedbacks, Is.Null.Or.Empty);
+        });
+    }
+
+    [Test]
+    public void EventSponsorViewModelToEntityTest()
+    {
+        var viewModel = new EventSponsorViewModel
+        {
+            Id = 1,
+            EventId = 10,
+            Event = new Event { Id = 10 },
+            OrganizationId = 5,
+            Organization = new Organization
+            {
+                Id = 5,
+                Name = "GreenFuture",
+                Description = "Environmental NGO",
+                Website = "https://greenfuture.org",
+                Phone = "0898123456",
+                ContactEmail = "contact@greenfuture.org",
+                City = "Sofia",
+                CreatedAt = DateTime.UtcNow
+            },
+            Name = "GreenFuture",
+            Description = "Environmental NGO",
+            Website = "https://greenfuture.org",
+            Phone = "0898123456",
+            ContactEmail = "contact@greenfuture.org"
+        };
+
+        var model = _modelConverter.ConvertToModel<EventSponsorViewModel, EventSponsor>(viewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(model.Id, Is.EqualTo(viewModel.Id));
+            Assert.That(model.EventId, Is.EqualTo(viewModel.EventId));
+            Assert.That(model.Event.Id, Is.EqualTo(viewModel.Event.Id));
+            Assert.That(model.OrganizationId, Is.EqualTo(viewModel.OrganizationId));
+            Assert.That(model.Organization.Id, Is.EqualTo(viewModel.Organization.Id));
+            Assert.That(model.Organization.Name, Is.EqualTo(viewModel.Name));
+            Assert.That(model.Organization.Description, Is.EqualTo(viewModel.Description));
+            Assert.That(model.Organization.Website, Is.EqualTo(viewModel.Website));
+            Assert.That(model.Organization.Phone, Is.EqualTo(viewModel.Phone));
+            Assert.That(model.Organization.ContactEmail, Is.EqualTo(viewModel.ContactEmail));
+        });
+    }
+    [Test]
+    public void EventDetailsViewModelToEntityTest()
+    {
+        EventDetailsViewModel viewModel = new EventDetailsViewModel
+        {
+            Id = 1,
+            Name = "Beach Cleanup",
+            City = "Varna",
+            Type = "Cleanup",
+            RequiredVolunteers = 100,
+            Description = "Cleaning the beach",
+            Latitude = 43.2047m,
+            Longitude = 27.9106m,
+            Start = new DateTime(2025, 8, 5, 9, 0, 0),
+            End = new DateTime(2025, 8, 5, 18, 0, 0),
+            UserId = "user456",
+        };
+
+        var model = _modelConverter.ConvertToModel<EventDetailsViewModel, Event> (viewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(model.Id, Is.EqualTo(viewModel.Id));
+            Assert.That(model.Name, Is.EqualTo(viewModel.Name));
+            Assert.That(model.City, Is.EqualTo(viewModel.City));
+            Assert.That(model.Type, Is.EqualTo(viewModel.Type));
+            Assert.That(model.RequiredVolunteers, Is.EqualTo(viewModel.RequiredVolunteers));
+            Assert.That(model.Description, Is.EqualTo(viewModel.Description));
+            Assert.That(model.Latitude, Is.EqualTo(viewModel.Latitude));
+            Assert.That(model.Longitude, Is.EqualTo(viewModel.Longitude));
+            Assert.That(model.Start, Is.EqualTo(viewModel.Start));
+            Assert.That(model.End, Is.EqualTo(viewModel.End));
         });
     }
 }

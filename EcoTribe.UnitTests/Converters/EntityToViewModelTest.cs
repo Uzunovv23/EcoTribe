@@ -173,5 +173,79 @@ public class EntityToViewModelTest
             Assert.That(viewModel.Facebook, Is.EqualTo(volunteer.Facebook));
         });
     }
+    [Test]
+    public void EventSponsorEntityToViewModelTest()
+    {
+        var model = new EventSponsor
+        {
+            Id = 1,
+            EventId = 10,
+            Event = new Event { Id = 10 },
+            OrganizationId = 5,
+            Organization = new Organization
+            {
+                Id = 5,
+                Name = "GreenFuture",
+                Description = "Environmental NGO",
+                Website = "https://greenfuture.org",
+                Phone = "0898123456",
+                ContactEmail = "contact@greenfuture.org",
+                City = "Sofia",
+                CreatedAt = DateTime.UtcNow
+            },
+
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<EventSponsor, EventSponsorViewModel>(model);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Id, Is.EqualTo(model.Id));
+            Assert.That(viewModel.EventId, Is.EqualTo(model.EventId));
+            Assert.That(viewModel.Event.Id, Is.EqualTo(model.Event.Id));
+            Assert.That(viewModel.OrganizationId, Is.EqualTo(model.OrganizationId));
+            Assert.That(viewModel.Organization.Id, Is.EqualTo(model.Organization.Id));
+        });
+    }
+    [Test]
+    public void EventDetailsEntityToViewModelTest()
+    {
+        var eventEntity = new Event
+        {
+            Id = 1,
+            Name = "Tree Planting",
+            City = "Plovdiv",
+            Type = "Environmental",
+            RequiredVolunteers = 50,
+            Description = "Planting trees in the park",
+            Latitude = 42.1354m,
+            Longitude = 24.7453m,
+            Start = new DateTime(2025, 7, 10, 10, 0, 0),
+            End = new DateTime(2025, 7, 10, 16, 0, 0),
+            EventVolunteers = new List<EventVolunteer>(),
+            EventSponsors = new List<EventSponsor>(),
+            Feedbacks = new List<Feedback>()
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<Event, EventDetailsViewModel>(eventEntity);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Id, Is.EqualTo(eventEntity.Id));
+            Assert.That(viewModel.Name, Is.EqualTo(eventEntity.Name));
+            Assert.That(viewModel.City, Is.EqualTo(eventEntity.City));
+            Assert.That(viewModel.Type, Is.EqualTo(eventEntity.Type));
+            Assert.That(viewModel.RequiredVolunteers, Is.EqualTo(eventEntity.RequiredVolunteers));
+            Assert.That(viewModel.Description, Is.EqualTo(eventEntity.Description));
+            Assert.That(viewModel.Latitude, Is.EqualTo(eventEntity.Latitude));
+            Assert.That(viewModel.Longitude, Is.EqualTo(eventEntity.Longitude));
+            Assert.That(viewModel.Start, Is.EqualTo(eventEntity.Start));
+            Assert.That(viewModel.End, Is.EqualTo(eventEntity.End));
+            Assert.That(viewModel.IsParticipating, Is.False);
+            Assert.That(viewModel.AttendingVolunteers, Is.Empty);
+            Assert.That(viewModel.Sponsors, Is.Empty);
+            Assert.That(viewModel.Feedbacks, Is.Empty);
+        });
+    }
 
 }
