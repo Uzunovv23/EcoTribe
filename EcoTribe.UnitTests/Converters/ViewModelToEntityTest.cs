@@ -242,4 +242,30 @@ public class ViewModelToEntityTest
             Assert.That(model.End, Is.EqualTo(viewModel.End));
         });
     }
+
+    [Test]
+    public void LocationViewModelToEntityTest()
+    {
+        var viewModel = new LocationViewModel
+        {
+            Id = 2,
+            Name = "Green Zone",
+            City = "Burgas",
+            Latitude = 42.5048m,
+            Longitude = 27.4626m,
+            Description = "Local recycling awareness center"
+        };
+
+        var result = _modelConverter.ConvertToModel<LocationViewModel, Location>(viewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Id, Is.EqualTo(viewModel.Id));
+            Assert.That(result.Name, Is.EqualTo(viewModel.Name));
+            Assert.That(result.City, Is.EqualTo(viewModel.City));
+            Assert.That(result.Latitude, Is.EqualTo(viewModel.Latitude));
+            Assert.That(result.Longitude, Is.EqualTo(viewModel.Longitude));
+            Assert.That(result.Description, Is.EqualTo(viewModel.Description));
+        });
+    }
 }

@@ -248,4 +248,30 @@ public class EntityToViewModelTest
         });
     }
 
+    [Test]
+    public void LocationEntityToViewModelTest()
+    {
+        var location = new Location
+        {
+            Id = 1,
+            Name = "Nature Park",
+            City = "Varna",
+            Latitude = 43.2047m,
+            Longitude = 27.9104m,
+            Description = "A peaceful area for tree planting"
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<Location, LocationViewModel>(location);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Id, Is.EqualTo(location.Id));
+            Assert.That(viewModel.Name, Is.EqualTo(location.Name));
+            Assert.That(viewModel.City, Is.EqualTo(location.City));
+            Assert.That(viewModel.Latitude, Is.EqualTo(location.Latitude));
+            Assert.That(viewModel.Longitude, Is.EqualTo(location.Longitude));
+            Assert.That(viewModel.Description, Is.EqualTo(location.Description));
+        });
+    }
+
 }
