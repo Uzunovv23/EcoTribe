@@ -274,4 +274,43 @@ public class EntityToViewModelTest
         });
     }
 
+    [Test]
+    public void ApplicationUserToRegisterViewModelTest()
+    {
+        var user = new ApplicationUser
+        {
+            Email = "user@example.com",
+            FirstName = "Ivan",
+            LastName = "Petrov"
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<ApplicationUser, RegisterViewModel>(user);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Email, Is.EqualTo(user.Email));
+            Assert.That(viewModel.FirstName, Is.EqualTo(user.FirstName));
+            Assert.That(viewModel.LastName, Is.EqualTo(user.LastName));
+            Assert.That(viewModel.Password, Is.Null.Or.Empty);
+            Assert.That(viewModel.ConfirmPassword, Is.Null.Or.Empty);
+        });
+    }
+
+    [Test]
+    public void ApplicationUserToLoginViewModelTest()
+    {
+        var user = new ApplicationUser
+        {
+            Email = "user@example.com"
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<ApplicationUser, LoginViewModel>(user);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Email, Is.EqualTo(user.Email));
+            Assert.That(viewModel.Password, Is.Null.Or.Empty); 
+            Assert.That(viewModel.RememberMe, Is.False);        
+        });
+    }
 }

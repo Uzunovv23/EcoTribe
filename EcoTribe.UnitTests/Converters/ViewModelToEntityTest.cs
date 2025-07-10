@@ -268,4 +268,50 @@ public class ViewModelToEntityTest
             Assert.That(result.Description, Is.EqualTo(viewModel.Description));
         });
     }
+
+    [Test]
+    public void RegisterViewModelToApplicationUserTest()
+    {
+        var viewModel = new RegisterViewModel
+        {
+            Email = "user@example.com",
+            Password = "Secure123!",
+            ConfirmPassword = "Secure123!",
+            FirstName = "Maria",
+            LastName = "Ivanova"
+        };
+
+        var user = _modelConverter.ConvertToModel<RegisterViewModel, ApplicationUser>(viewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(user.Email, Is.EqualTo(viewModel.Email));
+            Assert.That(user.UserName, Is.Null.Or.Empty); 
+            Assert.That(user.FirstName, Is.EqualTo(viewModel.FirstName));
+            Assert.That(user.LastName, Is.EqualTo(viewModel.LastName));
+            Assert.That(user.Address, Is.Null.Or.Empty); 
+        });
+    }
+
+    [Test]
+    public void LoginViewModelToApplicationUserTest()
+    {
+        var viewModel = new LoginViewModel
+        {
+            Email = "login@example.com",
+            Password = "MySecret123!",
+            RememberMe = true
+        };
+
+        var user = _modelConverter.ConvertToModel<LoginViewModel, ApplicationUser>(viewModel);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(user.Email, Is.EqualTo(viewModel.Email));
+            Assert.That(user.UserName, Is.Null.Or.Empty); 
+            Assert.That(user.FirstName, Is.Null.Or.Empty);
+            Assert.That(user.LastName, Is.Null.Or.Empty);
+            Assert.That(user.Address, Is.Null.Or.Empty);
+        });
+    }
 }
