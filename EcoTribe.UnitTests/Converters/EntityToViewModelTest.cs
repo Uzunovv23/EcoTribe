@@ -313,4 +313,58 @@ public class EntityToViewModelTest
             Assert.That(viewModel.RememberMe, Is.False);        
         });
     }
+
+    [Test]
+    public void EventVolunteerEntityToViewModelTest()
+    {
+        var model = new EventVolunteer
+        {
+            Id = 1,
+            VolunteerId = 10,
+            Volunteer = new Volunteer { Id = 10, Name = "Anna" },
+            EventId = 20,
+            Event = new Event { Id = 20, Name = "Tree Planting" },
+            Intention = "I love trees!",
+            Attended = true
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<EventVolunteer, EventVolunteerViewModel>(model);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Id, Is.EqualTo(model.Id));
+            Assert.That(viewModel.VolunteerId, Is.EqualTo(model.VolunteerId));
+            Assert.That(viewModel.EventId, Is.EqualTo(model.EventId));
+            Assert.That(viewModel.Intention, Is.EqualTo(model.Intention));
+            Assert.That(viewModel.Attended, Is.EqualTo(model.Attended));
+
+            Assert.That(viewModel.Volunteer, Is.EqualTo(model.Volunteer));
+            Assert.That(viewModel.Event, Is.EqualTo(model.Event));
+
+            Assert.That(viewModel.ApplicationUserId, Is.Null.Or.Empty);
+            Assert.That(viewModel.ApplicationUserName, Is.Null.Or.Empty);
+        });
+    }
+
+    [Test]
+    public void ApplicationUserToUserViewModelTest()
+    {
+        var user = new ApplicationUser
+        {
+            Id = "abc123",
+            Email = "eco@tribe.com",
+            FirstName = "Eco",
+            LastName = "Tribe"
+        };
+
+        var viewModel = _modelConverter.ConvertToViewModel<ApplicationUser, UserViewModel>(user);
+
+        Assert.That(viewModel.Id, Is.EqualTo(user.Id));
+        Assert.That(viewModel.Email, Is.EqualTo(user.Email));
+
+        Assert.That(viewModel.Name, Is.Null.Or.Empty);
+        Assert.That(viewModel.Role, Is.Null.Or.Empty); 
+    }
+
+
 }
