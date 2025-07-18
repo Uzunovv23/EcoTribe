@@ -36,6 +36,8 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IEventSponsorService, EventSponsorService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 
+builder.WebHost.UseUrls("https://localhost:7104");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

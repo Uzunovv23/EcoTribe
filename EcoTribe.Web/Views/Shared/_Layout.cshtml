@@ -17,7 +17,7 @@
 </head>
 <body>
     <main role="main">
-        <button class="side-nav-toggle">
+        <button id="side-nav-toggle" class="side-nav-toggle">
             <span></span>
             <span></span>
             <span></span>
@@ -91,6 +91,7 @@
             }, 100);
 
             const sideNavToggle = document.querySelector('.side-nav-toggle');
+            sideNavToggle.id = 'side-nav-toggle';
             const sideNav = document.querySelector('.side-nav');
             const body = document.body;
 

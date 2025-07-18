@@ -367,4 +367,35 @@ public class ViewModelToEntityTest
         Assert.That(user.Address, Is.Null.Or.Empty);
     }
 
+    [Test]
+    public void TestViewModelToFeedbackEntityTest()
+    {
+        var viewModel = new TestViewModel
+        {
+            Id = 2,
+            EventId = 99,
+            Event = new Event { Id = 99, Name = "Beach Cleanup" },
+            VolunteerId = 42,
+            Volunteer = new Volunteer { Id = 42 },
+            Reiting = 4,                           // should map to Rating
+            Komentari = "Well organized!",         // should map to Comments
+            CreatedAt = new DateTime(2025, 7, 11),
+            ApplicationUserId = "user123",
+            ApplicationUserName = "john.doe@example.com",
+            VolunteerName = "John Doe"
+        };
+
+        var feedback = _modelConverter.ConvertToModel<TestViewModel, Feedback>(viewModel);
+
+        Assert.That(feedback.Id, Is.EqualTo(viewModel.Id));
+        Assert.That(feedback.EventId, Is.EqualTo(viewModel.EventId));
+        Assert.That(feedback.Event, Is.EqualTo(viewModel.Event));
+        Assert.That(feedback.VolunteerId, Is.EqualTo(viewModel.VolunteerId));
+        Assert.That(feedback.Volunteer, Is.EqualTo(viewModel.Volunteer));
+        Assert.That(feedback.Rating, Is.EqualTo(viewModel.Reiting));           // mapped via [MapFrom]
+        Assert.That(feedback.Comments, Is.EqualTo(viewModel.Komentari));       // mapped via [MapFrom]
+        Assert.That(feedback.CreatedAt, Is.EqualTo(viewModel.CreatedAt));
+    }
+
+
 }
