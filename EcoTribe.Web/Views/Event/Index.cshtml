@@ -19,7 +19,7 @@
 
             @if (User.IsInRole("Administrator") || User.IsInRole("Organizator") && Model.UserApprovedOrganization != null)
             {
-                <a href="@Url.Action("Create", "Event")" class="btn btn-eco-primary btn-lg mt-3">
+                <a href="@Url.Action("Create", "Event")" id="create-event" class="btn btn-eco-primary btn-lg mt-3">
                     <i class="bi bi-plus-circle"></i> Create New Event
                 </a>
             }
