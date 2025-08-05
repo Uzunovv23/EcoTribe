@@ -30,7 +30,7 @@ namespace EcoTribe.Web.Controllers
         public IActionResult Login() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        public async Task<IActionResult> Login(LoginInputModel model)
         {
             if (!ModelState.IsValid) return View(model);
 
