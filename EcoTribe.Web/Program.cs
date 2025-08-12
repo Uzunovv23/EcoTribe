@@ -1,4 +1,5 @@
 using EcoTribe.BusinessObjects.Domain.Models;
+using EcoTribe.BusinessObjects.Dtos.Mail;
 using EcoTribe.Data;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Implementations;
@@ -24,6 +25,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<MailjetSettings>(
+    builder.Configuration.GetSection("Mailjet"));
+
+// Register services
+builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IModelConverter, ModelConverter>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<ILocationService, LocationService>();
