@@ -31,25 +31,5 @@ namespace EcoTribe.Web.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-        public async Task<IActionResult> SendTestEmail()
-        {
-            try
-            {
-                await _mailService.SendEmail(
-                    to: "ecotribe10@gmail.com",        
-                    subject: "Test Email from EcoTribe",
-                    body: "This is a test email sent via Mailjet."
-                );
-
-                ViewBag.Message = "Email sent successfully!";
-            }
-            catch (Exception ex)
-            {
-                ViewBag.Message = $"Failed to send email: {ex.Message}";
-            }
-
-            return View();
-        }
     }
 }

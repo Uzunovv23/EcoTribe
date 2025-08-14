@@ -25,6 +25,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddEntityFrameworkStores<AppDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+    opt.TokenLifespan = TimeSpan.FromHours(24));
+
 builder.Services.Configure<MailjetSettings>(
     builder.Configuration.GetSection("Mailjet"));
 

@@ -5,11 +5,7 @@ using Mailjet.Client.Resources;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace EcoTribe.Services.Implementations
 {
@@ -22,7 +18,13 @@ namespace EcoTribe.Services.Implementations
             _mailjetSettings = mailjetSettings.Value;
         }
 
-        public async Task SendEmail(string to, string subject, string body)
+        /// <summary>
+        /// Sends an HTML email via Mailjet
+        /// </summary>
+        /// <param name="to">Recipient email address</param>
+        /// <param name="subject">Email subject</param>
+        /// <param name="htmlBody">Email body in HTML format</param>
+        public async Task SendEmail(string to, string subject, string htmlBody)
         {
             var client = new MailjetClient(
                 _mailjetSettings.ApiKeyPublic,
@@ -35,12 +37,14 @@ namespace EcoTribe.Services.Implementations
             .Property(Send.FromEmail, _mailjetSettings.SenderEmail)
             .Property(Send.FromName, _mailjetSettings.SenderName)
             .Property(Send.Subject, subject)
-            .Property(Send.TextPart, body)
-            .Property(Send.HtmlPart, $"<h3>{body}</h3>")
-            .Property(Send.Recipients, new JArray {
-        new JObject {
-            { "Email", to }
-        }
+            .Property(Send.HtmlPart, htmlBody)
+            .Property(Send.TextPart, StripHtmlTags(htmlBody)) // fallback for plain text
+            .Property(Send.Recipients, new JArray
+            {
+                new JObject
+                {
+                    { "Email", to }
+                }
             });
 
             var response = await client.PostAsync(request);
@@ -51,5 +55,12 @@ namespace EcoTribe.Services.Implementations
             }
         }
 
+        /// <summary>
+        /// Removes HTML tags for plain-text fallback
+        /// </summary>
+        private string StripHtmlTags(string input)
+        {
+            return System.Text.RegularExpressions.Regex.Replace(input, "<.*?>", string.Empty);
+        }
     }
 }
