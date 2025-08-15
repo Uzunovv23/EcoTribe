@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
 using System.Net;
+using System.ComponentModel.DataAnnotations;
 
 namespace EcoTribe.Web.Controllers
 {
@@ -58,7 +59,15 @@ namespace EcoTribe.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(RegisterVolunteerInputModel model)
         {
-            if (!ModelState.IsValid) return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "This email is already registered.");
+                return View(model);
+            }
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
             var result = await _userManager.CreateAsync(user, model.Password);
@@ -96,11 +105,24 @@ namespace EcoTribe.Web.Controllers
             }
 
             foreach (var error in result.Errors)
-                ModelState.AddModelError(string.Empty, error.Description);
+            {
+                if (error.Code == "DuplicateEmail" ||
+                    error.Description.Contains("Email", StringComparison.OrdinalIgnoreCase))
+                {
+                    ModelState.AddModelError("Email", error.Description);
+                }
+                else if (error.Code.Contains("Password", StringComparison.OrdinalIgnoreCase))
+                {
+                    ModelState.AddModelError("Password", error.Description);
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
 
             return View(model);
         }
-
 
         [HttpGet]
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
@@ -116,7 +138,7 @@ namespace EcoTribe.Web.Controllers
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
             if (result.Succeeded)
-                return View("ConfirmEmail"); 
+                return View("ConfirmEmail");
 
             return BadRequest("Email confirmation failed.");
         }
@@ -125,6 +147,97 @@ namespace EcoTribe.Web.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        // =========================
+        // FORGOT PASSWORD FEATURE
+        // =========================
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordInputModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+            {
+                return RedirectToAction(nameof(ForgotPasswordConfirmation));
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var encodedToken = WebUtility.UrlEncode(token);
+
+            var callbackUrl = Url.Action(
+                nameof(ResetPassword),
+                "Account",
+                new { token = encodedToken, email = user.Email },
+                protocol: HttpContext.Request.Scheme);
+
+            await _emailService.SendEmail(
+                user.Email,
+                "Reset Password",
+                $"Please reset your password by clicking this link: <a href='{callbackUrl}'>Reset Password</a>");
+
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            if (token == null || email == null)
+                return BadRequest("Invalid password reset request.");
+
+            var model = new ResetPasswordInputModel { Token = token, Email = email };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordInputModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+
+            var decodedToken = WebUtility.UrlDecode(model.Token);
+            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
     }
 }
