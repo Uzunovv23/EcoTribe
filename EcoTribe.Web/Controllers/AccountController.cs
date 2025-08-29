@@ -173,12 +173,11 @@ namespace EcoTribe.Web.Controllers
             }
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var encodedToken = WebUtility.UrlEncode(token);
 
             var callbackUrl = Url.Action(
                 nameof(ResetPassword),
                 "Account",
-                new { token = encodedToken, email = user.Email },
+                new { token, email = user.Email },
                 protocol: HttpContext.Request.Scheme);
 
             await _emailService.SendEmail(
@@ -198,11 +197,19 @@ namespace EcoTribe.Web.Controllers
         [HttpGet]
         public IActionResult ResetPassword(string token, string email)
         {
-            if (token == null || email == null)
-                return BadRequest("Invalid password reset request.");
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(email))
+            {
+                // Optionally redirect to an error page if params are missing
+                return RedirectToAction("Error", "Home");
+            }
 
-            var model = new ResetPasswordInputModel { Token = token, Email = email };
-            return View(model);
+            ResetPasswordInputModel model = new ResetPasswordInputModel
+            {
+                Token = token,
+                Email = email
+            };
+
+            return View(model); // This will populate your hidden inputs
         }
 
         [HttpPost]
@@ -212,20 +219,23 @@ namespace EcoTribe.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
+            // Find the user by email
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
+                // Don't reveal that the user does not exist
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
 
-            var decodedToken = WebUtility.UrlDecode(model.Token);
-            var result = await _userManager.ResetPasswordAsync(user, decodedToken, model.Password);
+            // Use the token directly (don’t decode again!)
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.Password);
 
             if (result.Succeeded)
             {
                 return RedirectToAction(nameof(ResetPasswordConfirmation));
             }
 
+            // Show errors if reset failed
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
