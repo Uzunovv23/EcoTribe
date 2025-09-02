@@ -22,5 +22,7 @@ namespace EcoTribe.BusinessObjects.Domain.Models
 
         public string Intention { get; set; } = null!;
         public bool? Attended { get; set; }
+        public int Points { get; set; }
+        public ICollection<EventPhoto> EventPhotos { get; set; } = new List<EventPhoto>();
     }
 }

@@ -17,11 +17,13 @@ namespace EcoTribe.Services.Implementations
     {
         private readonly IAppDbContext context;
         private readonly IModelConverter modelConverter;
+        private readonly IOrganizationService organizationService;
 
-        public EventService(IAppDbContext context, IModelConverter modelConverter)
+        public EventService(IAppDbContext context, IModelConverter modelConverter, IOrganizationService organizationService)
         {
             this.context = context;
             this.modelConverter = modelConverter;
+            this.organizationService = organizationService;
         }
         public IEnumerable<EventViewModel> GetAll()
         {
@@ -200,6 +202,15 @@ namespace EcoTribe.Services.Implementations
             }
 
             context.SaveChanges(); 
+        }
+
+        public async IEnumerable<EventViewModel> GetAll(string userId)
+        {
+            IEnumerable<EventViewModel> events = GetAll();
+
+            OrganizationViewModel? organization = organizationService.GetByUserId(userId);
+
+
         }
     }
 }

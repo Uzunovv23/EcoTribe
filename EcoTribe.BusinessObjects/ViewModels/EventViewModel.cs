@@ -19,5 +19,6 @@ namespace EcoTribe.BusinessObjects.ViewModels
         public decimal Longitude { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
+        public bool FinishAvailable { get; set; }
     }
 }

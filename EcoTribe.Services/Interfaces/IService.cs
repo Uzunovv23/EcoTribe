@@ -10,6 +10,7 @@ namespace EcoTribe.Services.Interfaces
     public interface IService<TViewModel, TInputModel>
     {
         IEnumerable<TViewModel> GetAll();
+        IEnumerable<TViewModel> GetAll(string userId);
         TViewModel? GetById(int id);
         void Create(TInputModel inputModel);
         void Update(int id, TInputModel inputModel);

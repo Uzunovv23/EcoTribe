@@ -21,11 +21,8 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public DateTime End { get; set; }
 
         public ICollection<EventVolunteer> EventVolunteers { get; set; } = new List<EventVolunteer>();
-
         public ICollection<EventSponsor> EventSponsors { get; set; } = new List<EventSponsor>();
-
         public ICollection<Feedback> Feedbacks { get; set; } = new List<Feedback>();
-
-
+        public ICollection<EventPhoto> EventPhotos { get; set; } = new List<EventPhoto>();
     }
 }
