@@ -115,6 +115,11 @@ namespace EcoTribe.Services.Implementations
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<EventSponsorViewModel> GetAll(string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

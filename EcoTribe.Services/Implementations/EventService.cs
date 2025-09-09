@@ -204,13 +204,22 @@ namespace EcoTribe.Services.Implementations
             context.SaveChanges(); 
         }
 
-        public async IEnumerable<EventViewModel> GetAll(string userId)
+        public IEnumerable<EventViewModel> GetAll(string userId)
         {
             IEnumerable<EventViewModel> events = GetAll();
+            
 
             OrganizationViewModel? organization = organizationService.GetByUserId(userId);
 
+            if (organization is null)
+            {
+                throw new ArgumentException("No organization found on this user.");
+            }
 
+            return events.Select(e => { 
+                e.FinishAvailable = e.CreatedBy == organization.Id ? true : false;
+                return e;
+            });
         }
     }
 }

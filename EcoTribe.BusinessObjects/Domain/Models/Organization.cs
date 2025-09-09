@@ -24,5 +24,8 @@ namespace EcoTribe.BusinessObjects.Domain.Models
 
         public ICollection<UserOrganization> UserOrganizations { get; set; } = new List<UserOrganization>();
 
+        public ICollection<OrganizationPhoto> OrganizationPhotos { get; set; } = new List<OrganizationPhoto>();
+
+
     }
 }

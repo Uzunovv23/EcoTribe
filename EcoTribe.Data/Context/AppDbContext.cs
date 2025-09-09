@@ -20,6 +20,10 @@ namespace EcoTribe.Data.Context
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<EventSponsor> EventSponsors { get; set; }
         public DbSet<UserOrganization> UserOrganizations { get; set; }
+        public DbSet<Photo> Photos { get; set; }
+        public DbSet<EventPhoto> EventPhotos { get; set; }
+        public DbSet<VolunteerPhoto> VolunteerPhotos { get; set; }
+        public DbSet<OrganizationPhoto> OrganizationPhotos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -40,7 +44,7 @@ namespace EcoTribe.Data.Context
                 .HasOne(es => es.Event)
                 .WithMany(e => e.EventSponsors)
                 .HasForeignKey(es => es.EventId)
-                .OnDelete(DeleteBehavior.Cascade);  
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<EventSponsor>()
                 .HasOne(es => es.Organization)
@@ -60,6 +64,45 @@ namespace EcoTribe.Data.Context
                 .HasOne(uo => uo.Organization)
                 .WithMany(o => o.UserOrganizations)
                 .HasForeignKey(uo => uo.OrganizationId);
+
+            modelBuilder.Entity<EventPhoto>()
+                .HasKey(ep => new { ep.EventId, ep.PhotoId });
+
+            modelBuilder.Entity<EventPhoto>()
+                .HasOne(ep => ep.Event)
+                .WithMany(e => e.EventPhotos)
+                .HasForeignKey(ep => ep.EventId);
+
+            modelBuilder.Entity<EventPhoto>()
+                .HasOne(ep => ep.Photo)
+                .WithMany(p => p.EventPhotos)
+                .HasForeignKey(ep => ep.PhotoId);
+
+            modelBuilder.Entity<VolunteerPhoto>()
+                .HasKey(vp => new { vp.VolunteerId, vp.PhotoId });
+
+            modelBuilder.Entity<VolunteerPhoto>()
+                .HasOne(vp => vp.Volunteer)
+                .WithMany(v => v.VolunteerPhotos)
+                .HasForeignKey(vp => vp.VolunteerId);
+
+            modelBuilder.Entity<VolunteerPhoto>()
+                .HasOne(vp => vp.Photo)
+                .WithMany(p => p.VolunteerPhotos)
+                .HasForeignKey(vp => vp.PhotoId);
+
+            modelBuilder.Entity<OrganizationPhoto>()
+                .HasKey(op => new { op.OrganizationId, op.PhotoId });
+
+            modelBuilder.Entity<OrganizationPhoto>()
+                .HasOne(op => op.Organization)
+                .WithMany(o => o.OrganizationPhotos)
+                .HasForeignKey(op => op.OrganizationId);
+
+            modelBuilder.Entity<OrganizationPhoto>()
+                .HasOne(op => op.Photo)
+                .WithMany(p => p.OrganizationPhotos)
+                .HasForeignKey(op => op.PhotoId);
         }
     }
 }

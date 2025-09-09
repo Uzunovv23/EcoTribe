@@ -22,10 +22,12 @@ namespace EcoTribe.BusinessObjects.Domain.Models
         public ICollection<EventVolunteer>? EventVolunteers { get; set; }
         public ICollection<Feedback>? Feedbacks { get; set; }
 
-
         public string? UserId { get; set; }
 
         [ForeignKey(nameof(UserId))]
         public virtual ApplicationUser User { get; set; } = null!;
+
+        public ICollection<VolunteerPhoto> VolunteerPhotos { get; set; } = new List<VolunteerPhoto>();
+
     }
 }

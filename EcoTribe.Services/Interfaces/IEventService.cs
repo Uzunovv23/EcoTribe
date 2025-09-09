@@ -18,5 +18,6 @@ namespace EcoTribe.Services.Interfaces
         void AddFeedback(FeedbackInputModel inputModel);
         List<FeedbackViewModel> GetFeedbacksForEvent(int eventId);
         void CreateAndNotifyUsers(EventInputModel inputModel);
+        IEnumerable<EventViewModel> GetAll(string userId);
     }
 }

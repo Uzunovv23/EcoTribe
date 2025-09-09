@@ -70,5 +70,10 @@ namespace EcoTribe.Services.Implementations
             context.EventResources.Remove(eventResource);
             context.SaveChanges();
         }
+
+        public IEnumerable<EventResourceViewModel> GetAll(string userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

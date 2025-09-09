@@ -30,14 +30,15 @@ namespace EcoTribe.Web.Controllers
         }
         public IActionResult Index()
         {
-            OrganizationViewModel? organization = organizationService.GetByUserId(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            OrganizationViewModel? organization = organizationService.GetByUserId(userId);
 
             if (organization != null && organization.Status != OrganizationStatus.Approved)
             {
                 organization = null;  
             }
 
-            List<EventViewModel> events = eventService.GetAll().ToList();
+            List<EventViewModel> events = eventService.GetAll(userId).ToList();
 
             EventsViewModel eventsViewModel = new EventsViewModel
             {
