@@ -1,3 +1,4 @@
+using EcoTribe.BusinessObjects.Config;
 using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.Dtos.Mail;
 using EcoTribe.Data;
@@ -8,7 +9,6 @@ using EcoTribe.Services.Utils;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +30,9 @@ builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
 
 builder.Services.Configure<MailjetSettings>(
     builder.Configuration.GetSection("Mailjet"));
+
+builder.Services.Configure<UploadSettings>(
+    builder.Configuration.GetSection("UploadSettings"));
 
 // Register services
 builder.Services.AddScoped<IEmailService, EmailService>();

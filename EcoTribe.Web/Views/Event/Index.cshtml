@@ -92,8 +92,8 @@
 
                                     @if (eventItem.FinishAvailable)
                                     {
-                                        <a href="@Url.Action("Change", "Event", new { id = eventItem.Id })" class="btn btn-outline-warning">
-                                            <i class="bi bi-arrow-repeat"></i> Change
+                                        <a href="@Url.Action("AddPhoto", "Event", new { id = eventItem.Id })" class="btn btn-outline-warning">
+                                            <i class="bi bi-arrow-repeat"></i> Add Photos
                                         </a>
                                     }
 

@@ -1,10 +1,14 @@
-﻿using EcoTribe.BusinessObjects.Domain.Models;
+﻿using EcoTribe.BusinessObjects.Config;
+using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
 using EcoTribe.Data.Context;
 using EcoTribe.Services.Interfaces;
 using EcoTribe.Services.Utils;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +22,14 @@ namespace EcoTribe.Services.Implementations
         private readonly IAppDbContext context;
         private readonly IModelConverter modelConverter;
         private readonly IOrganizationService organizationService;
+        private readonly UploadSettings uploadSettings;
 
-        public EventService(IAppDbContext context, IModelConverter modelConverter, IOrganizationService organizationService)
+        public EventService(IAppDbContext context, IModelConverter modelConverter, IOrganizationService organizationService, IOptions<UploadSettings> uploadSettings)
         {
             this.context = context;
             this.modelConverter = modelConverter;
             this.organizationService = organizationService;
+            this.uploadSettings = uploadSettings.Value;
         }
         public IEnumerable<EventViewModel> GetAll()
         {
@@ -220,6 +226,44 @@ namespace EcoTribe.Services.Implementations
                 e.FinishAvailable = e.CreatedBy == organization.Id ? true : false;
                 return e;
             });
+        }
+
+        public async Task AddPhotoAsync(int eventId, IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                throw new ArgumentException("File is empty");
+
+            string uploadsFolder = Path.Combine(uploadSettings.RootPath, uploadSettings.EventsPath);
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            var photo = new Photo
+            {
+                Url = $"/uploads/{uploadSettings.EventsPath}/{fileName}", 
+                UploadedOn = DateTime.UtcNow
+            };
+
+            context.Photos.Add(photo);
+            await context.SaveChangesAsync();
+
+            var eventPhoto = new EventPhoto
+            {
+                EventId = eventId,
+                PhotoId = photo.Id
+            };
+
+            context.EventPhotos.Add(eventPhoto);
+            await context.SaveChangesAsync();
         }
     }
 }

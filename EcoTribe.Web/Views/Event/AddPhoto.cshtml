@@ -1,0 +1,22 @@
+﻿@model EcoTribe.BusinessObjects.InputModels.AddPhotoInputModel
+
+@{
+    ViewData["Title"] = "Add Photo";
+}
+
+<div class="photo-upload-container">
+    <h2>Add Photo for Event</h2>
+
+    <form asp-action="AddPhoto" method="post" enctype="multipart/form-data">
+        <input type="hidden" asp-for="EventId" />
+
+        <div class="mb-3">
+            <label asp-for="Photo" class="form-label">Choose Photo</label>
+            <input asp-for="Photo" type="file" class="form-control" />
+            <span asp-validation-for="Photo" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">Upload</button>
+        <a asp-controller="Event" asp-action="Details" asp-route-id="@Model.EventId" class="btn btn-outline-secondary">Cancel</a>
+    </form>
+</div>

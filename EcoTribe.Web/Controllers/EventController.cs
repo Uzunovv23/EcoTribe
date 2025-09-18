@@ -280,5 +280,33 @@ namespace EcoTribe.Web.Controllers
             }
         }
 
+        [Authorize(Roles = "Administrator, Organizator")]
+        public IActionResult AddPhoto(int eventId)
+        {
+            return View(new AddPhotoInputModel { EventId = eventId });
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Administrator, Organizator")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddPhoto(AddPhotoInputModel model)
+        {
+            if (model.Photo == null || model.Photo.Length == 0)
+            {
+                ModelState.AddModelError("", "Please upload a valid photo.");
+                return View(model);
+            }
+
+            try
+            {
+                await eventService.AddPhotoAsync(model.EventId, model.Photo);
+                return RedirectToAction("Details", new { id = model.EventId });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "An error occurred while uploading the photo.");
+                return View(model);
+            }
+        }
     }
 }

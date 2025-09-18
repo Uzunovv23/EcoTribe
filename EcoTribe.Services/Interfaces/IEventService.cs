@@ -1,6 +1,7 @@
 ﻿using EcoTribe.BusinessObjects.Domain.Models;
 using EcoTribe.BusinessObjects.InputModels;
 using EcoTribe.BusinessObjects.ViewModels;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,5 +20,6 @@ namespace EcoTribe.Services.Interfaces
         List<FeedbackViewModel> GetFeedbacksForEvent(int eventId);
         void CreateAndNotifyUsers(EventInputModel inputModel);
         IEnumerable<EventViewModel> GetAll(string userId);
+        Task AddPhotoAsync(int eventId, IFormFile file);
     }
 }

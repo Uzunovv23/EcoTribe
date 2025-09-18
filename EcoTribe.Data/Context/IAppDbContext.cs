@@ -22,6 +22,10 @@ namespace EcoTribe.Data.Context
         DbSet<EventSponsor> EventSponsors { get; set; }
         DbSet<UserOrganization> UserOrganizations { get; set; }
         DbSet<ApplicationUser> Users { get; }
+        DbSet<Photo> Photos { get; set; }
+        DbSet<EventPhoto> EventPhotos { get; set; }
+        DbSet<VolunteerPhoto> VolunteerPhotos { get; set; }
+        DbSet<OrganizationPhoto> OrganizationPhotos { get; set; }
         EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
