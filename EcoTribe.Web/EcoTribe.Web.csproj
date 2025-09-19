@@ -27,4 +27,8 @@
     <ProjectReference Include="..\EcoTribe.Services\EcoTribe.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\events\" />
+  </ItemGroup>
+
 </Project>

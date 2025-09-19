@@ -281,7 +281,7 @@ namespace EcoTribe.Web.Controllers
         }
 
         [Authorize(Roles = "Administrator, Organizator")]
-        public IActionResult AddPhoto(int eventId)
+        public IActionResult AddPhoto([FromRoute(Name = "id")] int eventId)
         {
             return View(new AddPhotoInputModel { EventId = eventId });
         }
