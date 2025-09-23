@@ -53,7 +53,7 @@ namespace EcoTribe.Services.Implementations
                 : null;
         }
 
-        public EventDetailsViewModel? GetByIdWithVolunteersAndSponsorsAndFeedbacks(int id)
+        public EventDetailsViewModel? GetByIdWithVolunteersAndSponsorsAndFeedbacksAndPhotos(int id)
         {
             var eventEntity = context.Events
                 .Include(e => e.EventSponsors)
@@ -62,6 +62,8 @@ namespace EcoTribe.Services.Implementations
                     .ThenInclude(ev => ev.Volunteer)
                 .Include(e => e.Feedbacks)
                     .ThenInclude(f => f.Volunteer)
+                .Include(e => e.EventPhotos) 
+                    .ThenInclude(ep => ep.Photo)
                 .FirstOrDefault(e => e.Id == id);
 
             if (eventEntity == null)
@@ -85,6 +87,15 @@ namespace EcoTribe.Services.Implementations
                     var feedbackVM = modelConverter.ConvertToViewModel<Feedback, FeedbackViewModel>(f);
                     feedbackVM.VolunteerName = f.Volunteer.Name;
                     return feedbackVM;
+                })
+                .ToList();
+
+            eventDetailsViewModel.EventPhotos = eventEntity.EventPhotos
+                .Select(ep => new EventPhotoViewModel
+                {
+                    Id = ep.Photo.Id,
+                    Url = ep.Photo.Url,
+                    UploadedOn = ep.Photo.UploadedOn
                 })
                 .ToList();
 

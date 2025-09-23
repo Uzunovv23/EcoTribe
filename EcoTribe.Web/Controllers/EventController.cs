@@ -172,7 +172,7 @@ namespace EcoTribe.Web.Controllers
 
         public IActionResult Details(int id)
         {
-            var viewModel = eventService.GetByIdWithVolunteersAndSponsorsAndFeedbacks(id);
+            var viewModel = eventService.GetByIdWithVolunteersAndSponsorsAndFeedbacksAndPhotos(id);
             if (viewModel == null)
             {
                 return NotFound();
