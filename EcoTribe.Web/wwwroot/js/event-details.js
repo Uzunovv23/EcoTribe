@@ -1,11 +1,10 @@
-﻿
-/**
+﻿/**
  *Initialize the Leaflet map
  @param {number} latitude 
  @param {number} longitude 
  @param {string} eventName 
  */
- 
+
 function initMap(latitude, longitude, eventName) {
     const map = L.map('map').setView([latitude, longitude], 14);
 
@@ -94,6 +93,109 @@ function initStarRating() {
         });
     });
 }
+
+let currentPhotoIndex = 0;
+let photoUrls = [];
+
+function initPhotoGallery() {
+    const galleryImages = document.querySelectorAll('.gallery-image');
+    photoUrls = Array.from(galleryImages).map(img => img.src);
+
+
+    document.addEventListener('keydown', (e) => {
+        if (document.getElementById('lightboxModal').style.display === 'block') {
+            switch (e.key) {
+                case 'Escape':
+                    closeLightbox();
+                    break;
+                case 'ArrowLeft':
+                    prevPhoto();
+                    break;
+                case 'ArrowRight':
+                    nextPhoto();
+                    break;
+            }
+        }
+    });
+
+    document.getElementById('lightboxModal').addEventListener('click', (e) => {
+        if (e.target.id === 'lightboxModal') {
+            closeLightbox();
+        }
+    });
+}
+
+function openLightbox(index) {
+    if (photoUrls.length === 0) return;
+
+    currentPhotoIndex = index;
+    const modal = document.getElementById('lightboxModal');
+    const img = document.getElementById('lightboxImage');
+    const counter = document.getElementById('lightboxCounter');
+
+    img.src = photoUrls[currentPhotoIndex];
+    counter.textContent = `${currentPhotoIndex + 1} / ${photoUrls.length}`;
+
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+
+    preloadImages();
+}
+
+function closeLightbox() {
+    const modal = document.getElementById('lightboxModal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+function nextPhoto() {
+    currentPhotoIndex = (currentPhotoIndex + 1) % photoUrls.length;
+    updateLightboxImage();
+}
+
+function prevPhoto() {
+    currentPhotoIndex = (currentPhotoIndex - 1 + photoUrls.length) % photoUrls.length;
+    updateLightboxImage();
+}
+
+function updateLightboxImage() {
+    const img = document.getElementById('lightboxImage');
+    const counter = document.getElementById('lightboxCounter');
+
+    img.src = photoUrls[currentPhotoIndex];
+    counter.textContent = `${currentPhotoIndex + 1} / ${photoUrls.length}`;
+
+    preloadImages();
+}
+
+function preloadImages() {
+    if (currentPhotoIndex < photoUrls.length - 1) {
+        const nextImg = new Image();
+        nextImg.src = photoUrls[currentPhotoIndex + 1];
+    }
+
+    if (currentPhotoIndex > 0) {
+        const prevImg = new Image();
+        prevImg.src = photoUrls[currentPhotoIndex - 1];
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    const viewGalleryLinks = document.querySelectorAll('a[href="#photoGallery"]');
+    viewGalleryLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const gallerySection = document.getElementById('photoGallery');
+            if (gallerySection) {
+                gallerySection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+});
 
 function addStyleToHead() {
     const link = document.createElement('link');

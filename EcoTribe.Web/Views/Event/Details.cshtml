@@ -149,6 +149,58 @@
                         }
                     }
                 </div>
+
+                <div class="content-card mb-4 animate-on-scroll fade-in">
+                    <h2 class="section-title"><i class="bi bi-images"></i> Event Gallery</h2>
+                    @if (Model.EventPhotos != null && Model.EventPhotos.Any())
+                    {
+                        <div class="modern-gallery">
+                            <div class="gallery-grid" id="photoGallery">
+                                @for (int i = 0; i < Model.EventPhotos.Count(); i++)
+                                {
+                                    var photo = Model.EventPhotos.ElementAt(i);
+                                    <div class="gallery-item @(i == 0 ? "gallery-item-large" : "")" data-index="@i">
+                                        <div class="gallery-image-container">
+                                            <img src="@Url.Content(photo.Url)" alt="Event Photo @(i + 1)" class="gallery-image" loading="lazy" />
+                                            <div class="gallery-overlay">
+                                                <div class="gallery-overlay-content">
+                                                    <button class="gallery-expand-btn" onclick="openLightbox(@i)">
+                                                        <i class="bi bi-zoom-in"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                            @if (Model.EventPhotos.Count() > 6)
+                            {
+                                <div class="gallery-view-all">
+                                    <button class="btn btn-outline-primary" onclick="showAllPhotos()">
+                                        <i class="bi bi-grid-3x3"></i> View All @Model.EventPhotos.Count() Photos
+                                    </button>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="gallery-empty-state">
+                            <div class="empty-gallery-icon">
+                                <i class="bi bi-camera"></i>
+                            </div>
+                            <h3>No Photos Yet</h3>
+                            <p>Photos from this event will appear here once they're uploaded.</p>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
+                            {
+                                <a asp-action="AddPhoto" asp-route-id="@Model.Id" class="btn btn-eco-primary">
+                                    <i class="bi bi-plus-circle"></i> Upload First Photos
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
             </div>
 
             <div class="col-lg-4">
@@ -272,36 +324,77 @@
                 </div>
 
                 <div class="content-card mb-4 animate-on-scroll slide-in-right">
-                    <h2 class="section-title"><i class="bi bi-image"></i> Event Photos</h2>
+                    <h2 class="section-title"><i class="bi bi-camera"></i> Photos</h2>
                     @if (Model.EventPhotos != null && Model.EventPhotos.Any())
                     {
-                        <div class="photos-grid">
-                            @foreach (var photo in Model.EventPhotos)
-                            {
-                                <div class="photo-card">
-                                    <img src="@Url.Content(photo.Url)" alt="Event Photo" class="img-fluid rounded" />
+                        <div class="photo-preview-container">
+                            <div class="photo-preview-grid">
+                                @for (int i = 0; i < Math.Min(3, Model.EventPhotos.Count()); i++)
+                                {
+                                    var photo = Model.EventPhotos.ElementAt(i);
+                                    <div class="photo-preview-item @(i == 0 ? "main-preview" : "")">
+                                        <img src="@Url.Content(photo.Url)" alt="Preview @(i + 1)" class="preview-thumbnail" />
+                                        @if (i == 2 && Model.EventPhotos.Count() > 3)
+                                        {
+                                            <div class="photo-count-overlay">
+                                                <span>+@(Model.EventPhotos.Count() - 3)</span>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <div class="photo-stats">
+                                <div class="stat-item">
+                                    <i class="bi bi-images"></i>
+                                    <span>@Model.EventPhotos.Count() Photo@(Model.EventPhotos.Count() != 1 ? "s" : "")</span>
                                 </div>
-                            }
+                            </div>
+                            <div class="photo-actions">
+                                <a href="#photoGallery" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-eye"></i> View Gallery
+                                </a>
+                                @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
+                                {
+                                    <a asp-action="AddPhoto" asp-route-id="@Model.Id" class="btn btn-sm btn-eco-primary">
+                                        <i class="bi bi-plus"></i> Add More
+                                    </a>
+                                }
+                            </div>
                         </div>
                     }
                     else
                     {
-                        <div class="empty-state">
-                            <i class="bi bi-card-image empty-icon"></i>
-                            <p>No photos uploaded yet for this event.</p>
-                        </div>
-                    }
-
-                    @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
-                    {
-                        <div class="mt-3">
-                            <a asp-action="AddPhoto" asp-route-id="@Model.Id" class="btn btn-eco-primary">
-                                <i class="bi bi-plus-circle"></i> Add Photos
-                            </a>
+                        <div class="photo-preview-empty">
+                            <div class="empty-preview-icon">
+                                <i class="bi bi-camera-fill"></i>
+                            </div>
+                            <p class="empty-preview-text">No photos yet</p>
+                            @if (User.IsInRole("Administrator") || User.IsInRole("Organizator"))
+                            {
+                                <a asp-action="AddPhoto" asp-route-id="@Model.Id" class="btn btn-eco-primary btn-sm">
+                                    <i class="bi bi-plus-circle"></i> Upload Photos
+                                </a>
+                            }
                         </div>
                     }
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div id="lightboxModal" class="lightbox-modal">
+    <div class="lightbox-content">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <button class="lightbox-nav lightbox-prev" onclick="prevPhoto()">
+            <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="lightbox-nav lightbox-next" onclick="nextPhoto()">
+            <i class="bi bi-chevron-right"></i>
+        </button>
+        <img id="lightboxImage" src="" alt="Event Photo" />
+        <div class="lightbox-caption">
+            <span id="lightboxCounter"></span>
         </div>
     </div>
 </div>
@@ -314,6 +407,8 @@
         initMap(@Model.Latitude, @Model.Longitude, '@Model.Name');
         initAnimations();
         initStarRating();
+        initPhotoGallery();
+        initPhotoGallery();
 
         document.addEventListener("DOMContentLoaded", function () {
             const form = document.getElementById("participation-form");
